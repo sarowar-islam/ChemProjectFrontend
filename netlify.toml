@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  VITE_API_BASE_URL = "https://web-production-21d4d.up.railway.app/api"
 
 # SPA redirect - Handle client-side routing
 # This ensures all routes work with React Router
