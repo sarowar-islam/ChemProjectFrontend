@@ -34,14 +34,20 @@ import { newsService } from '@/services/news.service';
 type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'settings';
 
 const DESIGNATION_OPTIONS = [
+  'Faculty',
   'Professor',
   'Associate Professor',
   'Assistant Professor',
-  'PhD Researcher',
-  'MSc Student',
-  'BSc Student',
+  'Post Doctoral Researcher',
+  'PhD Student',
+  'M.Phil Student',
+  'M.Sc Student',
+  'MSc Student Researcher',
+  "Master's Fellowship",
+  'Research Associate',
   'Research Assistant',
-  'Postdoctoral Researcher',
+  'Research Assistant (RA)',
+  'BSc Student',
   'Visiting Researcher',
   'Lab Technician',
 ];

@@ -22,15 +22,25 @@ export default function TeamPage() {
 
   // Group members by designation type
   const faculty = members.filter((m) =>
-    ['Professor', 'Associate Professor', 'Assistant Professor'].some((d) =>
+    ['Professor', 'Associate Professor', 'Assistant Professor', 'Faculty'].some((d) =>
       m.designation.includes(d)
     )
   );
   const researchers = members.filter(
-    (m) => m.designation.includes('PhD') || m.designation.includes('Researcher')
+    (m) => m.designation.includes('PhD') || 
+           m.designation.includes('Researcher') || 
+           m.designation.includes('Research Assistant') ||
+           m.designation.includes('Research Associate') ||
+           m.designation.includes('Post Doctoral') ||
+           m.designation.includes('Postdoctoral')
   );
   const students = members.filter(
-    (m) => m.designation.includes('MSc') || m.designation.includes('Student')
+    (m) => m.designation.includes('M.Sc') || 
+           m.designation.includes('MSc') || 
+           m.designation.includes('M.Phil') ||
+           m.designation.includes('BSc') ||
+           m.designation.includes('Student') ||
+           m.designation.includes('Fellowship')
   );
 
   return (
