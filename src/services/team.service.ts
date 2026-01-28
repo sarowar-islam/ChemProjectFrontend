@@ -127,4 +127,26 @@ export const teamService = {
       return { success: false, error: 'Failed to upload photo' };
     }
   },
+
+  async updateMemberSettings(
+    username: string,
+    settings: {
+      name?: string;
+      username?: string;
+      currentPassword?: string;
+      newPassword?: string;
+    }
+  ): Promise<ApiResponse<TeamMember>> {
+    const response = await apiRequest<TeamMember>({
+      method: 'PUT',
+      url: `/members/username/${username}/settings`,
+      data: settings,
+    });
+
+    if (!response.success) {
+      return { success: false, error: response.error };
+    }
+
+    return { success: true, data: response.data };
+  },
 };

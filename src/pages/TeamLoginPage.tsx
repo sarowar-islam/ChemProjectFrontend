@@ -114,11 +114,22 @@ export default function TeamLoginPage() {
             </button>
           </form>
 
-          {/* Demo credentials */}
-          <div className="mt-6 p-4 rounded-lg bg-muted text-center">
-            <p className="text-xs text-muted-foreground mb-1">Demo Credentials</p>
-            <p className="text-sm font-mono">john.doe / member123</p>
+          {/* Footer */}
+          <div className="mt-6 text-center">
+            <p className="text-xs text-muted-foreground">
+              Research group members only. Contact admin for access.
+            </p>
           </div>
+        </div>
+
+        {/* Back to home */}
+        <div className="mt-6 text-center">
+          <a
+            href="/"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            ← Back to Home
+          </a>
         </div>
       </div>
     </div>
