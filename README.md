@@ -93,9 +93,9 @@ src/
 
 ### Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `VITE_API_BASE_URL` | Backend API base URL | Yes |
+| Variable            | Description          | Required |
+| ------------------- | -------------------- | -------- |
+| `VITE_API_BASE_URL` | Backend API base URL | Yes      |
 
 ## Available Routes
 
