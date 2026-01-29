@@ -159,11 +159,11 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
 
   return (
     <div
-      className="group bg-card rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-elevated transition-all duration-300 animate-fade-in-up"
+      className="group bg-card rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-elevated hover:border-accent/30 transition-all duration-300 animate-fade-in-up"
       style={{ animationDelay: delay }}
     >
       {/* Header with gradient */}
-      <div className="relative h-24 sm:h-32 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent p-4 sm:p-6">
+      <div className="relative h-24 sm:h-32 bg-gradient-to-br from-accent/20 via-accent/10 to-transparent p-4 sm:p-6">
         <div className="absolute top-4 sm:top-6 right-4 sm:right-6">
           <span className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold ${status.bg} ${status.text}`}>
             {status.icon}
@@ -171,15 +171,15 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
           </span>
         </div>
         <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6">
-          <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-white shadow-md">
-            <FolderKanban className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
+          <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/20 border border-accent/30">
+            <FolderKanban className="w-4 h-4 sm:w-6 sm:h-6 text-accent" />
           </div>
         </div>
       </div>
       
       {/* Content */}
       <div className="p-4 sm:p-6 pt-3 sm:pt-4">
-        <h3 className="font-heading text-base sm:text-xl font-semibold text-foreground group-hover:text-primary transition-colors mb-2 sm:mb-3 line-clamp-2">
+        <h3 className="font-heading text-base sm:text-xl font-semibold text-foreground group-hover:text-accent transition-colors mb-2 sm:mb-3 line-clamp-2">
           {project.title}
         </h3>
 
@@ -201,7 +201,7 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
               href={project.researchLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-primary hover:text-accent font-medium transition-colors group/link"
+              className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-accent hover:brightness-110 font-medium transition-colors group/link"
             >
               Details
               <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover/link:translate-x-0.5" />

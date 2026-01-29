@@ -74,23 +74,23 @@
   .dark {
     /* Dark Theme - Deep Navy Blue #0F172A */
     --background: 222 47% 11%;
-    --foreground: 220 13% 91%;
+    --foreground: 210 20% 98%;
 
-    /* Secondary Background: Slate Blue-Gray #1E293B */
-    --card: 217 33% 17%;
-    --card-foreground: 220 13% 91%;
+    /* Secondary Background: Lighter Slate Blue-Gray for better contrast */
+    --card: 215 28% 23%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 217 33% 17%;
-    --popover-foreground: 220 13% 91%;
+    --popover: 215 28% 23%;
+    --popover-foreground: 210 20% 98%;
 
     --primary: 222 47% 11%;
-    --primary-foreground: 220 13% 91%;
+    --primary-foreground: 210 20% 98%;
 
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 220 13% 91%;
+    --secondary: 215 25% 27%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 16% 65%;
+    --muted: 215 25% 27%;
+    --muted-foreground: 215 20% 75%;
 
     --accent: 45 93% 47%;
     --accent-foreground: 222 47% 11%;
@@ -98,9 +98,9 @@
     --destructive: 0 60% 45%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Borders: rgba(148, 163, 184, 0.15) */
-    --border: 215 16% 47% / 0.15;
-    --input: 215 16% 47% / 0.25;
+    /* Borders: More visible */
+    --border: 215 20% 35%;
+    --input: 215 20% 30%;
     --ring: 45 93% 47%;
     
     --shadow-subtle: 0 1px 3px hsl(222 47% 5% / 0.2);
