@@ -55,25 +55,25 @@ export default function MemberProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-muted/30">
+      <div className="min-h-screen bg-[#0F172A]">
         <div className="container-wide py-12">
           <div className="max-w-5xl mx-auto animate-pulse">
-            <div className="h-6 w-24 bg-muted rounded mb-8" />
+            <div className="h-6 w-24 bg-[#1E293B] rounded mb-8" />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-1">
-                <div className="card-academic p-6 text-center">
-                  <div className="w-48 h-48 bg-muted rounded-full mx-auto mb-4" />
-                  <div className="h-6 w-32 bg-muted rounded mx-auto mb-2" />
-                  <div className="h-4 w-24 bg-muted rounded mx-auto" />
+                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6 text-center">
+                  <div className="w-48 h-48 bg-[#0F172A] rounded-full mx-auto mb-4" />
+                  <div className="h-6 w-32 bg-[#0F172A] rounded mx-auto mb-2" />
+                  <div className="h-4 w-24 bg-[#0F172A] rounded mx-auto" />
                 </div>
               </div>
               <div className="lg:col-span-2">
-                <div className="card-academic p-6">
-                  <div className="h-8 w-48 bg-muted rounded mb-4" />
+                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
+                  <div className="h-8 w-48 bg-[#0F172A] rounded mb-4" />
                   <div className="space-y-2">
-                    <div className="h-4 w-full bg-muted rounded" />
-                    <div className="h-4 w-full bg-muted rounded" />
-                    <div className="h-4 w-2/3 bg-muted rounded" />
+                    <div className="h-4 w-full bg-[#0F172A] rounded" />
+                    <div className="h-4 w-full bg-[#0F172A] rounded" />
+                    <div className="h-4 w-2/3 bg-[#0F172A] rounded" />
                   </div>
                 </div>
               </div>
@@ -86,15 +86,15 @@ export default function MemberProfilePage() {
 
   if (!member) {
     return (
-      <div className="min-h-screen bg-muted/30 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="text-center">
-          <h1 className="font-heading text-2xl text-primary mb-4">Member Not Found</h1>
-          <p className="text-muted-foreground mb-6">
+          <h1 className="font-heading text-2xl text-[#F8FAFC] mb-4">Member Not Found</h1>
+          <p className="text-[#94A3B8] mb-6">
             The team member you're looking for doesn't exist.
           </p>
           <Link
             to="/team"
-            className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium"
+            className="inline-flex items-center gap-2 text-[#FACC15] hover:text-[#FDE047] font-medium"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Team
@@ -105,13 +105,13 @@ export default function MemberProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className="min-h-screen bg-[#0F172A]">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-br from-primary via-primary/95 to-primary/90 text-white">
+      <div className="bg-gradient-to-br from-[#1E293B] via-[#1E293B]/95 to-[#0F172A] text-[#F8FAFC]">
         <div className="container-wide py-8">
           <Link
             to="/team"
-            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm"
+            className="inline-flex items-center gap-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Team
@@ -124,10 +124,10 @@ export default function MemberProfilePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Profile Card */}
             <div className="lg:col-span-1">
-              <div className="card-academic p-6 text-center sticky top-8">
+              <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6 text-center sticky top-8">
                 {/* Profile Image */}
                 <div className="relative -mt-20 mb-4">
-                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-white">
+                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-[#0F172A] shadow-xl bg-[#0F172A]">
                     <img
                       src={member.photoUrl}
                       alt={member.name}
@@ -137,16 +137,16 @@ export default function MemberProfilePage() {
                 </div>
 
                 {/* Name & Title */}
-                <h1 className="font-heading text-2xl font-bold text-primary mb-1">
+                <h1 className="font-heading text-2xl font-bold text-[#F8FAFC] mb-1">
                   {member.name}
                 </h1>
-                <p className="text-muted-foreground font-medium mb-3">
+                <p className="text-[#94A3B8] font-medium mb-3">
                   {member.designation}
                 </p>
 
                 {/* Research Area Badge */}
                 {member.researchArea && (
-                  <span className="inline-block badge-gold mb-4">
+                  <span className="inline-block px-4 py-1.5 bg-[#FACC15]/10 text-[#FACC15] rounded-full text-sm font-semibold border border-[#FACC15]/30 mb-4">
                     {member.researchArea}
                   </span>
                 )}
@@ -158,7 +158,7 @@ export default function MemberProfilePage() {
                       href={`https://mail.google.com/mail/?view=cm&to=${member.email}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-[#FACC15] text-[#0F172A] rounded-lg text-sm font-medium hover:bg-[#FDE047] transition-colors"
                     >
                       <Mail className="w-4 h-4" />
                       Send Email
@@ -169,7 +169,7 @@ export default function MemberProfilePage() {
                       href={member.googleScholarLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-secondary text-secondary-foreground rounded-lg text-sm font-medium hover:bg-secondary/80 transition-colors"
+                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-[#0F172A] text-[#CBD5E1] rounded-lg text-sm font-medium hover:bg-[#0F172A]/80 transition-colors border border-[#CBD5E1]/[0.18]"
                     >
                       <BookOpen className="w-4 h-4" />
                       Google Scholar
@@ -178,26 +178,26 @@ export default function MemberProfilePage() {
                 </div>
 
                 {/* Quick Info */}
-                <div className="border-t border-border pt-4 space-y-3 text-left">
+                <div className="border-t border-[#CBD5E1]/[0.18] pt-4 space-y-3 text-left">
                   {member.phone && (
                     <div className="flex items-center gap-3 text-sm">
-                      <Phone className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">{member.phone}</span>
+                      <Phone className="w-4 h-4 text-[#E5E7EB]" />
+                      <span className="text-[#94A3B8]">{member.phone}</span>
                     </div>
                   )}
                   {member.email && (
                     <div className="flex items-center gap-3 text-sm">
-                      <Mail className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground truncate">{member.email}</span>
+                      <Mail className="w-4 h-4 text-[#E5E7EB]" />
+                      <span className="text-[#94A3B8] truncate">{member.email}</span>
                     </div>
                   )}
                   <div className="flex items-center gap-3 text-sm">
-                    <MapPin className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">CUET, Chittagong</span>
+                    <MapPin className="w-4 h-4 text-[#E5E7EB]" />
+                    <span className="text-[#94A3B8]">CUET, Chittagong</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">
+                    <Calendar className="w-4 h-4 text-[#E5E7EB]" />
+                    <span className="text-[#94A3B8]">
                       Member since {new Date(member.joinedDate).getFullYear()}
                     </span>
                   </div>
@@ -208,13 +208,13 @@ export default function MemberProfilePage() {
             {/* Right Column - Details */}
             <div className="lg:col-span-2">
               {/* Tabs */}
-              <div className="flex gap-4 mb-6 border-b border-border bg-white rounded-t-xl px-2">
+              <div className="flex gap-4 mb-6 border-b border-[#CBD5E1]/[0.18] bg-[#1E293B] rounded-t-xl px-2">
                 <button
                   onClick={() => setActiveTab('overview')}
                   className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors border-b-2 -mb-px ${
                     activeTab === 'overview'
-                      ? 'border-primary text-primary'
-                      : 'border-transparent text-muted-foreground hover:text-foreground'
+                      ? 'border-[#FACC15] text-[#FACC15]'
+                      : 'border-transparent text-[#94A3B8] hover:text-[#F8FAFC]'
                   }`}
                 >
                   <Briefcase className="w-4 h-4" />
@@ -224,14 +224,14 @@ export default function MemberProfilePage() {
                   onClick={() => setActiveTab('publications')}
                   className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors border-b-2 -mb-px ${
                     activeTab === 'publications'
-                      ? 'border-primary text-primary'
-                      : 'border-transparent text-muted-foreground hover:text-foreground'
+                      ? 'border-[#FACC15] text-[#FACC15]'
+                      : 'border-transparent text-[#94A3B8] hover:text-[#F8FAFC]'
                   }`}
                 >
                   <BookOpen className="w-4 h-4" />
                   Publications
                   {publications.length > 0 && (
-                    <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                    <span className="text-xs bg-[#FACC15]/10 text-[#FACC15] px-2 py-0.5 rounded-full">
                       {publications.length}
                     </span>
                   )}
@@ -241,17 +241,17 @@ export default function MemberProfilePage() {
               {activeTab === 'overview' && (
                 <div className="space-y-6">
                   {/* Biography */}
-                  <div className="card-academic p-6">
-                    <h2 className="font-heading text-xl text-primary mb-4 flex items-center gap-2">
-                      <Award className="w-5 h-5" />
+                  <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
+                    <h2 className="font-heading text-xl text-[#F8FAFC] mb-4 flex items-center gap-2">
+                      <Award className="w-5 h-5 text-[#FACC15]" />
                       About
                     </h2>
                     {member.bio ? (
-                      <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                      <p className="text-[#CBD5E1] leading-relaxed whitespace-pre-line">
                         {member.bio}
                       </p>
                     ) : (
-                      <p className="text-muted-foreground italic">
+                      <p className="text-[#94A3B8] italic">
                         No biography available yet.
                       </p>
                     )}
@@ -259,16 +259,16 @@ export default function MemberProfilePage() {
 
                   {/* Expertise */}
                   {member.expertise && member.expertise.length > 0 && (
-                    <div className="card-academic p-6">
-                      <h2 className="font-heading text-xl text-primary mb-4 flex items-center gap-2">
-                        <GraduationCap className="w-5 h-5" />
+                    <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
+                      <h2 className="font-heading text-xl text-[#F8FAFC] mb-4 flex items-center gap-2">
+                        <GraduationCap className="w-5 h-5 text-[#FACC15]" />
                         Areas of Expertise
                       </h2>
                       <div className="flex flex-wrap gap-2">
                         {member.expertise.map((item) => (
                           <span
                             key={item}
-                            className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary/10 to-primary/5 text-primary rounded-lg text-sm font-medium border border-primary/10"
+                            className="inline-flex items-center px-4 py-2 bg-[#FACC15]/10 text-[#FACC15] rounded-lg text-sm font-medium border border-[#FACC15]/20"
                           >
                             {item}
                           </span>
@@ -279,37 +279,37 @@ export default function MemberProfilePage() {
 
                   {/* Research Stats */}
                   {(publications.length > 0 || scholarProfile) && (
-                    <div className="card-academic p-6">
-                      <h2 className="font-heading text-xl text-primary mb-4 flex items-center gap-2">
-                        <BookOpen className="w-5 h-5" />
+                    <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
+                      <h2 className="font-heading text-xl text-[#F8FAFC] mb-4 flex items-center gap-2">
+                        <BookOpen className="w-5 h-5 text-[#FACC15]" />
                         Research Metrics
                       </h2>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div className="bg-muted/50 rounded-xl p-4 text-center">
-                          <p className="text-3xl font-bold text-primary mb-1">
+                        <div className="bg-[#0F172A] rounded-xl p-4 text-center">
+                          <p className="text-3xl font-bold text-[#FACC15] mb-1">
                             {publications.length}
                           </p>
-                          <p className="text-sm text-muted-foreground">Publications</p>
+                          <p className="text-sm text-[#94A3B8]">Publications</p>
                         </div>
-                        <div className="bg-muted/50 rounded-xl p-4 text-center">
-                          <p className="text-3xl font-bold text-primary mb-1">
+                        <div className="bg-[#0F172A] rounded-xl p-4 text-center">
+                          <p className="text-3xl font-bold text-[#FACC15] mb-1">
                             {scholarProfile?.totalCitations || publications.reduce((sum, pub) => sum + (parseInt(pub.citedBy) || 0), 0)}
                           </p>
-                          <p className="text-sm text-muted-foreground">Total Citations</p>
+                          <p className="text-sm text-[#94A3B8]">Total Citations</p>
                         </div>
                         {scholarProfile && (
                           <>
-                            <div className="bg-muted/50 rounded-xl p-4 text-center">
-                              <p className="text-3xl font-bold text-primary mb-1">
+                            <div className="bg-[#0F172A] rounded-xl p-4 text-center">
+                              <p className="text-3xl font-bold text-[#FACC15] mb-1">
                                 {scholarProfile.hIndex}
                               </p>
-                              <p className="text-sm text-muted-foreground">h-index</p>
+                              <p className="text-sm text-[#94A3B8]">h-index</p>
                             </div>
-                            <div className="bg-muted/50 rounded-xl p-4 text-center">
-                              <p className="text-3xl font-bold text-primary mb-1">
+                            <div className="bg-[#0F172A] rounded-xl p-4 text-center">
+                              <p className="text-3xl font-bold text-[#FACC15] mb-1">
                                 {scholarProfile.i10Index}
                               </p>
-                              <p className="text-sm text-muted-foreground">i10-index</p>
+                              <p className="text-sm text-[#94A3B8]">i10-index</p>
                             </div>
                           </>
                         )}
@@ -327,7 +327,7 @@ export default function MemberProfilePage() {
                       <button
                         onClick={() => member && fetchPublications(member.id)}
                         disabled={pubsLoading}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-muted hover:bg-muted/80 text-muted-foreground rounded-lg transition-colors disabled:opacity-50"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-[#1E293B] hover:bg-[#1E293B]/80 text-[#94A3B8] rounded-lg transition-colors disabled:opacity-50 border border-[#CBD5E1]/[0.18]"
                       >
                         <RefreshCw className={`w-4 h-4 ${pubsLoading ? 'animate-spin' : ''}`} />
                         Refresh
@@ -336,29 +336,29 @@ export default function MemberProfilePage() {
                   )}
                   
                   {pubsLoading ? (
-                    <div className="card-academic p-8">
+                    <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-8">
                       <div className="space-y-4">
                         {Array.from({ length: 3 }).map((_, i) => (
                           <div key={i} className="animate-pulse">
-                            <div className="h-5 w-3/4 bg-muted rounded mb-2" />
-                            <div className="h-4 w-1/2 bg-muted rounded mb-2" />
-                            <div className="h-4 w-1/3 bg-muted rounded" />
+                            <div className="h-5 w-3/4 bg-[#0F172A] rounded mb-2" />
+                            <div className="h-4 w-1/2 bg-[#0F172A] rounded mb-2" />
+                            <div className="h-4 w-1/3 bg-[#0F172A] rounded" />
                           </div>
                         ))}
                       </div>
-                      <p className="text-sm text-muted-foreground text-center mt-4">
+                      <p className="text-sm text-[#94A3B8] text-center mt-4">
                         Fetching publications from Google Scholar...
                       </p>
                     </div>
                   ) : pubsError ? (
-                    <div className="card-academic p-8 text-center">
-                      <BookOpen className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
-                      <p className="text-muted-foreground mb-2">Could not load publications.</p>
-                      <p className="text-xs text-muted-foreground mb-4">{pubsError}</p>
+                    <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-8 text-center">
+                      <BookOpen className="w-12 h-12 text-[#94A3B8]/50 mx-auto mb-4" />
+                      <p className="text-[#CBD5E1] mb-2">Could not load publications.</p>
+                      <p className="text-xs text-[#94A3B8] mb-4">{pubsError}</p>
                       {member?.googleScholarLink && (
                         <button
                           onClick={() => member && fetchPublications(member.id)}
-                          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-[#FACC15] text-[#0F172A] rounded-lg hover:bg-[#FDE047] transition-colors"
                         >
                           <RefreshCw className="w-4 h-4" />
                           Try Again
@@ -370,25 +370,25 @@ export default function MemberProfilePage() {
                       {publications.slice(0, 20).map((pub, index) => (
                         <div
                           key={pub.scholarId || index}
-                          className="card-academic p-5 hover:shadow-md transition-shadow"
+                          className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-5 hover:shadow-md transition-shadow"
                         >
                           <div className="flex gap-4">
-                            <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary font-bold shrink-0">
+                            <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-lg bg-[#FACC15]/10 text-[#FACC15] font-bold shrink-0">
                               {index + 1}
                             </div>
                             <div className="flex-1">
-                              <h3 className="font-medium text-foreground mb-2 leading-snug">
+                              <h3 className="font-medium text-[#F8FAFC] mb-2 leading-snug">
                                 {pub.title}
                               </h3>
-                              <p className="text-sm text-muted-foreground mb-2">
+                              <p className="text-sm text-[#94A3B8] mb-2">
                                 {pub.authors?.join(', ') || 'Authors not available'}
                               </p>
                               <div className="flex flex-wrap items-center gap-3">
-                                <span className="text-xs text-muted-foreground italic">
+                                <span className="text-xs text-[#94A3B8] italic">
                                   {pub.journal || 'Journal not specified'} {pub.year && `• ${pub.year}`}
                                 </span>
                                 {pub.citedBy && parseInt(pub.citedBy) > 0 && (
-                                  <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">
+                                  <span className="inline-flex items-center gap-1 text-xs bg-[#FACC15]/10 text-[#FACC15] px-2 py-0.5 rounded-full font-medium">
                                     <Quote className="w-3 h-3" />
                                     Cited by {pub.citedBy}
                                   </span>
@@ -398,7 +398,7 @@ export default function MemberProfilePage() {
                                     href={pub.articleUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-xs text-primary hover:underline font-medium"
+                                    className="inline-flex items-center gap-1 text-xs text-[#FACC15] hover:underline font-medium"
                                   >
                                     View Paper
                                     <ExternalLink className="w-3 h-3" />
@@ -410,14 +410,14 @@ export default function MemberProfilePage() {
                         </div>
                       ))}
                       {publications.length > 20 && (
-                        <div className="card-academic p-4 text-center">
-                          <p className="text-sm text-muted-foreground">
+                        <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 text-center">
+                          <p className="text-sm text-[#94A3B8]">
                             Showing 20 of {publications.length} publications.{' '}
                             <a
                               href={member.googleScholarLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-primary hover:underline font-medium"
+                              className="text-[#FACC15] hover:underline font-medium"
                             >
                               View all on Google Scholar
                             </a>
@@ -426,12 +426,12 @@ export default function MemberProfilePage() {
                       )}
                     </div>
                   ) : (
-                    <div className="card-academic p-8 text-center">
-                      <BookOpen className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
-                      <h3 className="font-heading text-lg text-foreground mb-2">
+                    <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-8 text-center">
+                      <BookOpen className="w-12 h-12 text-[#94A3B8]/50 mx-auto mb-4" />
+                      <h3 className="font-heading text-lg text-[#F8FAFC] mb-2">
                         No Publications Yet
                       </h3>
-                      <p className="text-muted-foreground">
+                      <p className="text-[#94A3B8]">
                         Publications will appear here once they are linked to a Google Scholar profile.
                       </p>
                     </div>

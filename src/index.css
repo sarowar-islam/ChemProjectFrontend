@@ -191,32 +191,33 @@
   }
 
   .card-academic {
-    @apply bg-card rounded-xl border border-border/50 shadow-card hover:shadow-elevated transition-all duration-300;
+    @apply bg-[#1E293B] rounded-xl border border-[#CBD5E1]/[0.18] shadow-card hover:shadow-elevated transition-all duration-300;
   }
 
   .badge-gold {
     @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium;
-    background: hsl(var(--accent) / 0.15);
-    color: hsl(var(--accent));
+    background: rgba(250, 204, 21, 0.15);
+    color: #FACC15;
   }
   
   /* Navbar styles */
   .navbar-link {
     @apply relative text-[15px] font-medium transition-colors duration-200;
-    color: hsl(var(--foreground) / 0.85);
+    color: rgba(248, 250, 252, 0.85);
   }
   
   .navbar-link:hover {
-    color: hsl(var(--accent));
+    color: #FACC15;
   }
   
   .navbar-link.active {
-    color: hsl(var(--accent));
+    color: #FACC15;
   }
   
   .navbar-link::after {
     content: '';
-    @apply absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300;
+    @apply absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300;
+    background: #FACC15;
   }
   
   .navbar-link:hover::after,
@@ -226,21 +227,38 @@
 
   /* Button styles */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent text-accent-foreground rounded-xl font-semibold hover:brightness-110 transition-all duration-200 shadow-lg;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg;
+    background: #FACC15;
+    color: #0F172A;
+  }
+
+  .btn-primary:hover {
+    background: #FDE047;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent text-accent border-2 border-accent rounded-xl font-semibold hover:bg-accent/10 transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent rounded-xl font-semibold transition-all duration-200;
+    color: #FACC15;
+    border: 2px solid #FACC15;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(250, 204, 21, 0.1);
   }
 
   .link-underline {
-    @apply relative inline-block text-foreground hover:text-accent transition-colors duration-200;
+    @apply relative inline-block transition-colors duration-200;
+    color: #F8FAFC;
+  }
+
+  .link-underline:hover {
+    color: #FACC15;
   }
 
   .link-underline::after {
     content: '';
     @apply absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300;
-    background: hsl(var(--accent));
+    background: #FACC15;
   }
 
   .link-underline:hover::after {
@@ -248,21 +266,23 @@
   }
 
   .stat-card {
-    @apply p-6 rounded-xl bg-card shadow-card;
-    border: 1px solid hsl(var(--border));
+    @apply p-6 rounded-xl;
+    background: #1E293B;
+    border: 1px solid rgba(203, 213, 225, 0.18);
+    box-shadow: 0 4px 20px hsl(222 47% 5% / 0.25);
   }
 
   .stat-number {
     font-family: var(--heading-font);
     @apply text-4xl font-bold;
     /* Use accent gold for metrics */
-    color: hsl(var(--accent));
+    color: #FACC15;
   }
 
   .stat-label {
     @apply text-sm mt-1;
     /* Secondary text color */
-    color: hsl(var(--muted-foreground));
+    color: #94A3B8;
   }
 
   .page-header {
@@ -270,17 +290,19 @@
   }
 
   .page-title {
-    @apply mb-4 text-foreground;
+    @apply mb-4;
+    color: #F8FAFC;
   }
 
   .page-subtitle {
-    @apply text-lg text-muted-foreground max-w-2xl mx-auto;
+    @apply text-lg max-w-2xl mx-auto;
+    color: #94A3B8;
   }
 
   .form-input-academic {
-    @apply w-full px-4 py-3 rounded-xl border border-border/50 bg-secondary text-foreground;
-    @apply focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent;
-    @apply placeholder:text-muted-foreground transition-all duration-200;
+    @apply w-full px-4 py-3 rounded-xl border border-[#CBD5E1]/[0.18] bg-[#0F172A] text-[#F8FAFC];
+    @apply focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50 focus:border-transparent;
+    @apply placeholder:text-[#94A3B8] transition-all duration-200;
   }
 
   .shadow-elevated {

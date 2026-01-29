@@ -112,35 +112,35 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-muted/30 flex flex-col">
+    <div className="min-h-screen bg-[#0F172A] flex flex-col">
       {/* Header */}
-      <header className="bg-primary text-primary-foreground sticky top-0 z-50">
+      <header className="bg-[#1E293B] text-[#F8FAFC] sticky top-0 z-50 border-b border-[#CBD5E1]/[0.18]">
         <div className="px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-              className="lg:hidden p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors"
+              className="lg:hidden p-2 hover:bg-[#0F172A]/50 rounded-lg transition-colors"
             >
               <Menu className="w-5 h-5" />
             </button>
             <Link to="/" className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-primary-foreground/10">
-                <FlaskConical className="w-5 h-5" />
+              <div className="p-2 rounded-lg bg-[#FACC15]/10">
+                <FlaskConical className="w-5 h-5 text-[#FACC15]" />
               </div>
-              <span className="font-heading font-semibold hidden sm:inline">
+              <span className="font-heading font-semibold hidden sm:inline text-[#F8FAFC]">
                 Prof. Dr. Yunus Ahmed Research Group
               </span>
             </Link>
-            <span className="text-primary-foreground/50 hidden sm:inline">|</span>
-            <span className="text-sm hidden sm:inline">Admin Panel</span>
+            <span className="text-[#94A3B8] hidden sm:inline">|</span>
+            <span className="text-sm hidden sm:inline text-[#CBD5E1]">Admin Panel</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-primary-foreground/70 hidden sm:inline">
+            <span className="text-sm text-[#94A3B8] hidden sm:inline">
               {user?.email}
             </span>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary-foreground/10 hover:bg-primary-foreground/20 transition-colors text-sm"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#0F172A]/50 hover:bg-[#0F172A] transition-colors text-sm text-[#F8FAFC]"
             >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Logout</span>
@@ -160,7 +160,7 @@ export default function AdminDashboardPage() {
 
         {/* Sidebar */}
         <aside
-          className={`fixed lg:static inset-y-0 left-0 z-50 lg:z-auto bg-card border-r border-border transition-all duration-300 flex flex-col pt-16 lg:pt-0 ${
+          className={`fixed lg:static inset-y-0 left-0 z-50 lg:z-auto bg-[#1E293B] border-r border-[#CBD5E1]/[0.18] transition-all duration-300 flex flex-col pt-16 lg:pt-0 ${
             mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
           } ${sidebarCollapsed ? 'w-16' : 'w-64'}`}
         >
@@ -175,8 +175,8 @@ export default function AdminDashboardPage() {
                   }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm transition-colors ${
                     activeTab === tab.id
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                      ? 'bg-[#FACC15] text-[#0F172A]'
+                      : 'text-[#94A3B8] hover:bg-[#0F172A] hover:text-[#F8FAFC]'
                   }`}
                   title={sidebarCollapsed ? tab.label : undefined}
                 >
@@ -188,10 +188,10 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Collapse Button */}
-          <div className="p-2 border-t border-border hidden lg:block">
+          <div className="p-2 border-t border-[#CBD5E1]/[0.18] hidden lg:block">
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors text-sm"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-[#94A3B8] hover:bg-[#0F172A] hover:text-[#F8FAFC] transition-colors text-sm"
             >
               <ChevronLeft className={`w-4 h-4 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} />
               {!sidebarCollapsed && <span>Collapse</span>}
@@ -239,32 +239,32 @@ function DashboardView({
 }) {
   return (
     <div>
-      <h2 className="font-heading text-2xl text-primary mb-6">Overview</h2>
+      <h2 className="font-heading text-2xl text-[#F8FAFC] mb-6">Overview</h2>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="stat-card animate-pulse">
-              <div className="h-10 w-20 bg-muted rounded mb-2" />
-              <div className="h-4 w-24 bg-muted rounded" />
+            <div key={i} className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6 animate-pulse">
+              <div className="h-10 w-20 bg-[#0F172A] rounded mb-2" />
+              <div className="h-4 w-24 bg-[#0F172A] rounded" />
             </div>
           ))
         ) : (
           <>
-            <div className="stat-card">
-              <div className="stat-number">{stats.totalProjects}</div>
-              <div className="stat-label">Total Projects</div>
+            <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
+              <div className="text-3xl font-bold text-[#FACC15] mb-1">{stats.totalProjects}</div>
+              <div className="text-sm text-[#94A3B8]">Total Projects</div>
             </div>
-            <div className="stat-card">
-              <div className="stat-number">{stats.totalPublications}</div>
-              <div className="stat-label">Publications</div>
+            <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
+              <div className="text-3xl font-bold text-[#FACC15] mb-1">{stats.totalPublications}</div>
+              <div className="text-sm text-[#94A3B8]">Publications</div>
             </div>
-            <div className="stat-card">
-              <div className="stat-number">{stats.totalMembers}</div>
-              <div className="stat-label">Team Members</div>
+            <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
+              <div className="text-3xl font-bold text-[#FACC15] mb-1">{stats.totalMembers}</div>
+              <div className="text-sm text-[#94A3B8]">Team Members</div>
             </div>
-            <div className="stat-card">
-              <div className="stat-number">{stats.ongoingProjects}</div>
-              <div className="stat-label">Ongoing Projects</div>
+            <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
+              <div className="text-3xl font-bold text-[#FACC15] mb-1">{stats.ongoingProjects}</div>
+              <div className="text-sm text-[#94A3B8]">Ongoing Projects</div>
             </div>
           </>
         )}
@@ -366,8 +366,8 @@ function ProjectsView({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-heading text-2xl text-primary">Projects</h2>
-        <Button onClick={openAddModal}>
+        <h2 className="font-heading text-2xl text-[#F8FAFC]">Projects</h2>
+        <Button onClick={openAddModal} className="bg-[#FACC15] text-[#0F172A] hover:bg-[#FDE047]">
           <Plus className="w-4 h-4 mr-2" />
           Add Project
         </Button>
@@ -376,35 +376,35 @@ function ProjectsView({
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="card-academic p-4 animate-pulse">
-              <div className="h-5 w-2/3 bg-muted rounded mb-2" />
-              <div className="h-4 w-full bg-muted rounded" />
+            <div key={i} className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 animate-pulse">
+              <div className="h-5 w-2/3 bg-[#0F172A] rounded mb-2" />
+              <div className="h-4 w-full bg-[#0F172A] rounded" />
             </div>
           ))}
         </div>
       ) : projects.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
+        <div className="text-center py-12 text-[#94A3B8]">
           No projects yet. Click "Add Project" to create one.
         </div>
       ) : (
         <div className="space-y-4">
           {projects.map((project) => (
-            <div key={project.id} className="card-academic p-4 flex items-center justify-between">
+            <div key={project.id} className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 flex items-center justify-between">
               <div className="flex-1 min-w-0 mr-4">
-                <h3 className="font-medium text-foreground truncate">{project.title}</h3>
-                <p className="text-sm text-muted-foreground truncate">{project.description}</p>
+                <h3 className="font-medium text-[#F8FAFC] truncate">{project.title}</h3>
+                <p className="text-sm text-[#94A3B8] truncate">{project.description}</p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <span className={`px-2 py-1 rounded text-xs font-medium ${
-                  project.status === 'ongoing' ? 'bg-green-100 text-green-800' : 'bg-muted text-muted-foreground'
+                  project.status === 'ongoing' ? 'bg-green-900/30 text-green-400' : 'bg-[#0F172A] text-[#94A3B8]'
                 }`}>
                   {project.status}
                 </span>
-                <button onClick={() => openEditModal(project)} className="p-2 hover:bg-muted rounded-lg transition-colors">
-                  <Edit className="w-4 h-4 text-muted-foreground" />
+                <button onClick={() => openEditModal(project)} className="p-2 hover:bg-[#0F172A] rounded-lg transition-colors">
+                  <Edit className="w-4 h-4 text-[#E5E7EB]" />
                 </button>
-                <button onClick={() => handleDelete(project.id)} className="p-2 hover:bg-destructive/10 rounded-lg transition-colors">
-                  <Trash2 className="w-4 h-4 text-destructive" />
+                <button onClick={() => handleDelete(project.id)} className="p-2 hover:bg-red-900/20 rounded-lg transition-colors">
+                  <Trash2 className="w-4 h-4 text-red-400" />
                 </button>
               </div>
             </div>
@@ -413,9 +413,9 @@ function ProjectsView({
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg bg-[#1E293B] border-[#CBD5E1]/[0.18]">
           <DialogHeader>
-            <DialogTitle>{editingProject ? 'Edit Project' : 'Add Project'}</DialogTitle>
+            <DialogTitle className="text-[#F8FAFC]">{editingProject ? 'Edit Project' : 'Add Project'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
@@ -592,8 +592,8 @@ function MembersView({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-heading text-2xl text-primary">Team Members</h2>
-        <Button onClick={openAddModal}>
+        <h2 className="font-heading text-2xl text-[#F8FAFC]">Team Members</h2>
+        <Button onClick={openAddModal} className="bg-[#FACC15] text-[#0F172A] hover:bg-[#FDE047]">
           <Plus className="w-4 h-4 mr-2" />
           Add Member
         </Button>
@@ -602,25 +602,25 @@ function MembersView({
       {loading ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="card-academic p-4 animate-pulse">
+            <div key={i} className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 animate-pulse">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-muted rounded-full" />
+                <div className="w-12 h-12 bg-[#0F172A] rounded-full" />
                 <div className="flex-1">
-                  <div className="h-4 w-24 bg-muted rounded mb-1" />
-                  <div className="h-3 w-20 bg-muted rounded" />
+                  <div className="h-4 w-24 bg-[#0F172A] rounded mb-1" />
+                  <div className="h-3 w-20 bg-[#0F172A] rounded" />
                 </div>
               </div>
             </div>
           ))}
         </div>
       ) : members.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
+        <div className="text-center py-12 text-[#94A3B8]">
           No members yet. Click "Add Member" to add one.
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {members.map((member) => (
-            <div key={member.id} className="card-academic p-4">
+            <div key={member.id} className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4">
               <div className="flex items-center gap-3">
                 <img
                   src={member.photoUrl || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400'}
@@ -628,16 +628,16 @@ function MembersView({
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-foreground truncate">{member.name}</h3>
-                  <p className="text-sm text-muted-foreground truncate">{member.designation || 'No designation'}</p>
-                  <p className="text-xs text-muted-foreground/70 truncate">@{member.username}</p>
+                  <h3 className="font-medium text-[#F8FAFC] truncate">{member.name}</h3>
+                  <p className="text-sm text-[#94A3B8] truncate">{member.designation || 'No designation'}</p>
+                  <p className="text-xs text-[#94A3B8]/70 truncate">@{member.username}</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <button onClick={() => openEditModal(member)} className="p-2 hover:bg-muted rounded-lg transition-colors">
-                    <Edit className="w-4 h-4 text-muted-foreground" />
+                  <button onClick={() => openEditModal(member)} className="p-2 hover:bg-[#0F172A] rounded-lg transition-colors">
+                    <Edit className="w-4 h-4 text-[#E5E7EB]" />
                   </button>
-                  <button onClick={() => handleDelete(member.id)} className="p-2 hover:bg-destructive/10 rounded-lg transition-colors">
-                    <Trash2 className="w-4 h-4 text-destructive" />
+                  <button onClick={() => handleDelete(member.id)} className="p-2 hover:bg-red-900/20 rounded-lg transition-colors">
+                    <Trash2 className="w-4 h-4 text-red-400" />
                   </button>
                 </div>
               </div>
@@ -647,31 +647,33 @@ function MembersView({
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-[#1E293B] border-[#CBD5E1]/[0.18]">
           <DialogHeader>
-            <DialogTitle>{editingMember ? 'Edit Member' : 'Add Member'}</DialogTitle>
+            <DialogTitle className="text-[#F8FAFC]">{editingMember ? 'Edit Member' : 'Add Member'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <Label htmlFor="name">Name *</Label>
+              <Label htmlFor="name" className="text-[#CBD5E1]">Name *</Label>
               <Input 
                 id="name" 
                 value={formData.name} 
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
                 placeholder="Enter full name"
+                className="bg-[#0F172A] border-[#CBD5E1]/[0.18] text-[#F8FAFC] placeholder:text-[#94A3B8]"
               />
             </div>
             <div>
-              <Label htmlFor="username">Username *</Label>
+              <Label htmlFor="username" className="text-[#CBD5E1]">Username *</Label>
               <Input 
                 id="username" 
                 value={formData.username} 
                 onChange={(e) => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/\s/g, '') })} 
                 placeholder="Enter username (for login)"
                 disabled={!!editingMember}
+                className="bg-[#0F172A] border-[#CBD5E1]/[0.18] text-[#F8FAFC] placeholder:text-[#94A3B8]"
               />
               {!editingMember && (
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-[#94A3B8] mt-1">
                   This will be used for login
                 </p>
               )}
@@ -849,8 +851,8 @@ function NewsView({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-heading text-2xl text-primary">News</h2>
-        <Button onClick={openAddModal}>
+        <h2 className="font-heading text-2xl text-[#F8FAFC]">News</h2>
+        <Button onClick={openAddModal} className="bg-[#FACC15] text-[#0F172A] hover:bg-[#FDE047]">
           <Plus className="w-4 h-4 mr-2" />
           Add News
         </Button>
@@ -859,36 +861,36 @@ function NewsView({
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="card-academic p-4 animate-pulse">
-              <div className="h-5 w-2/3 bg-muted rounded mb-2" />
-              <div className="h-4 w-full bg-muted rounded" />
+            <div key={i} className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 animate-pulse">
+              <div className="h-5 w-2/3 bg-[#0F172A] rounded mb-2" />
+              <div className="h-4 w-full bg-[#0F172A] rounded" />
             </div>
           ))}
         </div>
       ) : news.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
+        <div className="text-center py-12 text-[#94A3B8]">
           No news yet. Click "Add News" to publish one.
         </div>
       ) : (
         <div className="space-y-4">
           {news.map((item) => (
-            <div key={item.id} className="card-academic p-4 flex items-start justify-between">
+            <div key={item.id} className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 flex items-start justify-between">
               <div className="flex-1 min-w-0 mr-4">
-                <h3 className="font-medium text-foreground">{item.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                <h3 className="font-medium text-[#F8FAFC]">{item.title}</h3>
+                <p className="text-sm text-[#94A3B8] line-clamp-2 mt-1">
                   {item.summary || item.content.substring(0, 150)}
                 </p>
-                <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-3 mt-2 text-xs text-[#94A3B8]">
                   <span>{new Date(item.date).toLocaleDateString()}</span>
                   {item.author && <span>by {item.author}</span>}
                 </div>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <button onClick={() => openEditModal(item)} className="p-2 hover:bg-muted rounded-lg transition-colors">
-                  <Edit className="w-4 h-4 text-muted-foreground" />
+                <button onClick={() => openEditModal(item)} className="p-2 hover:bg-[#0F172A] rounded-lg transition-colors">
+                  <Edit className="w-4 h-4 text-[#E5E7EB]" />
                 </button>
-                <button onClick={() => handleDelete(item.id)} className="p-2 hover:bg-destructive/10 rounded-lg transition-colors">
-                  <Trash2 className="w-4 h-4 text-destructive" />
+                <button onClick={() => handleDelete(item.id)} className="p-2 hover:bg-red-900/20 rounded-lg transition-colors">
+                  <Trash2 className="w-4 h-4 text-red-400" />
                 </button>
               </div>
             </div>
@@ -897,25 +899,25 @@ function NewsView({
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto bg-[#1E293B] border-[#CBD5E1]/[0.18]">
           <DialogHeader>
-            <DialogTitle>{editingNews ? 'Edit News' : 'Add News'}</DialogTitle>
+            <DialogTitle className="text-[#F8FAFC]">{editingNews ? 'Edit News' : 'Add News'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <Label htmlFor="title">Title *</Label>
-              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+              <Label htmlFor="title" className="text-[#CBD5E1]">Title *</Label>
+              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-[#0F172A] border-[#CBD5E1]/[0.18] text-[#F8FAFC]" />
             </div>
             <div>
-              <Label htmlFor="summary">Summary</Label>
-              <Input id="summary" value={formData.summary} onChange={(e) => setFormData({ ...formData, summary: e.target.value })} placeholder="Brief summary for preview" />
+              <Label htmlFor="summary" className="text-[#CBD5E1]">Summary</Label>
+              <Input id="summary" value={formData.summary} onChange={(e) => setFormData({ ...formData, summary: e.target.value })} placeholder="Brief summary for preview" className="bg-[#0F172A] border-[#CBD5E1]/[0.18] text-[#F8FAFC] placeholder:text-[#94A3B8]" />
             </div>
             <div>
-              <Label htmlFor="content">Content *</Label>
-              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={6} />
+              <Label htmlFor="content" className="text-[#CBD5E1]">Content *</Label>
+              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={6} className="bg-[#0F172A] border-[#CBD5E1]/[0.18] text-[#F8FAFC]" />
             </div>
             <div>
-              <Label htmlFor="imageUrl">Image URL</Label>
+              <Label htmlFor="imageUrl" className="text-[#CBD5E1]">Image URL</Label>
               <Input id="imageUrl" value={formData.imageUrl} onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })} placeholder="https://" />
             </div>
             <div>
@@ -1019,8 +1021,8 @@ function NoticesView({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-heading text-2xl text-primary">Notices</h2>
-        <Button onClick={openAddModal}>
+        <h2 className="font-heading text-2xl text-[#F8FAFC]">Notices</h2>
+        <Button onClick={openAddModal} className="bg-[#FACC15] text-[#0F172A] hover:bg-[#FDE047]">
           <Plus className="w-4 h-4 mr-2" />
           Add Notice
         </Button>
@@ -1029,40 +1031,40 @@ function NoticesView({
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="card-academic p-4 animate-pulse">
-              <div className="h-5 w-2/3 bg-muted rounded mb-2" />
-              <div className="h-4 w-full bg-muted rounded" />
+            <div key={i} className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 animate-pulse">
+              <div className="h-5 w-2/3 bg-[#0F172A] rounded mb-2" />
+              <div className="h-4 w-full bg-[#0F172A] rounded" />
             </div>
           ))}
         </div>
       ) : notices.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
+        <div className="text-center py-12 text-[#94A3B8]">
           No notices yet. Click "Add Notice" to create one.
         </div>
       ) : (
         <div className="space-y-4">
           {notices.map((notice) => (
-            <div key={notice.id} className="card-academic p-4 flex items-start justify-between">
+            <div key={notice.id} className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 flex items-start justify-between">
               <div className="flex-1 min-w-0 mr-4">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-medium text-foreground">{notice.title}</h3>
+                  <h3 className="font-medium text-[#F8FAFC]">{notice.title}</h3>
                   {notice.priority === 'important' && (
-                    <span className="px-2 py-0.5 rounded text-xs font-medium bg-destructive/10 text-destructive">
+                    <span className="px-2 py-0.5 rounded text-xs font-medium bg-red-900/20 text-red-400">
                       Important
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground line-clamp-1">{notice.content}</p>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-sm text-[#94A3B8] line-clamp-1">{notice.content}</p>
+                <p className="text-xs text-[#94A3B8] mt-1">
                   {new Date(notice.date).toLocaleDateString()}
                 </p>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <button onClick={() => openEditModal(notice)} className="p-2 hover:bg-muted rounded-lg transition-colors">
-                  <Edit className="w-4 h-4 text-muted-foreground" />
+                <button onClick={() => openEditModal(notice)} className="p-2 hover:bg-[#0F172A] rounded-lg transition-colors">
+                  <Edit className="w-4 h-4 text-[#E5E7EB]" />
                 </button>
-                <button onClick={() => handleDelete(notice.id)} className="p-2 hover:bg-destructive/10 rounded-lg transition-colors">
-                  <Trash2 className="w-4 h-4 text-destructive" />
+                <button onClick={() => handleDelete(notice.id)} className="p-2 hover:bg-red-900/20 rounded-lg transition-colors">
+                  <Trash2 className="w-4 h-4 text-red-400" />
                 </button>
               </div>
             </div>
@@ -1071,24 +1073,24 @@ function NoticesView({
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg bg-[#1E293B] border-[#CBD5E1]/[0.18]">
           <DialogHeader>
-            <DialogTitle>{editingNotice ? 'Edit Notice' : 'Add Notice'}</DialogTitle>
+            <DialogTitle className="text-[#F8FAFC]">{editingNotice ? 'Edit Notice' : 'Add Notice'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <Label htmlFor="title">Title *</Label>
-              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+              <Label htmlFor="title" className="text-[#CBD5E1]">Title *</Label>
+              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-[#0F172A] border-[#CBD5E1]/[0.18] text-[#F8FAFC]" />
             </div>
             <div>
-              <Label htmlFor="content">Content *</Label>
-              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={4} />
+              <Label htmlFor="content" className="text-[#CBD5E1]">Content *</Label>
+              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={4} className="bg-[#0F172A] border-[#CBD5E1]/[0.18] text-[#F8FAFC]" />
             </div>
             <div>
-              <Label htmlFor="priority">Priority</Label>
+              <Label htmlFor="priority" className="text-[#CBD5E1]">Priority</Label>
               <Select value={formData.priority} onValueChange={(v) => setFormData({ ...formData, priority: v as 'normal' | 'important' })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
+                <SelectTrigger className="bg-[#0F172A] border-[#CBD5E1]/[0.18] text-[#F8FAFC]"><SelectValue /></SelectTrigger>
+                <SelectContent className="bg-[#1E293B] border-[#CBD5E1]/[0.18]">
                   <SelectItem value="normal">Normal</SelectItem>
                   <SelectItem value="important">Important</SelectItem>
                 </SelectContent>
@@ -1096,8 +1098,8 @@ function NoticesView({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave} disabled={saving}>
+            <Button variant="outline" onClick={() => setIsModalOpen(false)} className="border-[#CBD5E1]/[0.18] text-[#CBD5E1] hover:bg-[#0F172A]">Cancel</Button>
+            <Button onClick={handleSave} disabled={saving} className="bg-[#FACC15] text-[#0F172A] hover:bg-[#FDE047]">
               {saving ? 'Saving...' : 'Save'}
             </Button>
           </DialogFooter>
@@ -1152,12 +1154,12 @@ function SettingsView({
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="h-8 w-48 bg-muted rounded animate-pulse" />
-        <div className="card-academic p-6 space-y-4 animate-pulse">
-          <div className="h-4 w-32 bg-muted rounded" />
-          <div className="h-10 w-full bg-muted rounded" />
-          <div className="h-4 w-32 bg-muted rounded" />
-          <div className="h-24 w-full bg-muted rounded" />
+        <div className="h-8 w-48 bg-[#1E293B] rounded animate-pulse" />
+        <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6 space-y-4 animate-pulse">
+          <div className="h-4 w-32 bg-[#0F172A] rounded" />
+          <div className="h-10 w-full bg-[#0F172A] rounded" />
+          <div className="h-4 w-32 bg-[#0F172A] rounded" />
+          <div className="h-24 w-full bg-[#0F172A] rounded" />
         </div>
       </div>
     );
@@ -1165,12 +1167,12 @@ function SettingsView({
 
   return (
     <div>
-      <h2 className="font-heading text-2xl text-primary mb-6">Site Settings</h2>
-      <div className="card-academic p-6 max-w-2xl">
+      <h2 className="font-heading text-2xl text-[#F8FAFC] mb-6">Site Settings</h2>
+      <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6 max-w-2xl">
         <div className="space-y-6">
           <div>
-            <Label htmlFor="googleScholarUrl" className="text-base font-medium">Google Scholar Profile URL</Label>
-            <p className="text-sm text-muted-foreground mb-2">
+            <Label htmlFor="googleScholarUrl" className="text-base font-medium text-[#F8FAFC]">Google Scholar Profile URL</Label>
+            <p className="text-sm text-[#94A3B8] mb-2">
               This URL is used to fetch publications for the Publications page.
             </p>
             <Input
@@ -1178,11 +1180,12 @@ function SettingsView({
               value={formData.googleScholarUrl}
               onChange={(e) => setFormData({ ...formData, googleScholarUrl: e.target.value })}
               placeholder="https://scholar.google.com/citations?user=..."
+              className="bg-[#0F172A] border-[#CBD5E1]/[0.18] text-[#F8FAFC] placeholder:text-[#94A3B8]"
             />
           </div>
           <div>
-            <Label htmlFor="aboutUs" className="text-base font-medium">About Us</Label>
-            <p className="text-sm text-muted-foreground mb-2">
+            <Label htmlFor="aboutUs" className="text-base font-medium text-[#F8FAFC]">About Us</Label>
+            <p className="text-sm text-[#94A3B8] mb-2">
               This text appears on the homepage About Us section.
             </p>
             <Textarea
@@ -1190,9 +1193,10 @@ function SettingsView({
               value={formData.aboutUs}
               onChange={(e) => setFormData({ ...formData, aboutUs: e.target.value })}
               rows={6}
+              className="bg-[#0F172A] border-[#CBD5E1]/[0.18] text-[#F8FAFC]"
             />
           </div>
-          <Button onClick={handleSave} disabled={saving}>
+          <Button onClick={handleSave} disabled={saving} className="bg-[#FACC15] text-[#0F172A] hover:bg-[#FDE047]">
             <Save className="w-4 h-4 mr-2" />
             {saving ? 'Saving...' : 'Save Settings'}
           </Button>
