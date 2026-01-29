@@ -47,7 +47,7 @@ export default function TeamPage() {
     <div>
       {/* Hero Section */}
       <section className="relative py-16 sm:py-20 md:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/90" />
+        <div className="absolute inset-0 bg-[#0F172A]" />
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
         </div>
@@ -56,16 +56,16 @@ export default function TeamPage() {
         
         <div className="container-wide relative">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 animate-fade-in-up">
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#E5E7EB] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
               Our Research Team
             </h1>
-            <p className="text-sm sm:text-lg md:text-xl text-white/80 animate-fade-in-up px-4 mb-8" style={{ animationDelay: '0.1s' }}>
+            <p className="text-sm sm:text-lg md:text-xl text-[#94A3B8] animate-fade-in-up px-4 mb-8" style={{ animationDelay: '0.1s' }}>
               Meet the dedicated researchers and students driving our scientific discoveries and pushing the boundaries of chemistry.
             </p>
             
             <Link
               to="/teamlogin"
-              className="group inline-flex items-center gap-2.5 px-6 py-3 bg-white text-primary rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 animate-fade-in-up"
+              className="group inline-flex items-center gap-2.5 px-6 py-3 bg-accent text-accent-foreground rounded-xl text-sm font-semibold shadow-lg hover:brightness-110 transition-all duration-300 hover:-translate-y-0.5 animate-fade-in-up"
               style={{ animationDelay: '0.2s' }}
             >
               <LogIn className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
@@ -78,25 +78,25 @@ export default function TeamPage() {
       {/* Team Stats */}
       <section className="container-wide -mt-8 sm:-mt-10 relative z-10 mb-12 sm:mb-16">
         <div className="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-elevated text-center animate-fade-in-up">
-            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-500 text-white flex items-center justify-center mx-auto mb-2 sm:mb-3">
+          <div className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border/50 text-center animate-fade-in-up">
+            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-accent text-accent-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
               <GraduationCap className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
-            <div className="font-heading text-lg sm:text-2xl font-bold text-foreground">{faculty.length}</div>
+            <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{faculty.length}</div>
             <div className="text-[10px] sm:text-xs text-muted-foreground">Faculty</div>
           </div>
-          <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-elevated text-center animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-emerald-500 text-white flex items-center justify-center mx-auto mb-2 sm:mb-3">
+          <div className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border/50 text-center animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-accent text-accent-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
               <Microscope className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
-            <div className="font-heading text-lg sm:text-2xl font-bold text-foreground">{researchers.length}</div>
+            <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{researchers.length}</div>
             <div className="text-[10px] sm:text-xs text-muted-foreground">Researchers</div>
           </div>
-          <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-elevated text-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-violet-500 text-white flex items-center justify-center mx-auto mb-2 sm:mb-3">
+          <div className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border/50 text-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-accent text-accent-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
               <BookUser className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
-            <div className="font-heading text-lg sm:text-2xl font-bold text-foreground">{students.length}</div>
+            <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{students.length}</div>
             <div className="text-[10px] sm:text-xs text-muted-foreground">Students</div>
           </div>
         </div>

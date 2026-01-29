@@ -29,7 +29,7 @@ export default function NewsPage() {
     <div>
       {/* Hero Section */}
       <section className="relative py-16 sm:py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/90" />
+        <div className="absolute inset-0 bg-[#0F172A]" />
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
         </div>
@@ -38,14 +38,14 @@ export default function NewsPage() {
         
         <div className="container-wide relative">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-white/90 text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-[#E5E7EB] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
               <Newspaper className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Latest Updates</span>
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 animate-fade-in-up">
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#E5E7EB] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
               News & Updates
             </h1>
-            <p className="text-sm sm:text-lg md:text-xl text-white/80 animate-fade-in-up px-4" style={{ animationDelay: '0.1s' }}>
+            <p className="text-sm sm:text-lg md:text-xl text-[#94A3B8] animate-fade-in-up px-4" style={{ animationDelay: '0.1s' }}>
               Stay informed about the latest happenings, achievements, and announcements from our research group.
             </p>
           </div>
@@ -58,17 +58,17 @@ export default function NewsPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="card-academic overflow-hidden animate-pulse">
-                <div className="h-48 bg-muted" />
+                <div className="h-48 bg-secondary" />
                 <div className="p-6">
-                  <div className="h-5 w-3/4 bg-muted rounded mb-3" />
-                  <div className="h-4 w-full bg-muted rounded mb-2" />
-                  <div className="h-4 w-2/3 bg-muted rounded" />
+                  <div className="h-5 w-3/4 bg-secondary rounded mb-3" />
+                  <div className="h-4 w-full bg-secondary rounded mb-2" />
+                  <div className="h-4 w-2/3 bg-secondary rounded" />
                 </div>
               </div>
             ))}
           </div>
         ) : news.length === 0 ? (
-          <div className="text-center py-20 bg-muted/30 rounded-3xl">
+          <div className="text-center py-20 bg-secondary/50 rounded-xl border border-border/50">
             <Newspaper className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
             <h3 className="font-heading text-xl text-foreground mb-2">No news available</h3>
             <p className="text-muted-foreground">News and updates will appear here once published.</p>

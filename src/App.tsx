@@ -4,8 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import { MainLayout } from "@/components/layout";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 // Public Pages
 import HomePage from "./pages/HomePage";
@@ -29,25 +31,26 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Public Routes with MainLayout */}
-            <Route element={<MainLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/projects" element={<ProjectsPage />} />
-              <Route path="/publications" element={<PublicationsPage />} />
-              <Route path="/team" element={<TeamPage />} />
-              <Route path="/team/:username" element={<MemberProfilePage />} />
-              <Route path="/news" element={<NewsPage />} />
-              <Route path="/notices" element={<NoticesPage />} />
-            </Route>
+    <ThemeProvider>
+      <TooltipProvider>
+        <AuthProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Public Routes with MainLayout */}
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/projects" element={<ProjectsPage />} />
+                <Route path="/publications" element={<PublicationsPage />} />
+                <Route path="/team" element={<TeamPage />} />
+                <Route path="/team/:username" element={<MemberProfilePage />} />
+                <Route path="/news" element={<NewsPage />} />
+                <Route path="/notices" element={<NoticesPage />} />
+              </Route>
 
-            {/* Hidden Login Routes (no links, direct URL only) */}
-            <Route path="/admin" element={<AdminLoginPage />} />
+              {/* Hidden Login Routes (no links, direct URL only) */}
+              <Route path="/admin" element={<AdminLoginPage />} />
             <Route path="/teamlogin" element={<TeamLoginPage />} />
 
             {/* Protected Admin Routes */}
@@ -73,10 +76,12 @@ const App = () => (
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <ThemeToggle />
         </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>
-  </QueryClientProvider>
+  </ThemeProvider>
+</QueryClientProvider>
 );
 
 export default App;

@@ -39,9 +39,9 @@ export default function NoticesPage() {
           <div className="space-y-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="card-academic p-6 animate-pulse">
-                <div className="h-5 w-3/4 bg-muted rounded mb-3" />
-                <div className="h-4 w-full bg-muted rounded mb-2" />
-                <div className="h-4 w-2/3 bg-muted rounded" />
+                <div className="h-5 w-3/4 bg-secondary rounded mb-3" />
+                <div className="h-4 w-full bg-secondary rounded mb-2" />
+                <div className="h-4 w-2/3 bg-secondary rounded" />
               </div>
             ))}
           </div>
@@ -76,8 +76,8 @@ function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
         <div
           className={`p-1.5 sm:p-2 rounded-md sm:rounded-lg shrink-0 ${
             isImportant
-              ? 'bg-destructive/10 text-destructive'
-              : 'bg-accent/10 text-accent'
+              ? 'bg-destructive/15 text-destructive'
+              : 'bg-accent/15 text-accent'
           }`}
         >
           {isImportant ? (
@@ -92,7 +92,7 @@ function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
               {notice.title}
             </h3>
             {isImportant && (
-              <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-xs font-medium bg-destructive/10 text-destructive shrink-0">
+              <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-xs font-medium bg-destructive/15 text-destructive shrink-0">
                 Important
               </span>
             )}

@@ -77,20 +77,20 @@ export default function PublicationsPage() {
             alt="Publications"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/90 to-primary/80" />
+          <div className="absolute inset-0 bg-[#0F172A]/85" />
         </div>
         <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-accent/20 rounded-full blur-3xl" />
         
         <div className="container-wide relative">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-white/90 text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-[#E5E7EB] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
               <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Research Publications</span>
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 animate-fade-in-up">
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#E5E7EB] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
               Publications
             </h1>
-            <p className="text-sm sm:text-lg md:text-xl text-white/80 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <p className="text-sm sm:text-lg md:text-xl text-[#94A3B8] animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
               Our research contributions to the scientific community through peer-reviewed publications.
             </p>
           </div>
@@ -99,48 +99,48 @@ export default function PublicationsPage() {
 
       {/* Stats Section */}
       <section className="container-wide -mt-8 sm:-mt-10 relative z-10 mb-8 sm:mb-12">
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-elevated p-4 sm:p-6 md:p-8">
+        <div className="bg-card rounded-xl sm:rounded-xl shadow-card border border-border/50 p-4 sm:p-6 md:p-8">
           <div className="flex flex-col gap-4 sm:gap-6">
             {/* Stats */}
             <div className="flex items-center justify-center sm:justify-start gap-4 sm:gap-8 flex-wrap">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-blue-100 text-blue-600">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
                   <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-foreground">{publications.length}</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-accent">{publications.length}</div>
                   <div className="text-[10px] sm:text-xs text-muted-foreground">Publications</div>
                 </div>
               </div>
-              <div className="w-px h-10 sm:h-12 bg-border" />
+              <div className="w-px h-10 sm:h-12 bg-border/50" />
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-amber-100 text-amber-600">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
                   <Quote className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-foreground">{totalCitations}</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-accent">{totalCitations}</div>
                   <div className="text-[10px] sm:text-xs text-muted-foreground">Citations</div>
                 </div>
               </div>
               {profile && (
                 <>
-                  <div className="w-px h-10 sm:h-12 bg-border hidden sm:block" />
+                  <div className="w-px h-10 sm:h-12 bg-border/50 hidden sm:block" />
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-green-100 text-green-600">
+                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
                       <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <div className="font-heading text-xl sm:text-2xl font-bold text-foreground">{profile.hIndex}</div>
+                      <div className="font-heading text-xl sm:text-2xl font-bold text-accent">{profile.hIndex}</div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground">h-index</div>
                     </div>
                   </div>
-                  <div className="w-px h-10 sm:h-12 bg-border hidden sm:block" />
+                  <div className="w-px h-10 sm:h-12 bg-border/50 hidden sm:block" />
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-purple-100 text-purple-600">
+                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
                       <Award className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <div className="font-heading text-xl sm:text-2xl font-bold text-foreground">{profile.i10Index}</div>
+                      <div className="font-heading text-xl sm:text-2xl font-bold text-accent">{profile.i10Index}</div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground">i10-index</div>
                     </div>
                   </div>
@@ -151,7 +151,7 @@ export default function PublicationsPage() {
               <button
                 onClick={fetchPublications}
                 disabled={loading}
-                className="ml-auto p-2 rounded-lg bg-muted hover:bg-muted/80 text-muted-foreground transition-colors disabled:opacity-50"
+                className="ml-auto p-2 rounded-lg bg-secondary hover:bg-secondary/80 text-muted-foreground transition-colors disabled:opacity-50"
                 title="Refresh publications"
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -164,8 +164,8 @@ export default function PublicationsPage() {
                 onClick={() => setSelectedYear(null)}
                 className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm font-medium transition-all ${
                   selectedYear === null
-                    ? 'bg-primary text-primary-foreground shadow-md'
-                    : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                    ? 'bg-accent text-accent-foreground shadow-md'
+                    : 'bg-secondary/50 text-muted-foreground hover:bg-secondary'
                 }`}
               >
                 All
@@ -176,8 +176,8 @@ export default function PublicationsPage() {
                   onClick={() => setSelectedYear(year)}
                   className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm font-medium transition-all ${
                     selectedYear === year
-                      ? 'bg-primary text-primary-foreground shadow-md'
-                      : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+                      ? 'bg-accent text-accent-foreground shadow-md'
+                      : 'bg-secondary/50 text-muted-foreground hover:bg-secondary'
                   }`}
                 >
                   {year}

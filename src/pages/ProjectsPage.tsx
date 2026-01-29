@@ -38,20 +38,20 @@ export default function ProjectsPage() {
             alt="Research Projects"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/90 to-primary/80" />
+          <div className="absolute inset-0 bg-[#0F172A]/85" />
         </div>
         <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-accent/20 rounded-full blur-3xl" />
         
         <div className="container-wide relative">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-white/90 text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-[#E5E7EB] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
               <Beaker className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Innovation in Progress</span>
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 animate-fade-in-up">
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#E5E7EB] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
               Research Projects
             </h1>
-            <p className="text-sm sm:text-lg md:text-xl text-white/80 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <p className="text-sm sm:text-lg md:text-xl text-[#94A3B8] animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
               Explore our ongoing and completed research initiatives pushing the boundaries of chemistry.
             </p>
           </div>
@@ -60,26 +60,26 @@ export default function ProjectsPage() {
 
       {/* Stats & Filter Section */}
       <section className="container-wide -mt-8 sm:-mt-10 relative z-10 mb-8 sm:mb-12">
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-elevated p-4 sm:p-6 md:p-8">
+        <div className="bg-card rounded-xl sm:rounded-xl shadow-card border border-border/50 p-4 sm:p-6 md:p-8">
           <div className="flex flex-col gap-4 sm:gap-6">
             {/* Stats */}
             <div className="flex items-center justify-center sm:justify-start gap-4 sm:gap-8">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-emerald-100 text-emerald-600">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
                   <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-foreground">{ongoingCount}</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-accent">{ongoingCount}</div>
                   <div className="text-[10px] sm:text-xs text-muted-foreground">Ongoing</div>
                 </div>
               </div>
-              <div className="w-px h-10 sm:h-12 bg-border" />
+              <div className="w-px h-10 sm:h-12 bg-border/50" />
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-blue-100 text-blue-600">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
                   <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-foreground">{completedCount}</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-accent">{completedCount}</div>
                   <div className="text-[10px] sm:text-xs text-muted-foreground">Completed</div>
                 </div>
               </div>
@@ -87,15 +87,15 @@ export default function ProjectsPage() {
             
             {/* Filter */}
             <div className="flex justify-center sm:justify-end">
-              <div className="flex gap-1 sm:gap-2 bg-muted/50 p-1 sm:p-1.5 rounded-lg sm:rounded-xl">
+              <div className="flex gap-1 sm:gap-2 bg-secondary/50 p-1 sm:p-1.5 rounded-lg sm:rounded-xl">
                 {(['all', 'ongoing', 'completed'] as const).map((status) => (
                   <button
                     key={status}
                     onClick={() => setFilter(status)}
                     className={`px-3 sm:px-5 py-2 sm:py-2.5 rounded-md sm:rounded-lg text-xs sm:text-sm font-medium transition-all ${
                       filter === status
-                        ? 'bg-primary text-primary-foreground shadow-md'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-white'
+                        ? 'bg-accent text-accent-foreground shadow-md'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
                     }`}
                   >
                     {status === 'all' ? 'All' : status.charAt(0).toUpperCase() + status.slice(1)}

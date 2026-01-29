@@ -1,108 +1,120 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* 
+  Design System for Yunus Ahmed Lab
+  Academic Research Group Website
+  Color Palette: Deep Navy + Slate + Academic Gold
+  Typography: Playfair Display (headings) + Inter (body)
 */
 
 @layer base {
   :root {
+    /* Light Theme - Clean Academic White */
     --background: 0 0% 99%;
-    --foreground: 220 20% 15%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 15%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 15%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 215 50% 23%;
+    --primary: 222 47% 11%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 40 30% 95%;
-    --secondary-foreground: 220 20% 15%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 220 15% 95%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 38 75% 55%;
-    --accent-foreground: 220 20% 10%;
+    /* Accent: Warm Academic Gold #EAB308 */
+    --accent: 45 93% 47%;
+    --accent-foreground: 222 47% 11%;
 
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 215 50% 23%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 45 93% 47%;
 
-    --radius: 0.5rem;
+    --radius: 0.625rem;
 
     /* Custom tokens */
-    --heading-font: 'Source Serif 4', Georgia, serif;
-    --body-font: 'DM Sans', system-ui, sans-serif;
+    --heading-font: 'Playfair Display', Georgia, serif;
+    --body-font: 'Inter', system-ui, sans-serif;
     
-    --gold: 38 75% 55%;
-    --gold-light: 40 60% 70%;
-    --slate-dark: 215 50% 18%;
+    /* Academic Gold */
+    --gold: 45 93% 47%;
+    --gold-light: 45 85% 60%;
     
-    --shadow-subtle: 0 1px 3px hsl(220 20% 15% / 0.05);
-    --shadow-card: 0 4px 20px hsl(220 20% 15% / 0.08);
-    --shadow-elevated: 0 10px 40px hsl(220 20% 15% / 0.12);
+    /* Navy shades */
+    --navy-deep: 222 47% 11%;
+    --slate-blue: 217 33% 17%;
     
-    --gradient-primary: linear-gradient(135deg, hsl(215, 50%, 23%) 0%, hsl(215, 45%, 30%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(38, 75%, 55%) 0%, hsl(40, 65%, 60%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(0, 0%, 99%) 0%, hsl(220, 15%, 97%) 100%);
+    --shadow-subtle: 0 1px 3px hsl(220 20% 15% / 0.08);
+    --shadow-card: 0 4px 20px hsl(220 20% 15% / 0.1);
+    --shadow-elevated: 0 10px 40px hsl(220 20% 15% / 0.15);
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 45 93% 47%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 45 93% 47%;
   }
 
   .dark {
-    --background: 220 20% 10%;
-    --foreground: 220 10% 95%;
+    /* Dark Theme - Deep Navy Blue #0F172A */
+    --background: 222 47% 11%;
+    --foreground: 220 13% 91%;
 
-    --card: 220 20% 12%;
-    --card-foreground: 220 10% 95%;
+    /* Secondary Background: Slate Blue-Gray #1E293B */
+    --card: 217 33% 17%;
+    --card-foreground: 220 13% 91%;
 
-    --popover: 220 20% 12%;
-    --popover-foreground: 220 10% 95%;
+    --popover: 217 33% 17%;
+    --popover-foreground: 220 13% 91%;
 
-    --primary: 38 75% 55%;
-    --primary-foreground: 220 20% 10%;
+    --primary: 222 47% 11%;
+    --primary-foreground: 220 13% 91%;
 
-    --secondary: 220 20% 18%;
-    --secondary-foreground: 220 10% 95%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 220 13% 91%;
 
-    --muted: 220 20% 18%;
-    --muted-foreground: 220 10% 60%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 16% 65%;
 
-    --accent: 38 70% 50%;
-    --accent-foreground: 220 20% 10%;
+    --accent: 45 93% 47%;
+    --accent-foreground: 222 47% 11%;
 
     --destructive: 0 60% 45%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 220 20% 20%;
-    --input: 220 20% 20%;
-    --ring: 38 75% 55%;
+    /* Borders: rgba(148, 163, 184, 0.15) */
+    --border: 215 16% 47% / 0.15;
+    --input: 215 16% 47% / 0.25;
+    --ring: 45 93% 47%;
+    
+    --shadow-subtle: 0 1px 3px hsl(222 47% 5% / 0.2);
+    --shadow-card: 0 4px 20px hsl(222 47% 5% / 0.25);
+    --shadow-elevated: 0 10px 40px hsl(222 47% 5% / 0.35);
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 220 13% 91%;
+    --sidebar-primary: 45 93% 47%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 220 13% 91%;
+    --sidebar-border: 215 16% 47% / 0.15;
+    --sidebar-ring: 45 93% 47%;
   }
 }
 
@@ -118,11 +130,33 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-family: var(--body-font);
+    font-weight: 400;
+    line-height: 1.7;
   }
 
+  /* Typography - Playfair Display for headings */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--heading-font);
-    @apply font-semibold tracking-tight;
+    @apply font-semibold;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  h1 {
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl;
+  }
+
+  h2 {
+    @apply text-3xl sm:text-4xl md:text-5xl;
+  }
+
+  h3 {
+    @apply text-xl sm:text-2xl;
+  }
+
+  p {
+    @apply text-base sm:text-lg;
+    line-height: 1.7;
   }
 }
 
@@ -136,21 +170,49 @@ All colors MUST be HSL.
   }
 
   .section-padding {
-    @apply py-12 sm:py-16 md:py-24;
+    @apply py-16 sm:py-20 md:py-28;
   }
 
   .card-academic {
-    @apply bg-card rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow duration-300;
+    @apply bg-card rounded-xl border border-border/50 shadow-card hover:shadow-elevated transition-all duration-300;
   }
 
   .badge-gold {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
-    background: hsl(var(--gold) / 0.15);
+    @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium;
+    background: hsl(var(--accent) / 0.15);
     color: hsl(var(--accent));
+  }
+  
+  /* Navbar styles */
+  .navbar-link {
+    @apply relative text-[15px] font-medium text-foreground/80 hover:text-accent transition-colors duration-200;
+  }
+  
+  .navbar-link.active {
+    @apply text-accent;
+  }
+  
+  .navbar-link::after {
+    content: '';
+    @apply absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300;
+  }
+  
+  .navbar-link:hover::after,
+  .navbar-link.active::after {
+    @apply w-full;
+  }
+
+  /* Button styles */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent text-accent-foreground rounded-xl font-semibold hover:brightness-110 transition-all duration-200 shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent text-accent border-2 border-accent rounded-xl font-semibold hover:bg-accent/10 transition-all duration-200;
   }
 
   .link-underline {
-    @apply relative inline-block;
+    @apply relative inline-block text-foreground hover:text-accent transition-colors duration-200;
   }
 
   .link-underline::after {
@@ -164,13 +226,12 @@ All colors MUST be HSL.
   }
 
   .stat-card {
-    @apply p-6 rounded-xl border border-border bg-card;
+    @apply p-6 rounded-xl border border-border/50 bg-card shadow-card;
   }
 
   .stat-number {
     font-family: var(--heading-font);
-    @apply text-4xl font-bold;
-    color: hsl(var(--primary));
+    @apply text-4xl font-bold text-accent;
   }
 
   .stat-label {
@@ -178,12 +239,11 @@ All colors MUST be HSL.
   }
 
   .page-header {
-    @apply text-center mb-12;
+    @apply text-center mb-16;
   }
 
   .page-title {
-    @apply text-4xl md:text-5xl mb-4;
-    color: hsl(var(--primary));
+    @apply mb-4 text-foreground;
   }
 
   .page-subtitle {
@@ -191,13 +251,13 @@ All colors MUST be HSL.
   }
 
   .form-input-academic {
-    @apply w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
-    @apply transition-all duration-200;
+    @apply w-full px-4 py-3 rounded-xl border border-border/50 bg-secondary text-foreground;
+    @apply focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent;
+    @apply placeholder:text-muted-foreground transition-all duration-200;
   }
 
   .shadow-elevated {
-    box-shadow: 0 10px 40px -10px hsl(220 20% 15% / 0.15), 0 4px 6px -2px hsl(220 20% 15% / 0.05);
+    box-shadow: 0 10px 40px -10px hsl(222 47% 5% / 0.4), 0 4px 6px -2px hsl(222 47% 5% / 0.2);
   }
 }
 
