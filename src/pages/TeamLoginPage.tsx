@@ -37,16 +37,21 @@ export default function TeamLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--gradient-subtle)' }}>
-      <div className="w-full max-w-md">
-        <div className="card-academic p-8 shadow-elevated animate-fade-in-up">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#0F172A]">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-64 h-64 bg-[#FACC15]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+      </div>
+      
+      <div className="w-full max-w-md relative z-10">
+        <div className="bg-[#1E293B] rounded-2xl p-8 shadow-elevated animate-fade-in-up border border-[#CBD5E1]/[0.18]">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center p-3 rounded-xl bg-primary text-primary-foreground mb-4">
+            <div className="inline-flex items-center justify-center p-3 rounded-xl bg-[#FACC15] text-[#0F172A] mb-4">
               <FlaskConical className="w-6 h-6" />
             </div>
-            <h1 className="font-heading text-2xl font-bold text-primary">Team Member Login</h1>
-            <p className="text-muted-foreground text-sm mt-2">
+            <h1 className="font-heading text-2xl font-bold text-[#F8FAFC]">Team Member Login</h1>
+            <p className="text-[#94A3B8] text-sm mt-2">
               Access your member dashboard
             </p>
           </div>
@@ -54,7 +59,7 @@ export default function TeamLoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-foreground mb-2">
+              <label htmlFor="username" className="block text-sm font-medium text-[#F8FAFC] mb-2">
                 Username
               </label>
               <input
@@ -62,14 +67,14 @@ export default function TeamLoginPage() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="form-input-academic"
+                className="w-full px-4 py-3 rounded-xl border border-[#CBD5E1]/[0.18] bg-[#0F172A] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15] focus:border-transparent transition-all"
                 placeholder="john.doe"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-[#F8FAFC] mb-2">
                 Password
               </label>
               <div className="relative">
@@ -78,14 +83,14 @@ export default function TeamLoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="form-input-academic pr-10"
+                  className="w-full px-4 py-3 rounded-xl border border-[#CBD5E1]/[0.18] bg-[#0F172A] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15] focus:border-transparent transition-all pr-10"
                   placeholder="••••••••"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -101,7 +106,7 @@ export default function TeamLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full py-3 bg-[#FACC15] text-[#0F172A] rounded-xl font-semibold hover:bg-[#FDE047] transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"
             >
               {loading ? (
                 <>
@@ -116,7 +121,7 @@ export default function TeamLoginPage() {
 
           {/* Footer */}
           <div className="mt-6 text-center">
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-[#94A3B8]">
               Research group members only. Contact admin for access.
             </p>
           </div>
@@ -126,7 +131,7 @@ export default function TeamLoginPage() {
         <div className="mt-6 text-center">
           <a
             href="/"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="text-sm text-[#CBD5E1] hover:text-[#FACC15] transition-colors"
           >
             ← Back to Home
           </a>

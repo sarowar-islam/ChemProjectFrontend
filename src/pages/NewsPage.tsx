@@ -33,19 +33,19 @@ export default function NewsPage() {
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
         </div>
-        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-accent/20 rounded-full blur-3xl" />
+        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-[#FACC15]/20 rounded-full blur-3xl" />
         <div className="absolute bottom-10 sm:bottom-20 left-10 sm:left-20 w-64 sm:w-96 h-64 sm:h-96 bg-white/5 rounded-full blur-3xl" />
         
         <div className="container-wide relative">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-[#E5E7EB] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-[#F8FAFC] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
               <Newspaper className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Latest Updates</span>
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#E5E7EB] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#F8FAFC] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
               News & Updates
             </h1>
-            <p className="text-sm sm:text-lg md:text-xl text-[#94A3B8] animate-fade-in-up px-4" style={{ animationDelay: '0.1s' }}>
+            <p className="text-sm sm:text-lg md:text-xl text-[#CBD5E1] animate-fade-in-up px-4" style={{ animationDelay: '0.1s' }}>
               Stay informed about the latest happenings, achievements, and announcements from our research group.
             </p>
           </div>
@@ -148,11 +148,11 @@ function NewsCard({
   return (
     <article
       onClick={onClick}
-      className="group card-academic overflow-hidden cursor-pointer hover:shadow-elevated transition-all duration-300 animate-fade-in-up"
+      className="group card-academic overflow-hidden cursor-pointer hover:shadow-elevated hover:border-[#FACC15]/25 transition-all duration-300 animate-fade-in-up"
       style={{ animationDelay: delay }}
     >
       {/* Image */}
-      <div className="relative h-48 bg-gradient-to-br from-primary/10 to-accent/10 overflow-hidden">
+      <div className="relative h-48 bg-gradient-to-br from-[#FACC15]/10 to-secondary overflow-hidden">
         {news.imageUrl ? (
           <img 
             src={news.imageUrl} 
@@ -161,7 +161,7 @@ function NewsCard({
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Newspaper className="w-12 h-12 text-primary/30" />
+            <Newspaper className="w-12 h-12 text-muted-foreground/30" />
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -188,7 +188,7 @@ function NewsCard({
         </div>
 
         {/* Title */}
-        <h3 className="font-heading text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-2 line-clamp-2">
+        <h3 className="font-heading text-lg font-semibold text-foreground group-hover:text-[#FACC15] transition-colors mb-2 line-clamp-2">
           {news.title}
         </h3>
 
@@ -198,7 +198,7 @@ function NewsCard({
         </p>
 
         {/* Read More */}
-        <div className="flex items-center gap-2 text-sm font-medium text-primary group-hover:gap-3 transition-all">
+        <div className="flex items-center gap-2 text-sm font-medium text-[#FACC15] group-hover:gap-3 transition-all">
           Read More
           <ArrowRight className="w-4 h-4" />
         </div>

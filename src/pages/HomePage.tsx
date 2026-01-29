@@ -59,30 +59,30 @@ export default function HomePage() {
 
         <div className="container-wide relative z-10 py-12 sm:py-16 md:py-24">
           <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 backdrop-blur-sm text-[#E5E7EB] text-xs sm:text-sm font-medium mb-6 sm:mb-8 animate-fade-in border border-white/20">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 backdrop-blur-sm text-[#F8FAFC] text-xs sm:text-sm font-medium mb-6 sm:mb-8 animate-fade-in border border-white/20">
               <FlaskConical className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Pioneering Chemistry Research</span>
             </div>
             
-            <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#E5E7EB] mb-4 sm:mb-6 animate-fade-in-up leading-[1.1]" style={{ animationDelay: '0.1s', letterSpacing: '-0.02em' }}>
+            <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#F8FAFC] mb-4 sm:mb-6 animate-fade-in-up leading-[1.1]" style={{ animationDelay: '0.1s', letterSpacing: '-0.02em' }}>
               Prof. Dr. Yunus Ahmed<br />
-              <span className="text-accent">Research Group</span>
+              <span className="text-[#FACC15]">Research Group</span>
             </h1>
             
             <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <div className="w-10 sm:w-16 h-1 bg-accent rounded-full" />
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#E5E7EB] font-medium">Professor of Chemistry, CUET</p>
+              <div className="w-10 sm:w-16 h-1 bg-[#FACC15] rounded-full" />
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#F8FAFC] font-medium">Professor of Chemistry, CUET</p>
             </div>
             
-            <p className="text-base sm:text-lg lg:text-xl text-[#94A3B8] mb-6 sm:mb-8 md:mb-10 max-w-2xl animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.3s' }}>
+            <p className="text-base sm:text-lg lg:text-xl text-[#CBD5E1] mb-6 sm:mb-8 md:mb-10 max-w-2xl animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.3s' }}>
               Chittagong University of Engineering & Technology — Advancing the frontiers of sustainable chemistry through innovative research and collaboration.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-              <Link to="/projects" className="btn-primary group hover:gap-3 shadow-lg shadow-accent/25 text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4">
+              <Link to="/projects" className="btn-primary group hover:gap-3 shadow-lg shadow-[#FACC15]/25 text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4">
                 Explore Research <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
               </Link>
-              <Link to="/team" className="btn-secondary text-[#E5E7EB] border-accent text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4">
+              <Link to="/team" className="btn-secondary text-[#F8FAFC] border-[#FACC15] text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4">
                 <Users className="w-4 h-4 sm:w-5 sm:h-5" /> Meet Our Team
               </Link>
             </div>
@@ -200,12 +200,12 @@ export default function HomePage() {
         
         <div className="container-wide relative">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-[#E5E7EB] text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-[#F8FAFC] text-sm font-medium mb-6">
               <Microscope className="w-4 h-4" />
               <span>What We Do</span>
             </div>
-            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl text-[#E5E7EB] mb-4" style={{ letterSpacing: '-0.02em' }}>Our Research Focus</h2>
-            <p className="text-[#94A3B8] max-w-2xl mx-auto text-lg">
+            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl text-[#F8FAFC] mb-4" style={{ letterSpacing: '-0.02em' }}>Our Research Focus</h2>
+            <p className="text-[#CBD5E1] max-w-2xl mx-auto text-lg">
               Exploring innovative solutions across multiple domains of chemistry to address global challenges.
             </p>
           </div>
@@ -221,14 +221,14 @@ export default function HomePage() {
             ].map((area, index) => (
               <div 
                 key={area.title} 
-                className="group p-8 rounded-xl bg-[#1E293B] border border-[#94A3B8]/15 hover:border-accent/30 transition-all duration-300 animate-fade-in-up"
+                className="group p-8 rounded-xl bg-[#1E293B] border border-[#CBD5E1]/[0.18] hover:border-[#FACC15]/30 transition-all duration-300 animate-fade-in-up"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="p-3 rounded-xl bg-accent/20 text-accent w-fit mb-4 group-hover:scale-110 transition-transform">
+                <div className="p-3 rounded-xl bg-[#FACC15]/20 text-[#FACC15] w-fit mb-4 group-hover:scale-110 transition-transform">
                   {area.icon}
                 </div>
-                <h3 className="font-heading text-xl text-[#E5E7EB] mb-2" style={{ letterSpacing: '-0.02em' }}>{area.title}</h3>
-                <p className="text-[#94A3B8] text-sm leading-relaxed">{area.desc}</p>
+                <h3 className="font-heading text-xl text-[#F8FAFC] mb-2" style={{ letterSpacing: '-0.02em' }}>{area.title}</h3>
+                <p className="text-[#CBD5E1] text-sm leading-relaxed">{area.desc}</p>
               </div>
             ))}
           </div>
@@ -290,17 +290,17 @@ export default function HomePage() {
           <div className="absolute inset-0 flex items-center">
             <div className="container-wide">
               <div className="max-w-xl px-2">
-                <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#E5E7EB] mb-3 sm:mb-4" style={{ letterSpacing: '-0.02em' }}>
+                <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-[#F8FAFC] mb-3 sm:mb-4" style={{ letterSpacing: '-0.02em' }}>
                   Interested in Joining Our Research?
                 </h2>
-                <p className="text-[#94A3B8] text-sm sm:text-base mb-6 sm:mb-8 leading-relaxed">
+                <p className="text-[#CBD5E1] text-sm sm:text-base mb-6 sm:mb-8 leading-relaxed">
                   We're always looking for passionate researchers and students to join our team. Explore opportunities to contribute to groundbreaking chemistry research.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <Link to="/teamlogin" className="btn-primary text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3">
                     Team Portal <ArrowRight className="w-4 h-4" />
                   </Link>
-                  <a href="https://mail.google.com/mail/?view=cm&to=yunus@cuet.ac.bd" target="_blank" rel="noopener noreferrer" className="btn-secondary text-[#E5E7EB] border-accent text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3">
+                  <a href="https://mail.google.com/mail/?view=cm&to=yunus@cuet.ac.bd" target="_blank" rel="noopener noreferrer" className="btn-secondary text-[#F8FAFC] border-[#FACC15] text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3">
                     Contact Us
                   </a>
                 </div>

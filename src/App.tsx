@@ -76,7 +76,7 @@ const App = () => (
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
         </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>

@@ -14,33 +14,42 @@
 @layer base {
   :root {
     /* Light Theme - Clean Academic White */
-    --background: 0 0% 99%;
+    /* Primary background: #F8FAFC */
+    --background: 210 40% 98%;
+    /* Primary text - Deep Slate: #0F172A */
     --foreground: 222 47% 11%;
 
+    /* Secondary background / cards: #FFFFFF */
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
+    /* Primary text: #0F172A */
     --primary: 222 47% 11%;
-    --primary-foreground: 0 0% 98%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 210 40% 96%;
+    /* Secondary text - Neutral Slate Gray: #475569 */
+    --secondary-foreground: 215 19% 35%;
 
-    --muted: 220 14% 96%;
+    --muted: 210 40% 96%;
+    /* Muted / Meta Text - Soft Gray: #64748B */
     --muted-foreground: 215 16% 47%;
 
-    /* Accent: Warm Academic Gold #EAB308 */
+    /* Accent: Academic Gold #EAB308 */
     --accent: 45 93% 47%;
     --accent-foreground: 222 47% 11%;
+    /* Hover / Active Accent - Darker Gold: #CA8A04 */
+    --accent-hover: 43 96% 40%;
 
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
+    /* Dividers / Borders: rgba(15, 23, 42, 0.12) */
+    --border: 222 47% 11% / 0.12;
+    --input: 222 47% 11% / 0.12;
     --ring: 45 93% 47%;
 
     --radius: 0.625rem;
@@ -72,36 +81,44 @@
   }
 
   .dark {
-    /* Dark Theme - Deep Navy Blue #0F172A */
+    /* Dark Theme - Deep Navy Blue #0F172A (KEEP BACKGROUNDS AS-IS) */
     --background: 222 47% 11%;
-    --foreground: 210 20% 98%;
+    /* Primary Text - Near-White Neutral: #F8FAFC */
+    --foreground: 210 40% 98%;
 
-    /* Secondary Background: Lighter Slate Blue-Gray for better contrast */
+    /* Card backgrounds (KEEP AS-IS) */
     --card: 215 28% 23%;
-    --card-foreground: 210 20% 98%;
+    /* Primary Text on cards: #F8FAFC */
+    --card-foreground: 210 40% 98%;
 
     --popover: 215 28% 23%;
-    --popover-foreground: 210 20% 98%;
+    --popover-foreground: 210 40% 98%;
 
     --primary: 222 47% 11%;
-    --primary-foreground: 210 20% 98%;
+    --primary-foreground: 210 40% 98%;
 
+    /* Secondary backgrounds (KEEP AS-IS) */
     --secondary: 215 25% 27%;
-    --secondary-foreground: 210 20% 98%;
+    /* Secondary Text - Cool Light Gray: #CBD5E1 */
+    --secondary-foreground: 214 32% 91%;
 
     --muted: 215 25% 27%;
-    --muted-foreground: 215 20% 75%;
+    /* Muted / Tertiary Text - Muted Blue-Gray: #94A3B8 */
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 45 93% 47%;
+    /* Accent - Warm Academic Gold: #FACC15 */
+    --accent: 48 96% 53%;
     --accent-foreground: 222 47% 11%;
+    /* Hover / Active Accent - Brighter gold: #FDE047 */
+    --accent-hover: 50 98% 64%;
 
     --destructive: 0 60% 45%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Borders: More visible */
-    --border: 215 20% 35%;
-    --input: 215 20% 30%;
-    --ring: 45 93% 47%;
+    /* Dividers / Borders: rgba(203, 213, 225, 0.18) */
+    --border: 214 32% 84% / 0.18;
+    --input: 214 32% 84% / 0.15;
+    --ring: 48 96% 53%;
     
     --shadow-subtle: 0 1px 3px hsl(222 47% 5% / 0.2);
     --shadow-card: 0 4px 20px hsl(222 47% 5% / 0.25);
@@ -185,11 +202,16 @@
   
   /* Navbar styles */
   .navbar-link {
-    @apply relative text-[15px] font-medium text-foreground/80 hover:text-accent transition-colors duration-200;
+    @apply relative text-[15px] font-medium transition-colors duration-200;
+    color: hsl(var(--foreground) / 0.85);
+  }
+  
+  .navbar-link:hover {
+    color: hsl(var(--accent));
   }
   
   .navbar-link.active {
-    @apply text-accent;
+    color: hsl(var(--accent));
   }
   
   .navbar-link::after {
@@ -226,16 +248,21 @@
   }
 
   .stat-card {
-    @apply p-6 rounded-xl border border-border/50 bg-card shadow-card;
+    @apply p-6 rounded-xl bg-card shadow-card;
+    border: 1px solid hsl(var(--border));
   }
 
   .stat-number {
     font-family: var(--heading-font);
-    @apply text-4xl font-bold text-accent;
+    @apply text-4xl font-bold;
+    /* Use accent gold for metrics */
+    color: hsl(var(--accent));
   }
 
   .stat-label {
-    @apply text-sm text-muted-foreground mt-1;
+    @apply text-sm mt-1;
+    /* Secondary text color */
+    color: hsl(var(--muted-foreground));
   }
 
   .page-header {

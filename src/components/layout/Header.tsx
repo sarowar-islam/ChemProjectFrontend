@@ -72,7 +72,7 @@ export function Header() {
                   className={`px-4 py-3 rounded-lg text-[15px] font-medium transition-colors ${
                     location.pathname === item.path
                       ? 'bg-accent text-accent-foreground'
-                      : 'text-foreground/80 hover:bg-secondary hover:text-foreground'
+                      : 'text-foreground hover:bg-secondary hover:text-foreground'
                   }`}
                 >
                   {item.label}
