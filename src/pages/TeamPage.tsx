@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, GraduationCap, Microscope, BookUser, ExternalLink, LogIn } from 'lucide-react';
+import { Users, GraduationCap, Microscope, BookUser, ExternalLink, LogIn, Crown, Wrench } from 'lucide-react';
 import { teamService } from '@/services/team.service';
 import { TeamMember } from '@/services/types';
 
@@ -20,28 +20,12 @@ export default function TeamPage() {
     fetchMembers();
   }, []);
 
-  // Group members by designation type
-  const faculty = members.filter((m) =>
-    ['Professor', 'Associate Professor', 'Assistant Professor', 'Faculty'].some((d) =>
-      m.designation.includes(d)
-    )
-  );
-  const researchers = members.filter(
-    (m) => m.designation.includes('PhD') || 
-           m.designation.includes('Researcher') || 
-           m.designation.includes('Research Assistant') ||
-           m.designation.includes('Research Associate') ||
-           m.designation.includes('Post Doctoral') ||
-           m.designation.includes('Postdoctoral')
-  );
-  const students = members.filter(
-    (m) => m.designation.includes('M.Sc') || 
-           m.designation.includes('MSc') || 
-           m.designation.includes('M.Phil') ||
-           m.designation.includes('BSc') ||
-           m.designation.includes('Student') ||
-           m.designation.includes('Fellowship')
-  );
+  // Group members by position
+  const teamLeaders = members.filter((m) => m.position === 'team_leader');
+  const faculty = members.filter((m) => m.position === 'faculty');
+  const researchers = members.filter((m) => m.position === 'researcher');
+  const students = members.filter((m) => m.position === 'student');
+  const staff = members.filter((m) => m.position === 'staff');
 
   return (
     <div>
@@ -82,7 +66,7 @@ export default function TeamPage() {
             <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-[#FACC15] text-[#0F172A] flex items-center justify-center mx-auto mb-2 sm:mb-3">
               <GraduationCap className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
-            <div className="font-heading text-lg sm:text-2xl font-bold text-[#FACC15]">{faculty.length}</div>
+            <div className="font-heading text-lg sm:text-2xl font-bold text-[#FACC15]">{teamLeaders.length + faculty.length}</div>
             <div className="text-[10px] sm:text-xs text-muted-foreground">Faculty</div>
           </div>
           <div className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
@@ -122,6 +106,18 @@ export default function TeamPage() {
           </div>
         ) : (
           <div className="space-y-20">
+            {/* Team Leader */}
+            {teamLeaders.length > 0 && (
+              <TeamSection 
+                title="Team Leader" 
+                subtitle="Leading our research group"
+                icon={<Crown className="w-5 h-5" />}
+                members={teamLeaders} 
+                startIndex={0}
+                featured
+              />
+            )}
+
             {/* Faculty */}
             {faculty.length > 0 && (
               <TeamSection 
@@ -129,7 +125,7 @@ export default function TeamPage() {
                 subtitle="Leading our research initiatives"
                 icon={<GraduationCap className="w-5 h-5" />}
                 members={faculty} 
-                startIndex={0}
+                startIndex={teamLeaders.length}
                 featured
               />
             )}
@@ -141,7 +137,7 @@ export default function TeamPage() {
                 subtitle="PhD scholars and research associates"
                 icon={<Microscope className="w-5 h-5" />}
                 members={researchers}
-                startIndex={faculty.length}
+                startIndex={teamLeaders.length + faculty.length}
               />
             )}
 
@@ -152,7 +148,18 @@ export default function TeamPage() {
                 subtitle="The future of chemistry research"
                 icon={<BookUser className="w-5 h-5" />}
                 members={students}
-                startIndex={faculty.length + researchers.length}
+                startIndex={teamLeaders.length + faculty.length + researchers.length}
+              />
+            )}
+
+            {/* Staff */}
+            {staff.length > 0 && (
+              <TeamSection
+                title="Staff"
+                subtitle="Supporting our research operations"
+                icon={<Wrench className="w-5 h-5" />}
+                members={staff}
+                startIndex={teamLeaders.length + faculty.length + researchers.length + students.length}
               />
             )}
           </div>
@@ -224,7 +231,7 @@ function MemberCard({ member, delay, featured }: { member: TeamMember; delay: st
         <h3 className={`font-heading font-semibold text-foreground group-hover:text-[#FACC15] transition-colors ${featured ? 'text-base sm:text-xl' : 'text-sm sm:text-lg'}`}>
           {member.name}
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-1">{member.designation}</p>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1">{member.title}</p>
         
         {member.researchArea && (
           <div className="mt-2 sm:mt-3 inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#FACC15]/10 text-[#FACC15] text-[10px] sm:text-xs font-medium">

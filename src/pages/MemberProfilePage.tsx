@@ -141,7 +141,7 @@ export default function MemberProfilePage() {
                   {member.name}
                 </h1>
                 <p className="text-[#94A3B8] font-medium mb-3">
-                  {member.designation}
+                  {member.title}
                 </p>
 
                 {/* Research Area Badge */}

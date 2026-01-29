@@ -33,23 +33,31 @@ import { newsService } from '@/services/news.service';
 
 type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'settings';
 
-const DESIGNATION_OPTIONS = [
-  'Faculty',
+// Position options - determines the category/section on team page
+const POSITION_OPTIONS = [
+  { value: 'team_leader', label: 'Team Leader' },
+  { value: 'faculty', label: 'Faculty' },
+  { value: 'researcher', label: 'Researcher' },
+  { value: 'student', label: 'Student' },
+  { value: 'staff', label: 'Staff' },
+] as const;
+
+// Title options - the academic/professional title
+const TITLE_OPTIONS = [
   'Professor',
   'Associate Professor',
   'Assistant Professor',
   'Post Doctoral Researcher',
-  'PhD Student',
-  'M.Phil Student',
-  'M.Sc Student',
-  'MSc Student Researcher',
   "Master's Fellowship",
   'Research Associate',
   'Research Assistant',
-  'Research Assistant (RA)',
+  'PhD Student',
+  'M.Phil Student',
+  'M.Sc Student',
   'BSc Student',
   'Visiting Researcher',
   'Lab Technician',
+  'Lab Assistant',
 ];
 
 export default function AdminDashboardPage() {
@@ -486,7 +494,8 @@ function MembersView({
     email: '',
     password: '',
     confirmPassword: '',
-    designation: '',
+    position: '' as TeamMember['position'] | '',
+    title: '',
   });
   const [saving, setSaving] = useState(false);
 
@@ -498,7 +507,8 @@ function MembersView({
       email: '',
       password: '',
       confirmPassword: '',
-      designation: '',
+      position: '',
+      title: '',
     });
     setShowPassword(false);
     setShowConfirmPassword(false);
@@ -513,7 +523,8 @@ function MembersView({
       email: member.email,
       password: '',
       confirmPassword: '',
-      designation: member.designation,
+      position: member.position,
+      title: member.title,
     });
     setShowPassword(false);
     setShowConfirmPassword(false);
@@ -549,7 +560,8 @@ function MembersView({
           name: formData.name,
           username: formData.username,
           email: formData.email,
-          designation: formData.designation,
+          position: formData.position as TeamMember['position'],
+          title: formData.title,
         });
         if (res.success) {
           toast({ title: 'Success', description: 'Member updated successfully' });
@@ -561,7 +573,8 @@ function MembersView({
           name: formData.name,
           username: formData.username,
           email: formData.email || `${formData.username}@cuet.ac.bd`,
-          designation: formData.designation,
+          position: formData.position as TeamMember['position'],
+          title: formData.title,
           password: formData.password,
         });
         if (res.success) {
@@ -629,8 +642,8 @@ function MembersView({
                 />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-[#F8FAFC] truncate">{member.name}</h3>
-                  <p className="text-sm text-[#94A3B8] truncate">{member.designation || 'No designation'}</p>
-                  <p className="text-xs text-[#94A3B8]/70 truncate">@{member.username}</p>
+                  <p className="text-sm text-[#94A3B8] truncate">{member.title || 'No title'}</p>
+                  <p className="text-xs text-[#FACC15]/70 truncate capitalize">{member.position?.replace('_', ' ') || 'No position'}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   <button onClick={() => openEditModal(member)} className="p-2 hover:bg-[#0F172A] rounded-lg transition-colors">
@@ -723,19 +736,37 @@ function MembersView({
             )}
 
             <div>
-              <Label htmlFor="designation">Designation *</Label>
-              <Select value={formData.designation} onValueChange={(v) => setFormData({ ...formData, designation: v })}>
+              <Label htmlFor="position">Position *</Label>
+              <Select value={formData.position} onValueChange={(v) => setFormData({ ...formData, position: v as TeamMember['position'] })}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select designation" />
+                  <SelectValue placeholder="Select position (category)" />
                 </SelectTrigger>
                 <SelectContent>
-                  {DESIGNATION_OPTIONS.map((option) => (
+                  {POSITION_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-[#94A3B8] mt-1">Determines the section on the team page</p>
+            </div>
+
+            <div>
+              <Label htmlFor="title">Title *</Label>
+              <Select value={formData.title} onValueChange={(v) => setFormData({ ...formData, title: v })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select title" />
+                </SelectTrigger>
+                <SelectContent>
+                  {TITLE_OPTIONS.map((option) => (
                     <SelectItem key={option} value={option}>
                       {option}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              <p className="text-xs text-[#94A3B8] mt-1">Academic/professional title</p>
             </div>
 
             <div>

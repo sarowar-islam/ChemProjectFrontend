@@ -13,7 +13,8 @@ export interface TeamMember {
   name: string;
   email: string;
   phone?: string;
-  designation: string;
+  position: 'team_leader' | 'faculty' | 'researcher' | 'student' | 'staff';
+  title: string;
   researchArea: string;
   bio: string;
   photoUrl: string;

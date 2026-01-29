@@ -54,7 +54,8 @@ export const adminService = {
     name: string;
     username: string;
     email: string;
-    designation: string;
+    position: TeamMember['position'];
+    title: string;
     password: string;
   }): Promise<ApiResponse<TeamMember>> {
     const response = await apiRequest<TeamMember>({
@@ -64,7 +65,8 @@ export const adminService = {
         name: member.name,
         username: member.username,
         email: member.email,
-        designation: member.designation,
+        position: member.position,
+        title: member.title,
         password: member.password,
         researchArea: '',
         bio: '',

@@ -337,7 +337,7 @@ export default function MemberDashboardPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-[#F8FAFC] text-sm truncate">{member?.name}</p>
-                <p className="text-xs text-[#94A3B8] truncate">{member?.designation}</p>
+                <p className="text-xs text-[#94A3B8] truncate">{member?.title}</p>
               </div>
             </div>
             <div className="flex items-center gap-2 text-xs text-[#94A3B8]">
