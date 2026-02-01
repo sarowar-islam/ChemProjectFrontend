@@ -77,17 +77,17 @@ export default function PublicationsPage() {
             alt="Publications"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-[#0F172A]/85" />
+          <div className="absolute inset-0 bg-[#0B1220]/85" />
         </div>
-        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-[#FACC15]/20 rounded-full blur-3xl" />
+        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-[#38BDF8]/20 rounded-full blur-3xl" />
         
         <div className="container-wide relative">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-[#F8FAFC] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-[#F3F4F6] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
               <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Research Publications</span>
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#F8FAFC] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#F3F4F6] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
               Publications
             </h1>
             <p className="text-sm sm:text-lg md:text-xl text-[#CBD5E1] animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
@@ -104,21 +104,21 @@ export default function PublicationsPage() {
             {/* Stats */}
             <div className="flex items-center justify-center sm:justify-start gap-4 sm:gap-8 flex-wrap">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#FACC15]/15 text-[#FACC15]">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#38BDF8]/15 text-[#38BDF8]">
                   <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#FACC15]">{publications.length}</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#38BDF8]">{publications.length}</div>
                   <div className="text-[10px] sm:text-xs text-muted-foreground">Publications</div>
                 </div>
               </div>
               <div className="w-px h-10 sm:h-12 bg-border" />
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#FACC15]/15 text-[#FACC15]">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#38BDF8]/15 text-[#38BDF8]">
                   <Quote className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#FACC15]">{totalCitations}</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#38BDF8]">{totalCitations}</div>
                   <div className="text-[10px] sm:text-xs text-muted-foreground">Citations</div>
                 </div>
               </div>
@@ -126,21 +126,21 @@ export default function PublicationsPage() {
                 <>
                   <div className="w-px h-10 sm:h-12 bg-border hidden sm:block" />
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#FACC15]/15 text-[#FACC15]">
+                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#38BDF8]/15 text-[#38BDF8]">
                       <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <div className="font-heading text-xl sm:text-2xl font-bold text-[#FACC15]">{profile.hIndex}</div>
+                      <div className="font-heading text-xl sm:text-2xl font-bold text-[#38BDF8]">{profile.hIndex}</div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground">h-index</div>
                     </div>
                   </div>
                   <div className="w-px h-10 sm:h-12 bg-border hidden sm:block" />
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#FACC15]/15 text-[#FACC15]">
+                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#38BDF8]/15 text-[#38BDF8]">
                       <Award className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <div className="font-heading text-xl sm:text-2xl font-bold text-[#FACC15]">{profile.i10Index}</div>
+                      <div className="font-heading text-xl sm:text-2xl font-bold text-[#38BDF8]">{profile.i10Index}</div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground">i10-index</div>
                     </div>
                   </div>
@@ -298,15 +298,15 @@ function PublicationCard({
   
   return (
     <div
-      className="group bg-card rounded-lg sm:rounded-xl border border-border p-4 sm:p-6 hover:shadow-elevated hover:border-[#FACC15]/25 transition-all duration-300 animate-fade-in-up"
+      className="group bg-card rounded-lg sm:rounded-xl border border-border p-4 sm:p-6 hover:shadow-elevated hover:border-[#38BDF8]/25 transition-all duration-300 animate-fade-in-up"
       style={{ animationDelay: delay }}
     >
       <div className="flex items-start gap-3 sm:gap-4">
-        <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#FACC15]/10 text-[#FACC15] shrink-0 group-hover:bg-[#FACC15] group-hover:text-[#0F172A] transition-colors">
+        <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#38BDF8]/10 text-[#38BDF8] shrink-0 group-hover:bg-[#38BDF8] group-hover:text-[#0B1220] transition-colors">
           <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-heading text-sm sm:text-lg font-medium text-foreground mb-1.5 sm:mb-2 leading-snug group-hover:text-[#FACC15] transition-colors">
+          <h3 className="font-heading text-sm sm:text-lg font-medium text-foreground mb-1.5 sm:mb-2 leading-snug group-hover:text-[#38BDF8] transition-colors">
             {publication.title}
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 line-clamp-2 sm:line-clamp-none">
@@ -318,7 +318,7 @@ function PublicationCard({
             </span>
             <div className="flex items-center gap-3 sm:gap-4">
               {citations > 0 && (
-                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#FACC15]/15 text-[#FACC15] text-[10px] sm:text-xs font-medium">
+                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#38BDF8]/15 text-[#38BDF8] text-[10px] sm:text-xs font-medium">
                   <Quote className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                   {citations} citations
                 </span>
@@ -328,7 +328,7 @@ function PublicationCard({
                   href={publication.articleUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-[#FACC15] hover:text-[#FDE047] font-medium transition-colors"
+                  className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-[#38BDF8] hover:text-[#0EA5E9] font-medium transition-colors"
                 >
                   View
                   <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5" />

@@ -38,17 +38,17 @@ export default function ProjectsPage() {
             alt="Research Projects"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-[#0F172A]/85" />
+          <div className="absolute inset-0 bg-[#0B1220]/85" />
         </div>
-        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-[#FACC15]/20 rounded-full blur-3xl" />
+        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-[#38BDF8]/20 rounded-full blur-3xl" />
         
         <div className="container-wide relative">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-[#F8FAFC] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-[#F3F4F6] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
               <Beaker className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Innovation in Progress</span>
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#F8FAFC] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#F3F4F6] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
               Research Projects
             </h1>
             <p className="text-sm sm:text-lg md:text-xl text-[#CBD5E1] animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
@@ -65,21 +65,21 @@ export default function ProjectsPage() {
             {/* Stats */}
             <div className="flex items-center justify-center sm:justify-start gap-4 sm:gap-8">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#FACC15]/15 text-[#FACC15]">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#38BDF8]/15 text-[#38BDF8]">
                   <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#FACC15]">{ongoingCount}</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#38BDF8]">{ongoingCount}</div>
                   <div className="text-[10px] sm:text-xs text-muted-foreground">Ongoing</div>
                 </div>
               </div>
               <div className="w-px h-10 sm:h-12 bg-border" />
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#FACC15]/15 text-[#FACC15]">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#38BDF8]/15 text-[#38BDF8]">
                   <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#FACC15]">{completedCount}</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#38BDF8]">{completedCount}</div>
                   <div className="text-[10px] sm:text-xs text-muted-foreground">Completed</div>
                 </div>
               </div>
@@ -159,11 +159,11 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
 
   return (
     <div
-      className="group bg-card rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-elevated hover:border-[#FACC15]/25 transition-all duration-300 animate-fade-in-up"
+      className="group bg-card rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-elevated hover:border-[#38BDF8]/25 transition-all duration-300 animate-fade-in-up"
       style={{ animationDelay: delay }}
     >
       {/* Header with gradient */}
-      <div className="relative h-24 sm:h-32 bg-gradient-to-br from-[#FACC15]/20 via-[#FACC15]/10 to-transparent p-4 sm:p-6">
+      <div className="relative h-24 sm:h-32 bg-gradient-to-br from-[#38BDF8]/20 via-[#38BDF8]/10 to-transparent p-4 sm:p-6">
         <div className="absolute top-4 sm:top-6 right-4 sm:right-6">
           <span className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold ${status.bg} ${status.text}`}>
             {status.icon}
@@ -171,15 +171,15 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
           </span>
         </div>
         <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6">
-          <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#FACC15]/20 border border-[#FACC15]/30">
-            <FolderKanban className="w-4 h-4 sm:w-6 sm:h-6 text-[#FACC15]" />
+          <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#38BDF8]/20 border border-[#38BDF8]/30">
+            <FolderKanban className="w-4 h-4 sm:w-6 sm:h-6 text-[#38BDF8]" />
           </div>
         </div>
       </div>
       
       {/* Content */}
       <div className="p-4 sm:p-6 pt-3 sm:pt-4">
-        <h3 className="font-heading text-base sm:text-xl font-semibold text-foreground group-hover:text-[#FACC15] transition-colors mb-2 sm:mb-3 line-clamp-2">
+        <h3 className="font-heading text-base sm:text-xl font-semibold text-foreground group-hover:text-[#38BDF8] transition-colors mb-2 sm:mb-3 line-clamp-2">
           {project.title}
         </h3>
 
@@ -201,7 +201,7 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
               href={project.researchLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-[#FACC15] hover:text-[#FDE047] font-medium transition-colors group/link"
+              className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-[#38BDF8] hover:text-[#0EA5E9] font-medium transition-colors group/link"
             >
               Details
               <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover/link:translate-x-0.5" />

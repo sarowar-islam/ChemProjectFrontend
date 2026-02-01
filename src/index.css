@@ -7,15 +7,15 @@
 /* 
   Design System for Yunus Ahmed Lab
   Academic Research Group Website
-  Color Palette: Deep Navy + Slate + Academic Gold
+  Color Palette: Academic Navy + Ice Blue (Research-Grade)
   Typography: Playfair Display (headings) + Inter (body)
 */
 
 @layer base {
   :root {
     /* Light Theme - Clean Academic White */
-    /* Primary background: #F8FAFC */
-    --background: 210 40% 98%;
+    /* Primary background: #FFFFFF */
+    --background: 0 0% 100%;
     /* Primary text - Deep Slate: #0F172A */
     --foreground: 222 47% 11%;
 
@@ -30,27 +30,28 @@
     --primary: 222 47% 11%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96%;
-    /* Secondary text - Neutral Slate Gray: #475569 */
-    --secondary-foreground: 215 19% 35%;
+    /* Secondary background: #F8FAFC */
+    --secondary: 210 40% 98%;
+    /* Secondary text - Neutral Slate Gray: #334155 */
+    --secondary-foreground: 215 25% 27%;
 
     --muted: 210 40% 96%;
     /* Muted / Meta Text - Soft Gray: #64748B */
     --muted-foreground: 215 16% 47%;
 
-    /* Accent: Academic Gold #EAB308 */
-    --accent: 45 93% 47%;
-    --accent-foreground: 222 47% 11%;
-    /* Hover / Active Accent - Darker Gold: #CA8A04 */
-    --accent-hover: 43 96% 40%;
+    /* Accent: Ice Blue #0284C7 (Light mode) */
+    --accent: 201 96% 40%;
+    --accent-foreground: 0 0% 100%;
+    /* Hover / Active Accent - Darker Blue: #0369A1 */
+    --accent-hover: 201 90% 33%;
 
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Dividers / Borders: rgba(15, 23, 42, 0.12) */
-    --border: 222 47% 11% / 0.12;
-    --input: 222 47% 11% / 0.12;
-    --ring: 45 93% 47%;
+    /* Dividers / Borders: #E2E8F0 */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 201 96% 40%;
 
     --radius: 0.625rem;
 
@@ -58,9 +59,9 @@
     --heading-font: 'Playfair Display', Georgia, serif;
     --body-font: 'Inter', system-ui, sans-serif;
     
-    /* Academic Gold */
-    --gold: 45 93% 47%;
-    --gold-light: 45 85% 60%;
+    /* Ice Blue */
+    --ice-blue: 199 89% 60%;
+    --ice-blue-light: 199 92% 74%;
     
     /* Navy shades */
     --navy-deep: 222 47% 11%;
@@ -72,66 +73,66 @@
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 45 93% 47%;
-    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-primary: 201 96% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 14% 96%;
     --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 45 93% 47%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 201 96% 40%;
   }
 
   .dark {
-    /* Dark Theme - Deep Navy Blue #0F172A (KEEP BACKGROUNDS AS-IS) */
-    --background: 222 47% 11%;
-    /* Primary Text - Near-White Neutral: #F8FAFC */
-    --foreground: 210 40% 98%;
+    /* Dark Theme - Deep Navy Blue #0B1220 */
+    --background: 220 47% 8%;
+    /* Primary Text - Near-White Neutral: #F3F4F6 */
+    --foreground: 220 14% 96%;
 
-    /* Card backgrounds (KEEP AS-IS) */
-    --card: 215 28% 23%;
-    /* Primary Text on cards: #F8FAFC */
-    --card-foreground: 210 40% 98%;
+    /* Card backgrounds: #1F2937 */
+    --card: 218 23% 17%;
+    /* Primary Text on cards: #F3F4F6 */
+    --card-foreground: 220 14% 96%;
 
-    --popover: 215 28% 23%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 218 23% 17%;
+    --popover-foreground: 220 14% 96%;
 
-    --primary: 222 47% 11%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 220 47% 8%;
+    --primary-foreground: 220 14% 96%;
 
-    /* Secondary backgrounds (KEEP AS-IS) */
-    --secondary: 215 25% 27%;
+    /* Secondary backgrounds: #111827 */
+    --secondary: 220 40% 11%;
     /* Secondary Text - Cool Light Gray: #CBD5E1 */
-    --secondary-foreground: 214 32% 91%;
+    --secondary-foreground: 214 32% 84%;
 
-    --muted: 215 25% 27%;
+    --muted: 218 23% 17%;
     /* Muted / Tertiary Text - Muted Blue-Gray: #94A3B8 */
     --muted-foreground: 215 20% 65%;
 
-    /* Accent - Warm Academic Gold: #FACC15 */
-    --accent: 48 96% 53%;
-    --accent-foreground: 222 47% 11%;
-    /* Hover / Active Accent - Brighter gold: #FDE047 */
-    --accent-hover: 50 98% 64%;
+    /* Accent - Ice Blue: #38BDF8 (Dark mode) */
+    --accent: 199 89% 60%;
+    --accent-foreground: 220 47% 8%;
+    /* Hover / Active Accent - Brighter ice blue: #0EA5E9 */
+    --accent-hover: 199 89% 48%;
 
     --destructive: 0 60% 45%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Dividers / Borders: rgba(203, 213, 225, 0.18) */
-    --border: 214 32% 84% / 0.18;
-    --input: 214 32% 84% / 0.15;
-    --ring: 48 96% 53%;
+    /* Dividers / Borders: #334155 */
+    --border: 217 24% 27%;
+    --input: 217 24% 27%;
+    --ring: 199 89% 60%;
     
     --shadow-subtle: 0 1px 3px hsl(222 47% 5% / 0.2);
     --shadow-card: 0 4px 20px hsl(222 47% 5% / 0.25);
     --shadow-elevated: 0 10px 40px hsl(222 47% 5% / 0.35);
 
-    --sidebar-background: 222 47% 11%;
+    --sidebar-background: 220 47% 8%;
     --sidebar-foreground: 220 13% 91%;
-    --sidebar-primary: 45 93% 47%;
-    --sidebar-primary-foreground: 222 47% 11%;
-    --sidebar-accent: 217 33% 17%;
+    --sidebar-primary: 199 89% 60%;
+    --sidebar-primary-foreground: 220 47% 8%;
+    --sidebar-accent: 218 23% 17%;
     --sidebar-accent-foreground: 220 13% 91%;
-    --sidebar-border: 215 16% 47% / 0.15;
-    --sidebar-ring: 45 93% 47%;
+    --sidebar-border: 217 24% 27%;
+    --sidebar-ring: 199 89% 60%;
   }
 }
 
@@ -191,33 +192,33 @@
   }
 
   .card-academic {
-    @apply bg-[#1E293B] rounded-xl border border-[#CBD5E1]/[0.18] shadow-card hover:shadow-elevated transition-all duration-300;
+    @apply bg-[#1F2937] rounded-xl border border-[#334155] shadow-card hover:shadow-elevated transition-all duration-300;
   }
 
-  .badge-gold {
+  .badge-ice {
     @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium;
-    background: rgba(250, 204, 21, 0.15);
-    color: #FACC15;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38BDF8;
   }
   
   /* Navbar styles */
   .navbar-link {
     @apply relative text-[15px] font-medium transition-colors duration-200;
-    color: rgba(248, 250, 252, 0.85);
+    color: rgba(203, 213, 225, 0.85);
   }
   
   .navbar-link:hover {
-    color: #FACC15;
+    color: #38BDF8;
   }
   
   .navbar-link.active {
-    color: #FACC15;
+    color: #38BDF8;
   }
   
   .navbar-link::after {
     content: '';
     @apply absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300;
-    background: #FACC15;
+    background: #38BDF8;
   }
   
   .navbar-link:hover::after,
@@ -228,37 +229,37 @@
   /* Button styles */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg;
-    background: #FACC15;
-    color: #0F172A;
+    background: #38BDF8;
+    color: #0B1220;
   }
 
   .btn-primary:hover {
-    background: #FDE047;
+    background: #0EA5E9;
   }
 
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent rounded-xl font-semibold transition-all duration-200;
-    color: #FACC15;
-    border: 2px solid #FACC15;
+    color: #38BDF8;
+    border: 2px solid #38BDF8;
   }
 
   .btn-secondary:hover {
-    background: rgba(250, 204, 21, 0.1);
+    background: rgba(56, 189, 248, 0.1);
   }
 
   .link-underline {
     @apply relative inline-block transition-colors duration-200;
-    color: #F8FAFC;
+    color: #F3F4F6;
   }
 
   .link-underline:hover {
-    color: #FACC15;
+    color: #38BDF8;
   }
 
   .link-underline::after {
     content: '';
     @apply absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300;
-    background: #FACC15;
+    background: #38BDF8;
   }
 
   .link-underline:hover::after {
@@ -267,16 +268,16 @@
 
   .stat-card {
     @apply p-6 rounded-xl;
-    background: #1E293B;
-    border: 1px solid rgba(203, 213, 225, 0.18);
+    background: #1F2937;
+    border: 1px solid #334155;
     box-shadow: 0 4px 20px hsl(222 47% 5% / 0.25);
   }
 
   .stat-number {
     font-family: var(--heading-font);
     @apply text-4xl font-bold;
-    /* Use accent gold for metrics */
-    color: #FACC15;
+    /* Use accent ice blue for metrics */
+    color: #38BDF8;
   }
 
   .stat-label {
@@ -291,7 +292,7 @@
 
   .page-title {
     @apply mb-4;
-    color: #F8FAFC;
+    color: #F3F4F6;
   }
 
   .page-subtitle {
@@ -300,8 +301,8 @@
   }
 
   .form-input-academic {
-    @apply w-full px-4 py-3 rounded-xl border border-[#CBD5E1]/[0.18] bg-[#0F172A] text-[#F8FAFC];
-    @apply focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50 focus:border-transparent;
+    @apply w-full px-4 py-3 rounded-xl border border-[#334155] bg-[#0B1220] text-[#F3F4F6];
+    @apply focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50 focus:border-transparent;
     @apply placeholder:text-[#94A3B8] transition-all duration-200;
   }
 

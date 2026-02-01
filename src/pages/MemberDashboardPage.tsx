@@ -240,31 +240,31 @@ export default function MemberDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0F172A]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#FACC15]" />
+      <div className="min-h-screen flex items-center justify-center bg-[#0B1220]">
+        <Loader2 className="w-8 h-8 animate-spin text-[#38BDF8]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0F172A]">
+    <div className="min-h-screen bg-[#0B1220]">
       {/* Top Navbar */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#1E293B] text-[#F8FAFC] shadow-lg h-16 border-b border-[#CBD5E1]/[0.18]">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#1F2937] text-[#F3F4F6] shadow-lg h-16 border-b border-[#334155]">
         <div className="h-full px-4 lg:px-6 flex items-center justify-between">
           {/* Left: Logo & Menu toggle */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-[#0F172A]/50 transition-colors"
+              className="lg:hidden p-2 rounded-lg hover:bg-[#0B1220]/50 transition-colors"
             >
               {sidebarOpen ? <XIcon className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
             <Link to="/" className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-[#FACC15]/10">
-                <FlaskConical className="w-5 h-5 text-[#FACC15]" />
+              <div className="p-2 rounded-lg bg-[#38BDF8]/10">
+                <FlaskConical className="w-5 h-5 text-[#38BDF8]" />
               </div>
               <div className="hidden sm:block">
-                <span className="font-heading font-semibold text-sm text-[#F8FAFC]">
+                <span className="font-heading font-semibold text-sm text-[#F3F4F6]">
                   Prof. Dr. Yunus Research Group
                 </span>
                 <span className="text-[#94A3B8] mx-2">|</span>
@@ -276,7 +276,7 @@ export default function MemberDashboardPage() {
           {/* Right: Profile & Logout */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#CBD5E1]/30 bg-[#0F172A]">
+              <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#334155] bg-[#0B1220]">
                 {(photoUrl || member?.photoUrl) ? (
                   <img
                     src={photoUrl || member?.photoUrl}
@@ -289,13 +289,13 @@ export default function MemberDashboardPage() {
                   </div>
                 )}
               </div>
-              <span className="text-sm font-medium hidden sm:inline text-[#F8FAFC]">
+              <span className="text-sm font-medium hidden sm:inline text-[#F3F4F6]">
                 {member?.name}
               </span>
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#0F172A]/50 hover:bg-[#0F172A] transition-colors text-sm text-[#F8FAFC]"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#0B1220]/50 hover:bg-[#0B1220] transition-colors text-sm text-[#F3F4F6]"
             >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Logout</span>
@@ -314,15 +314,15 @@ export default function MemberDashboardPage() {
 
       {/* Left Sidebar */}
       <aside
-        className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-[#1E293B] border-r border-[#CBD5E1]/[0.18] z-40 transform transition-transform duration-200 ease-in-out ${
+        className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-[#1F2937] border-r border-[#334155] z-40 transform transition-transform duration-200 ease-in-out ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         <div className="p-4">
           {/* Member Info Card */}
-          <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-[#FACC15]/5 to-[#FACC15]/10 border border-[#FACC15]/20">
+          <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-[#38BDF8]/5 to-[#38BDF8]/10 border border-[#38BDF8]/20">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FACC15]/20">
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#38BDF8]/20">
                 {(photoUrl || member?.photoUrl) ? (
                   <img
                     src={photoUrl || member?.photoUrl}
@@ -330,13 +330,13 @@ export default function MemberDashboardPage() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-[#0F172A] flex items-center justify-center">
+                  <div className="w-full h-full bg-[#0B1220] flex items-center justify-center">
                     <User className="w-6 h-6 text-[#94A3B8]" />
                   </div>
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-[#F8FAFC] text-sm truncate">{member?.name}</p>
+                <p className="font-medium text-[#F3F4F6] text-sm truncate">{member?.name}</p>
                 <p className="text-xs text-[#94A3B8] truncate">{member?.title}</p>
               </div>
             </div>
@@ -360,8 +360,8 @@ export default function MemberDashboardPage() {
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                     isActive
-                      ? 'bg-[#FACC15] text-[#0F172A] shadow-md'
-                      : 'text-[#94A3B8] hover:bg-[#0F172A] hover:text-[#F8FAFC]'
+                      ? 'bg-[#38BDF8] text-[#0B1220] shadow-md'
+                      : 'text-[#94A3B8] hover:bg-[#0B1220] hover:text-[#F3F4F6]'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -380,7 +380,7 @@ export default function MemberDashboardPage() {
           {/* Dashboard Section */}
           {activeSection === 'dashboard' && (
             <div className="animate-fade-in">
-              <h1 className="font-heading text-2xl lg:text-3xl text-[#F8FAFC] mb-2">
+              <h1 className="font-heading text-2xl lg:text-3xl text-[#F3F4F6] mb-2">
                 Welcome back, {member?.name?.split(' ')[0]}!
               </h1>
               <p className="text-[#94A3B8] mb-8">
@@ -389,48 +389,48 @@ export default function MemberDashboardPage() {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-5">
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-5">
                   <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-[#FACC15]/10 text-[#FACC15]">
+                    <div className="p-3 rounded-xl bg-[#38BDF8]/10 text-[#38BDF8]">
                       <BookOpen className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-[#F8FAFC]">{publications.length}</p>
+                      <p className="text-2xl font-bold text-[#F3F4F6]">{publications.length}</p>
                       <p className="text-sm text-[#94A3B8]">Publications</p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-5">
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-5">
                   <div className="flex items-center gap-4">
                     <div className="p-3 rounded-xl bg-green-900/30 text-green-400">
                       <Award className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-[#F8FAFC]">
+                      <p className="text-2xl font-bold text-[#F3F4F6]">
                         {scholarProfile?.totalCitations || 0}
                       </p>
                       <p className="text-sm text-[#94A3B8]">Total Citations</p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-5">
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-5">
                   <div className="flex items-center gap-4">
                     <div className="p-3 rounded-xl bg-blue-900/30 text-blue-400">
                       <Sparkles className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-[#F8FAFC]">{expertise.length}</p>
+                      <p className="text-2xl font-bold text-[#F3F4F6]">{expertise.length}</p>
                       <p className="text-sm text-[#94A3B8]">Skills</p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-5">
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-5">
                   <div className="flex items-center gap-4">
                     <div className="p-3 rounded-xl bg-amber-900/30 text-amber-400">
                       <Calendar className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-[#F8FAFC]">
+                      <p className="text-2xl font-bold text-[#F3F4F6]">
                         {scholarProfile?.hIndex || '-'}
                       </p>
                       <p className="text-sm text-[#94A3B8]">H-Index</p>
@@ -442,9 +442,9 @@ export default function MemberDashboardPage() {
               {/* Quick Info Cards */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Profile Completion */}
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
-                  <h3 className="font-heading text-lg text-[#F8FAFC] mb-4 flex items-center gap-2">
-                    <User className="w-5 h-5 text-[#FACC15]" />
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
+                  <h3 className="font-heading text-lg text-[#F3F4F6] mb-4 flex items-center gap-2">
+                    <User className="w-5 h-5 text-[#38BDF8]" />
                     Profile Status
                   </h3>
                   <div className="space-y-3">
@@ -484,23 +484,23 @@ export default function MemberDashboardPage() {
                 </div>
 
                 {/* Recent Publications */}
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
-                  <h3 className="font-heading text-lg text-[#F8FAFC] mb-4 flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-[#FACC15]" />
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
+                  <h3 className="font-heading text-lg text-[#F3F4F6] mb-4 flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-[#38BDF8]" />
                     Recent Publications
                   </h3>
                   {publications.length > 0 ? (
                     <div className="space-y-3">
                       {publications.slice(0, 3).map((pub, index) => (
                         <div key={index} className="text-sm">
-                          <p className="font-medium text-[#F8FAFC] line-clamp-1">{pub.title}</p>
+                          <p className="font-medium text-[#F3F4F6] line-clamp-1">{pub.title}</p>
                           <p className="text-xs text-[#94A3B8]">{pub.year} • Cited by {pub.citedBy || 0}</p>
                         </div>
                       ))}
                       {publications.length > 3 && (
                         <button
                           onClick={() => setActiveSection('publications')}
-                          className="text-sm text-[#FACC15] hover:underline font-medium"
+                          className="text-sm text-[#38BDF8] hover:underline font-medium"
                         >
                           View all {publications.length} publications →
                         </button>
@@ -521,7 +521,7 @@ export default function MemberDashboardPage() {
             <div className="animate-fade-in">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="font-heading text-2xl lg:text-3xl text-[#F8FAFC] mb-2">Publications</h1>
+                  <h1 className="font-heading text-2xl lg:text-3xl text-[#F3F4F6] mb-2">Publications</h1>
                   <p className="text-[#94A3B8]">
                     Your publications from Google Scholar
                   </p>
@@ -531,7 +531,7 @@ export default function MemberDashboardPage() {
                     href={member.googleScholarLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#FACC15] text-[#0F172A] rounded-lg text-sm font-medium hover:bg-[#FDE047] transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#38BDF8] text-[#0B1220] rounded-lg text-sm font-medium hover:bg-[#0EA5E9] transition-colors"
                   >
                     <ExternalLink className="w-4 h-4" />
                     <span className="hidden sm:inline">View on Scholar</span>
@@ -542,20 +542,20 @@ export default function MemberDashboardPage() {
               {/* Scholar Stats */}
               {scholarProfile && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-                  <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 text-center">
-                    <p className="text-2xl font-bold text-[#FACC15]">{scholarProfile.totalCitations || 0}</p>
+                  <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-4 text-center">
+                    <p className="text-2xl font-bold text-[#38BDF8]">{scholarProfile.totalCitations || 0}</p>
                     <p className="text-xs text-[#94A3B8]">Citations</p>
                   </div>
-                  <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 text-center">
-                    <p className="text-2xl font-bold text-[#FACC15]">{scholarProfile.hIndex || 0}</p>
+                  <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-4 text-center">
+                    <p className="text-2xl font-bold text-[#38BDF8]">{scholarProfile.hIndex || 0}</p>
                     <p className="text-xs text-[#94A3B8]">H-Index</p>
                   </div>
-                  <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 text-center">
-                    <p className="text-2xl font-bold text-[#FACC15]">{scholarProfile.i10Index || 0}</p>
+                  <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-4 text-center">
+                    <p className="text-2xl font-bold text-[#38BDF8]">{scholarProfile.i10Index || 0}</p>
                     <p className="text-xs text-[#94A3B8]">i10-Index</p>
                   </div>
-                  <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-4 text-center">
-                    <p className="text-2xl font-bold text-[#FACC15]">{publications.length}</p>
+                  <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-4 text-center">
+                    <p className="text-2xl font-bold text-[#38BDF8]">{publications.length}</p>
                     <p className="text-xs text-[#94A3B8]">Publications</p>
                   </div>
                 </div>
@@ -563,12 +563,12 @@ export default function MemberDashboardPage() {
 
               {pubsLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="w-8 h-8 animate-spin text-[#FACC15]" />
+                  <Loader2 className="w-8 h-8 animate-spin text-[#38BDF8]" />
                 </div>
               ) : publications.length === 0 ? (
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-8 text-center">
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-8 text-center">
                   <BookOpen className="w-12 h-12 text-[#94A3B8]/50 mx-auto mb-4" />
-                  <h3 className="font-heading text-lg text-[#F8FAFC] mb-2">No Publications Found</h3>
+                  <h3 className="font-heading text-lg text-[#F3F4F6] mb-2">No Publications Found</h3>
                   <p className="text-[#94A3B8] mb-4">
                     {googleScholarLink
                       ? 'No publications found on your Google Scholar profile.'
@@ -577,7 +577,7 @@ export default function MemberDashboardPage() {
                   {!googleScholarLink && (
                     <button
                       onClick={() => setActiveSection('info')}
-                      className="inline-flex items-center gap-2 text-[#FACC15] hover:underline font-medium"
+                      className="inline-flex items-center gap-2 text-[#38BDF8] hover:underline font-medium"
                     >
                       Add your Google Scholar link →
                     </button>
@@ -586,15 +586,15 @@ export default function MemberDashboardPage() {
               ) : (
                 <div className="space-y-4">
                   {publications.map((pub, index) => (
-                    <div key={index} className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-5 hover:shadow-md transition-shadow">
-                      <h3 className="font-medium text-[#F8FAFC] mb-2">{pub.title}</h3>
+                    <div key={index} className="bg-[#1F2937] border border-[#334155] rounded-xl p-5 hover:shadow-md transition-shadow">
+                      <h3 className="font-medium text-[#F3F4F6] mb-2">{pub.title}</h3>
                       <p className="text-sm text-[#94A3B8] mb-3">{pub.authors.join(', ')}</p>
                       <div className="flex flex-wrap items-center gap-3">
                         <span className="text-xs text-[#94A3B8] italic">
                           {pub.journal} • {pub.year}
                         </span>
                         {pub.citedBy && parseInt(pub.citedBy) > 0 && (
-                          <span className="text-xs bg-[#FACC15]/10 text-[#FACC15] px-2 py-0.5 rounded-full font-medium">
+                          <span className="text-xs bg-[#38BDF8]/10 text-[#38BDF8] px-2 py-0.5 rounded-full font-medium">
                             Cited by {pub.citedBy}
                           </span>
                         )}
@@ -603,7 +603,7 @@ export default function MemberDashboardPage() {
                             href={pub.articleUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-[#FACC15] hover:underline font-medium"
+                            className="inline-flex items-center gap-1 text-xs text-[#38BDF8] hover:underline font-medium"
                           >
                             View Article
                             <ExternalLink className="w-3 h-3" />
@@ -620,14 +620,14 @@ export default function MemberDashboardPage() {
           {/* Skills Section */}
           {activeSection === 'skills' && (
             <div className="animate-fade-in">
-              <h1 className="font-heading text-2xl lg:text-3xl text-[#FACC15] mb-2">Skills & Expertise</h1>
+              <h1 className="font-heading text-2xl lg:text-3xl text-[#38BDF8] mb-2">Skills & Expertise</h1>
               <p className="text-[#94A3B8] mb-8">
                 Manage your areas of expertise and skills
               </p>
 
-              <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
-                <h2 className="font-heading text-lg text-[#F8FAFC] mb-4 flex items-center gap-2">
-                  <GraduationCap className="w-5 h-5 text-[#FACC15]" />
+              <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
+                <h2 className="font-heading text-lg text-[#F3F4F6] mb-4 flex items-center gap-2">
+                  <GraduationCap className="w-5 h-5 text-[#38BDF8]" />
                   Current Skills
                 </h2>
 
@@ -635,12 +635,12 @@ export default function MemberDashboardPage() {
                   {expertise.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#FACC15]/10 text-[#FACC15] rounded-full text-sm font-medium"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#38BDF8]/10 text-[#38BDF8] rounded-full text-sm font-medium"
                     >
                       {item}
                       <button
                         onClick={() => handleRemoveExpertise(item)}
-                        className="hover:bg-[#FACC15]/20 rounded-full p-0.5 transition-colors"
+                        className="hover:bg-[#38BDF8]/20 rounded-full p-0.5 transition-colors"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -659,23 +659,23 @@ export default function MemberDashboardPage() {
                     value={newExpertise}
                     onChange={(e) => setNewExpertise(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddExpertise())}
-                    className="flex-1 bg-[#0F172A] border border-[#CBD5E1]/[0.18] rounded-lg px-4 py-2 text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50"
+                    className="flex-1 bg-[#0B1220] border border-[#334155] rounded-lg px-4 py-2 text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50"
                     placeholder="e.g., Organic Chemistry, Spectroscopy, Catalysis..."
                   />
                   <button
                     onClick={handleAddExpertise}
-                    className="px-6 py-2 bg-[#FACC15] text-[#0F172A] rounded-lg text-sm font-medium hover:bg-[#FDE047] transition-colors flex items-center gap-2"
+                    className="px-6 py-2 bg-[#38BDF8] text-[#0B1220] rounded-lg text-sm font-medium hover:bg-[#0EA5E9] transition-colors flex items-center gap-2"
                   >
                     <Plus className="w-4 h-4" />
                     Add
                   </button>
                 </div>
 
-                <div className="mt-6 pt-6 border-t border-[#CBD5E1]/[0.18]">
+                <div className="mt-6 pt-6 border-t border-[#334155]">
                   <button
                     onClick={handleSaveInfo}
                     disabled={saving}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#FACC15] text-[#0F172A] rounded-lg font-medium hover:bg-[#FDE047] transition-colors disabled:opacity-50"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#38BDF8] text-[#0B1220] rounded-lg font-medium hover:bg-[#0EA5E9] transition-colors disabled:opacity-50"
                   >
                     {saving ? (
                       <>
@@ -700,21 +700,21 @@ export default function MemberDashboardPage() {
           {/* Info Section */}
           {activeSection === 'info' && (
             <div className="animate-fade-in">
-              <h1 className="font-heading text-2xl lg:text-3xl text-[#FACC15] mb-2">Profile Information</h1>
+              <h1 className="font-heading text-2xl lg:text-3xl text-[#38BDF8] mb-2">Profile Information</h1>
               <p className="text-[#94A3B8] mb-8">
                 Update your profile details and contact information
               </p>
 
               <div className="space-y-6">
                 {/* Profile Photo */}
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
-                  <h2 className="font-heading text-lg text-[#F8FAFC] mb-4 flex items-center gap-2">
-                    <User className="w-5 h-5 text-[#FACC15]" />
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
+                  <h2 className="font-heading text-lg text-[#F3F4F6] mb-4 flex items-center gap-2">
+                    <User className="w-5 h-5 text-[#38BDF8]" />
                     Profile Photo
                   </h2>
                   <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                     <div className="relative group">
-                      <div className="w-32 h-32 rounded-xl overflow-hidden border-2 border-[#CBD5E1]/[0.18] shadow-lg">
+                      <div className="w-32 h-32 rounded-xl overflow-hidden border-2 border-[#334155] shadow-lg">
                         {(photoUrl || member?.photoUrl) ? (
                           <img
                             src={photoUrl || member?.photoUrl}
@@ -722,7 +722,7 @@ export default function MemberDashboardPage() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full bg-[#0F172A] flex items-center justify-center">
+                          <div className="w-full h-full bg-[#0B1220] flex items-center justify-center">
                             <User className="w-12 h-12 text-[#94A3B8]" />
                           </div>
                         )}
@@ -744,7 +744,7 @@ export default function MemberDashboardPage() {
                       <button
                         onClick={() => fileInputRef.current?.click()}
                         disabled={uploading}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#FACC15] text-[#0F172A] rounded-lg text-sm font-medium hover:bg-[#FDE047] transition-colors disabled:opacity-50"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#38BDF8] text-[#0B1220] rounded-lg text-sm font-medium hover:bg-[#0EA5E9] transition-colors disabled:opacity-50"
                       >
                         <Upload className="w-4 h-4" />
                         {uploading ? 'Uploading...' : 'Upload New Photo'}
@@ -757,34 +757,34 @@ export default function MemberDashboardPage() {
                 </div>
 
                 {/* Contact Information */}
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
-                  <h2 className="font-heading text-lg text-[#F8FAFC] mb-4 flex items-center gap-2">
-                    <Mail className="w-5 h-5 text-[#FACC15]" />
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
+                  <h2 className="font-heading text-lg text-[#F3F4F6] mb-4 flex items-center gap-2">
+                    <Mail className="w-5 h-5 text-[#38BDF8]" />
                     Contact Information
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-[#F8FAFC] mb-2">Email Address</label>
+                      <label className="block text-sm font-medium text-[#F3F4F6] mb-2">Email Address</label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]" />
                         <input
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-[#0F172A] border border-[#CBD5E1]/[0.18] rounded-lg pl-10 pr-4 py-2 text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50"
+                          className="w-full bg-[#0B1220] border border-[#334155] rounded-lg pl-10 pr-4 py-2 text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50"
                           placeholder="your.email@example.com"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-[#F8FAFC] mb-2">Phone Number</label>
+                      <label className="block text-sm font-medium text-[#F3F4F6] mb-2">Phone Number</label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]" />
                         <input
                           type="tel"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          className="w-full bg-[#0F172A] border border-[#CBD5E1]/[0.18] rounded-lg pl-10 pr-4 py-2 text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50"
+                          className="w-full bg-[#0B1220] border border-[#334155] rounded-lg pl-10 pr-4 py-2 text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50"
                           placeholder="+880 1XXX-XXXXXX"
                         />
                       </div>
@@ -793,16 +793,16 @@ export default function MemberDashboardPage() {
                 </div>
 
                 {/* Biography */}
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
-                  <h2 className="font-heading text-lg text-[#F8FAFC] mb-4 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-[#FACC15]" />
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
+                  <h2 className="font-heading text-lg text-[#F3F4F6] mb-4 flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-[#38BDF8]" />
                     Biography
                   </h2>
                   <textarea
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
                     rows={6}
-                    className="w-full bg-[#0F172A] border border-[#CBD5E1]/[0.18] rounded-lg px-4 py-3 text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50 resize-none"
+                    className="w-full bg-[#0B1220] border border-[#334155] rounded-lg px-4 py-3 text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50 resize-none"
                     placeholder="Write a short biography about yourself, your research interests, achievements, and academic journey..."
                   />
                   <p className="text-xs text-[#94A3B8] mt-2">
@@ -811,16 +811,16 @@ export default function MemberDashboardPage() {
                 </div>
 
                 {/* Google Scholar */}
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
-                  <h2 className="font-heading text-lg text-[#F8FAFC] mb-4 flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-[#FACC15]" />
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
+                  <h2 className="font-heading text-lg text-[#F3F4F6] mb-4 flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-[#38BDF8]" />
                     Google Scholar Profile
                   </h2>
                   <input
                     type="url"
                     value={googleScholarLink}
                     onChange={(e) => setGoogleScholarLink(e.target.value)}
-                    className="w-full bg-[#0F172A] border border-[#CBD5E1]/[0.18] rounded-lg px-4 py-2 text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50"
+                    className="w-full bg-[#0B1220] border border-[#334155] rounded-lg px-4 py-2 text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50"
                     placeholder="https://scholar.google.com/citations?user=..."
                   />
                   <p className="text-xs text-[#94A3B8] mt-2">
@@ -833,7 +833,7 @@ export default function MemberDashboardPage() {
                   <button
                     onClick={handleSaveInfo}
                     disabled={saving}
-                    className="inline-flex items-center gap-2 px-8 py-3 bg-[#FACC15] text-[#0F172A] rounded-lg font-medium hover:bg-[#FDE047] transition-colors disabled:opacity-50"
+                    className="inline-flex items-center gap-2 px-8 py-3 bg-[#38BDF8] text-[#0B1220] rounded-lg font-medium hover:bg-[#0EA5E9] transition-colors disabled:opacity-50"
                   >
                     {saving ? (
                       <>
@@ -860,36 +860,36 @@ export default function MemberDashboardPage() {
           {/* Settings Section */}
           {activeSection === 'settings' && (
             <div className="animate-fade-in">
-              <h1 className="font-heading text-2xl lg:text-3xl text-[#FACC15] mb-2">Settings</h1>
+              <h1 className="font-heading text-2xl lg:text-3xl text-[#38BDF8] mb-2">Settings</h1>
               <p className="text-[#94A3B8] mb-8">
                 Manage your account settings and security
               </p>
 
               <div className="space-y-6">
                 {/* Account Settings */}
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
-                  <h2 className="font-heading text-lg text-[#F8FAFC] mb-4 flex items-center gap-2">
-                    <User className="w-5 h-5 text-[#FACC15]" />
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
+                  <h2 className="font-heading text-lg text-[#F3F4F6] mb-4 flex items-center gap-2">
+                    <User className="w-5 h-5 text-[#38BDF8]" />
                     Account Information
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-[#F8FAFC] mb-2">Display Name</label>
+                      <label className="block text-sm font-medium text-[#F3F4F6] mb-2">Display Name</label>
                       <input
                         type="text"
                         value={settingsName}
                         onChange={(e) => setSettingsName(e.target.value)}
-                        className="w-full bg-[#0F172A] border border-[#CBD5E1]/[0.18] rounded-lg px-4 py-2 text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50"
+                        className="w-full bg-[#0B1220] border border-[#334155] rounded-lg px-4 py-2 text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50"
                         placeholder="Your full name"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-[#F8FAFC] mb-2">Username</label>
+                      <label className="block text-sm font-medium text-[#F3F4F6] mb-2">Username</label>
                       <input
                         type="text"
                         value={settingsUsername}
                         onChange={(e) => setSettingsUsername(e.target.value)}
-                        className="w-full bg-[#0F172A] border border-[#CBD5E1]/[0.18] rounded-lg px-4 py-2 text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50"
+                        className="w-full bg-[#0B1220] border border-[#334155] rounded-lg px-4 py-2 text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50"
                         placeholder="username"
                       />
                       <p className="text-xs text-[#94A3B8] mt-1">Used for login</p>
@@ -898,13 +898,13 @@ export default function MemberDashboardPage() {
                 </div>
 
                 {/* Profile Photo in Settings */}
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
-                  <h2 className="font-heading text-lg text-[#F8FAFC] mb-4 flex items-center gap-2">
-                    <Upload className="w-5 h-5 text-[#FACC15]" />
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
+                  <h2 className="font-heading text-lg text-[#F3F4F6] mb-4 flex items-center gap-2">
+                    <Upload className="w-5 h-5 text-[#38BDF8]" />
                     Profile Photo
                   </h2>
                   <div className="flex items-center gap-6">
-                    <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#CBD5E1]/[0.18]">
+                    <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#334155]">
                       {(photoUrl || member?.photoUrl) ? (
                         <img
                           src={photoUrl || member?.photoUrl}
@@ -912,7 +912,7 @@ export default function MemberDashboardPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full bg-[#0F172A] flex items-center justify-center">
+                        <div className="w-full h-full bg-[#0B1220] flex items-center justify-center">
                           <User className="w-8 h-8 text-[#94A3B8]" />
                         </div>
                       )}
@@ -921,7 +921,7 @@ export default function MemberDashboardPage() {
                       <button
                         onClick={() => fileInputRef.current?.click()}
                         disabled={uploading}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F172A] border border-[#CBD5E1]/[0.18] text-[#F8FAFC] rounded-lg text-sm font-medium hover:bg-[#1E293B] transition-colors disabled:opacity-50"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[#0B1220] border border-[#334155] text-[#F3F4F6] rounded-lg text-sm font-medium hover:bg-[#1F2937] transition-colors disabled:opacity-50"
                       >
                         <Upload className="w-4 h-4" />
                         {uploading ? 'Uploading...' : 'Change Photo'}
@@ -932,57 +932,57 @@ export default function MemberDashboardPage() {
                 </div>
 
                 {/* Password Change */}
-                <div className="bg-[#1E293B] border border-[#CBD5E1]/[0.18] rounded-xl p-6">
-                  <h2 className="font-heading text-lg text-[#F8FAFC] mb-4 flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-[#FACC15]" />
+                <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
+                  <h2 className="font-heading text-lg text-[#F3F4F6] mb-4 flex items-center gap-2">
+                    <Settings className="w-5 h-5 text-[#38BDF8]" />
                     Change Password
                   </h2>
                   <div className="space-y-4 max-w-md">
                     <div>
-                      <label className="block text-sm font-medium text-[#F8FAFC] mb-2">Current Password</label>
+                      <label className="block text-sm font-medium text-[#F3F4F6] mb-2">Current Password</label>
                       <div className="relative">
                         <input
                           type={showCurrentPassword ? 'text' : 'password'}
                           value={currentPassword}
                           onChange={(e) => setCurrentPassword(e.target.value)}
-                          className="w-full bg-[#0F172A] border border-[#CBD5E1]/[0.18] rounded-lg px-4 py-2 pr-10 text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50"
+                          className="w-full bg-[#0B1220] border border-[#334155] rounded-lg px-4 py-2 pr-10 text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50"
                           placeholder="••••••••"
                         />
                         <button
                           type="button"
                           onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#F8FAFC]"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#F3F4F6]"
                         >
                           {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-[#F8FAFC] mb-2">New Password</label>
+                      <label className="block text-sm font-medium text-[#F3F4F6] mb-2">New Password</label>
                       <div className="relative">
                         <input
                           type={showNewPassword ? 'text' : 'password'}
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
-                          className="w-full bg-[#0F172A] border border-[#CBD5E1]/[0.18] rounded-lg px-4 py-2 pr-10 text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50"
+                          className="w-full bg-[#0B1220] border border-[#334155] rounded-lg px-4 py-2 pr-10 text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50"
                           placeholder="••••••••"
                         />
                         <button
                           type="button"
                           onClick={() => setShowNewPassword(!showNewPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#F8FAFC]"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#F3F4F6]"
                         >
                           {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-[#F8FAFC] mb-2">Confirm New Password</label>
+                      <label className="block text-sm font-medium text-[#F3F4F6] mb-2">Confirm New Password</label>
                       <input
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full bg-[#0F172A] border border-[#CBD5E1]/[0.18] rounded-lg px-4 py-2 text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#FACC15]/50"
+                        className="w-full bg-[#0B1220] border border-[#334155] rounded-lg px-4 py-2 text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50"
                         placeholder="••••••••"
                       />
                     </div>
@@ -994,7 +994,7 @@ export default function MemberDashboardPage() {
                   <button
                     onClick={handleSaveSettings}
                     disabled={savingSettings}
-                    className="inline-flex items-center gap-2 px-8 py-3 bg-[#FACC15] text-[#0F172A] rounded-lg font-medium hover:bg-[#FDE047] transition-colors disabled:opacity-50"
+                    className="inline-flex items-center gap-2 px-8 py-3 bg-[#38BDF8] text-[#0B1220] rounded-lg font-medium hover:bg-[#0EA5E9] transition-colors disabled:opacity-50"
                   >
                     {savingSettings ? (
                       <>
