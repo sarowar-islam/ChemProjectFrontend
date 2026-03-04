@@ -37,20 +37,20 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-[#0B1220]">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-[#F3F8FF] to-[#FAFBF8]">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-10 w-64 h-64 bg-[#38BDF8]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-10 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        <div className="absolute top-20 right-10 w-64 h-64 bg-[#3B82F6]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-10 w-96 h-96 bg-[#3B82F6]/5 rounded-full blur-3xl" />
       </div>
       
       <div className="w-full max-w-md relative z-10">
-        <div className="bg-[#1F2937] rounded-2xl p-8 shadow-elevated animate-fade-in-up border border-[#334155]">
+        <div className="bg-white rounded-2xl p-8 shadow-lg animate-fade-in-up border border-[#E5E7EB]">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center p-3 rounded-xl bg-[#38BDF8] text-[#0B1220] mb-4">
+            <div className="inline-flex items-center justify-center p-3 rounded-xl bg-[#1E40AF] text-white mb-4">
               <FlaskConical className="w-6 h-6" />
             </div>
-            <h1 className="font-heading text-2xl font-bold text-[#F3F4F6]">Admin Login</h1>
+            <h1 className="font-heading text-2xl font-bold text-[#1E40AF]">Admin Login</h1>
             <p className="text-[#94A3B8] text-sm mt-2">
               Access the admin dashboard
             </p>
@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[#F3F4F6] mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-[#475569] mb-2">
                 Email
               </label>
               <input
@@ -67,14 +67,14 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-[#334155] bg-[#0B1220] text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8] focus:border-transparent transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] bg-white text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-[#3B82F6] transition-all"
                 placeholder="admin@cuet.ac.bd"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[#F3F4F6] mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-[#475569] mb-2">
                 Password
               </label>
               <div className="relative">
@@ -83,14 +83,14 @@ export default function AdminLoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-[#334155] bg-[#0B1220] text-[#F3F4F6] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8] focus:border-transparent transition-all pr-10"
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] bg-white text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-[#3B82F6] transition-all pr-10"
                   placeholder="••••••••"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#F3F4F6] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#475569] transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -98,7 +98,7 @@ export default function AdminLoginPage() {
             </div>
 
             {error && (
-              <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+              <div className="p-3 rounded-lg bg-red-50 text-red-600 border border-red-200 text-sm">
                 {error}
               </div>
             )}
@@ -106,7 +106,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#38BDF8] text-[#0B1220] rounded-xl font-semibold hover:bg-[#0EA5E9] transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"
+              className="w-full py-3 bg-[#3B82F6] text-white rounded-xl font-semibold hover:bg-[#2563EB] transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"
             >
               {loading ? (
                 <>
@@ -131,7 +131,7 @@ export default function AdminLoginPage() {
         <div className="mt-6 text-center">
           <a
             href="/"
-            className="text-sm text-[#CBD5E1] hover:text-[#38BDF8] transition-colors"
+            className="text-sm text-[#3B82F6] hover:text-[#2563EB] transition-colors"
           >
             ← Back to Home
           </a>

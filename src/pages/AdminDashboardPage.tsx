@@ -42,20 +42,26 @@ const POSITION_OPTIONS = [
   { value: 'staff', label: 'Staff' },
 ] as const;
 
-// Title options - the academic/professional title
+// Title options - the academic/professional title (ordered by seniority)
 const TITLE_OPTIONS = [
+  // Faculty titles
   'Professor',
   'Associate Professor',
   'Assistant Professor',
+  // Researcher titles (seniority: Post-doc > PhD Fellow > Research Associate > Research Assistant)
   'Post Doctoral Researcher',
-  "Master's Fellowship",
+  'PhD Fellow',
   'Research Associate',
+  "Master's Fellowship",
   'Research Assistant',
+  'Research Assistant (RA)',
+  'Visiting Researcher',
+  // Student titles (seniority: PhD > MPhil > MSc > BSc)
   'PhD Student',
   'M.Phil Student',
   'M.Sc Student',
   'BSc Student',
-  'Visiting Researcher',
+  // Staff titles
   'Lab Technician',
   'Lab Assistant',
 ];
@@ -120,27 +126,27 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0B1220] flex flex-col">
+    <div className="min-h-screen bg-[#FAFBF8] flex flex-col">
       {/* Header */}
-      <header className="bg-[#1F2937] text-[#F3F4F6] sticky top-0 z-50 border-b border-[#334155]">
+      <header className="bg-white text-[#0F172A] sticky top-0 z-50 border-b border-[#E5E7EB] shadow-sm">
         <div className="px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-              className="lg:hidden p-2 hover:bg-[#0B1220]/50 rounded-lg transition-colors"
+              className="lg:hidden p-2 hover:bg-[#F3F8FF] rounded-lg transition-colors"
             >
               <Menu className="w-5 h-5" />
             </button>
             <Link to="/" className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-[#38BDF8]/10">
-                <FlaskConical className="w-5 h-5 text-[#38BDF8]" />
+              <div className="p-2 rounded-lg bg-[#DBEAFE]">
+                <FlaskConical className="w-5 h-5 text-[#3B82F6]" />
               </div>
-              <span className="font-heading font-semibold hidden sm:inline text-[#F3F4F6]">
+              <span className="font-heading font-semibold hidden sm:inline text-[#0F172A]">
                 Prof. Dr. Yunus Ahmed Research Group
               </span>
             </Link>
             <span className="text-[#94A3B8] hidden sm:inline">|</span>
-            <span className="text-sm hidden sm:inline text-[#CBD5E1]">Admin Panel</span>
+            <span className="text-sm hidden sm:inline text-[#475569]">Admin Panel</span>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-[#94A3B8] hidden sm:inline">
@@ -148,7 +154,7 @@ export default function AdminDashboardPage() {
             </span>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#0B1220]/50 hover:bg-[#0B1220] transition-colors text-sm text-[#F3F4F6]"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-[#E5E7EB] hover:bg-[#F3F8FF] transition-colors text-sm text-[#475569]"
             >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Logout</span>
@@ -168,7 +174,7 @@ export default function AdminDashboardPage() {
 
         {/* Sidebar */}
         <aside
-          className={`fixed lg:static inset-y-0 left-0 z-50 lg:z-auto bg-[#1F2937] border-r border-[#334155] transition-all duration-300 flex flex-col pt-16 lg:pt-0 ${
+          className={`fixed lg:static inset-y-0 left-0 z-50 lg:z-auto bg-white border-r border-[#E5E7EB] transition-all duration-300 flex flex-col pt-16 lg:pt-0 ${
             mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
           } ${sidebarCollapsed ? 'w-16' : 'w-64'}`}
         >
@@ -183,8 +189,8 @@ export default function AdminDashboardPage() {
                   }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm transition-colors ${
                     activeTab === tab.id
-                      ? 'bg-[#38BDF8] text-[#0B1220]'
-                      : 'text-[#94A3B8] hover:bg-[#0B1220] hover:text-[#F3F4F6]'
+                      ? 'bg-[#3B82F6] text-white'
+                      : 'text-[#475569] hover:bg-[#F3F8FF] hover:text-[#0F172A]'
                   }`}
                   title={sidebarCollapsed ? tab.label : undefined}
                 >
@@ -196,10 +202,10 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Collapse Button */}
-          <div className="p-2 border-t border-[#334155] hidden lg:block">
+          <div className="p-2 border-t border-[#E5E7EB] hidden lg:block">
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-[#94A3B8] hover:bg-[#0B1220] hover:text-[#F3F4F6] transition-colors text-sm"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-[#475569] hover:bg-[#F3F8FF] hover:text-[#0F172A] transition-colors text-sm"
             >
               <ChevronLeft className={`w-4 h-4 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} />
               {!sidebarCollapsed && <span>Collapse</span>}
@@ -247,31 +253,31 @@ function DashboardView({
 }) {
   return (
     <div>
-      <h2 className="font-heading text-2xl text-[#F3F4F6] mb-6">Overview</h2>
+      <h2 className="font-heading text-2xl text-[#1E40AF] mb-6">Overview</h2>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="bg-[#1F2937] border border-[#334155] rounded-xl p-6 animate-pulse">
-              <div className="h-10 w-20 bg-[#0B1220] rounded mb-2" />
-              <div className="h-4 w-24 bg-[#0B1220] rounded" />
+            <div key={i} className="bg-white border border-[#E5E7EB] rounded-xl p-6 animate-pulse shadow-sm">
+              <div className="h-10 w-20 bg-[#F3F8FF] rounded mb-2" />
+              <div className="h-4 w-24 bg-[#F3F8FF] rounded" />
             </div>
           ))
         ) : (
           <>
-            <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
-              <div className="text-3xl font-bold text-[#38BDF8] mb-1">{stats.totalProjects}</div>
+            <div className="bg-white border border-[#E5E7EB] rounded-xl p-6 shadow-sm">
+              <div className="text-3xl font-bold text-[#3B82F6] mb-1">{stats.totalProjects}</div>
               <div className="text-sm text-[#94A3B8]">Total Projects</div>
             </div>
-            <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
-              <div className="text-3xl font-bold text-[#38BDF8] mb-1">{stats.totalPublications}</div>
+            <div className="bg-white border border-[#E5E7EB] rounded-xl p-6 shadow-sm">
+              <div className="text-3xl font-bold text-[#3B82F6] mb-1">{stats.totalPublications}</div>
               <div className="text-sm text-[#94A3B8]">Publications</div>
             </div>
-            <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
-              <div className="text-3xl font-bold text-[#38BDF8] mb-1">{stats.totalMembers}</div>
+            <div className="bg-white border border-[#E5E7EB] rounded-xl p-6 shadow-sm">
+              <div className="text-3xl font-bold text-[#3B82F6] mb-1">{stats.totalMembers}</div>
               <div className="text-sm text-[#94A3B8]">Team Members</div>
             </div>
-            <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6">
-              <div className="text-3xl font-bold text-[#38BDF8] mb-1">{stats.ongoingProjects}</div>
+            <div className="bg-white border border-[#E5E7EB] rounded-xl p-6 shadow-sm">
+              <div className="text-3xl font-bold text-[#3B82F6] mb-1">{stats.ongoingProjects}</div>
               <div className="text-sm text-[#94A3B8]">Ongoing Projects</div>
             </div>
           </>
@@ -374,8 +380,8 @@ function ProjectsView({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-heading text-2xl text-[#F3F4F6]">Projects</h2>
-        <Button onClick={openAddModal} className="bg-[#38BDF8] text-[#0B1220] hover:bg-[#0EA5E9]">
+        <h2 className="font-heading text-2xl text-[#1E40AF]">Projects</h2>
+        <Button onClick={openAddModal} className="bg-[#3B82F6] text-white hover:bg-[#2563EB]">
           <Plus className="w-4 h-4 mr-2" />
           Add Project
         </Button>
@@ -384,9 +390,9 @@ function ProjectsView({
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="bg-[#1F2937] border border-[#334155] rounded-xl p-4 animate-pulse">
-              <div className="h-5 w-2/3 bg-[#0B1220] rounded mb-2" />
-              <div className="h-4 w-full bg-[#0B1220] rounded" />
+            <div key={i} className="bg-white border border-[#E5E7EB] rounded-xl p-4 animate-pulse shadow-sm">
+              <div className="h-5 w-2/3 bg-[#F3F8FF] rounded mb-2" />
+              <div className="h-4 w-full bg-[#F3F8FF] rounded" />
             </div>
           ))}
         </div>
@@ -397,22 +403,22 @@ function ProjectsView({
       ) : (
         <div className="space-y-4">
           {projects.map((project) => (
-            <div key={project.id} className="bg-[#1F2937] border border-[#334155] rounded-xl p-4 flex items-center justify-between">
+            <div key={project.id} className="bg-white border border-[#E5E7EB] rounded-xl p-4 flex items-center justify-between shadow-sm">
               <div className="flex-1 min-w-0 mr-4">
-                <h3 className="font-medium text-[#F3F4F6] truncate">{project.title}</h3>
+                <h3 className="font-medium text-[#0F172A] truncate">{project.title}</h3>
                 <p className="text-sm text-[#94A3B8] truncate">{project.description}</p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <span className={`px-2 py-1 rounded text-xs font-medium ${
-                  project.status === 'ongoing' ? 'bg-green-900/30 text-green-400' : 'bg-[#0B1220] text-[#94A3B8]'
+                  project.status === 'ongoing' ? 'bg-[#DCFCE7] text-[#22C55E]' : 'bg-[#F3F8FF] text-[#94A3B8]'
                 }`}>
                   {project.status}
                 </span>
-                <button onClick={() => openEditModal(project)} className="p-2 hover:bg-[#0B1220] rounded-lg transition-colors">
-                  <Edit className="w-4 h-4 text-[#E5E7EB]" />
+                <button onClick={() => openEditModal(project)} className="p-2 hover:bg-[#F3F8FF] rounded-lg transition-colors">
+                  <Edit className="w-4 h-4 text-[#475569]" />
                 </button>
-                <button onClick={() => handleDelete(project.id)} className="p-2 hover:bg-red-900/20 rounded-lg transition-colors">
-                  <Trash2 className="w-4 h-4 text-red-400" />
+                <button onClick={() => handleDelete(project.id)} className="p-2 hover:bg-[#FEE2E2] rounded-lg transition-colors">
+                  <Trash2 className="w-4 h-4 text-[#EF4444]" />
                 </button>
               </div>
             </div>
@@ -421,9 +427,9 @@ function ProjectsView({
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-lg bg-[#1F2937] border-[#334155]">
+        <DialogContent className="max-w-lg bg-white border-[#E5E7EB]">
           <DialogHeader>
-            <DialogTitle className="text-[#F3F4F6]">{editingProject ? 'Edit Project' : 'Add Project'}</DialogTitle>
+            <DialogTitle className="text-[#0F172A]">{editingProject ? 'Edit Project' : 'Add Project'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
@@ -605,8 +611,8 @@ function MembersView({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-heading text-2xl text-[#F3F4F6]">Team Members</h2>
-        <Button onClick={openAddModal} className="bg-[#38BDF8] text-[#0B1220] hover:bg-[#0EA5E9]">
+        <h2 className="font-heading text-2xl text-[#1E40AF]">Team Members</h2>
+        <Button onClick={openAddModal} className="bg-[#3B82F6] text-white hover:bg-[#2563EB]">
           <Plus className="w-4 h-4 mr-2" />
           Add Member
         </Button>
@@ -615,12 +621,12 @@ function MembersView({
       {loading ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="bg-[#1F2937] border border-[#334155] rounded-xl p-4 animate-pulse">
+            <div key={i} className="bg-white border border-[#E5E7EB] rounded-xl p-4 animate-pulse shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-[#0B1220] rounded-full" />
+                <div className="w-12 h-12 bg-[#F3F8FF] rounded-full" />
                 <div className="flex-1">
-                  <div className="h-4 w-24 bg-[#0B1220] rounded mb-1" />
-                  <div className="h-3 w-20 bg-[#0B1220] rounded" />
+                  <div className="h-4 w-24 bg-[#F3F8FF] rounded mb-1" />
+                  <div className="h-3 w-20 bg-[#F3F8FF] rounded" />
                 </div>
               </div>
             </div>
@@ -633,24 +639,24 @@ function MembersView({
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {members.map((member) => (
-            <div key={member.id} className="bg-[#1F2937] border border-[#334155] rounded-xl p-4">
+            <div key={member.id} className="bg-white border border-[#E5E7EB] rounded-xl p-4 shadow-sm">
               <div className="flex items-center gap-3">
                 <img
-                  src={member.photoUrl || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400'}
+                  src={member.photoUrl || '/photos/blank_profile.png'}
                   alt={member.name}
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-[#F3F4F6] truncate">{member.name}</h3>
+                  <h3 className="font-medium text-[#0F172A] truncate">{member.name}</h3>
                   <p className="text-sm text-[#94A3B8] truncate">{member.title || 'No title'}</p>
-                  <p className="text-xs text-[#38BDF8]/70 truncate capitalize">{member.position?.replace('_', ' ') || 'No position'}</p>
+                  <p className="text-xs text-[#3B82F6]/70 truncate capitalize">{member.position?.replace('_', ' ') || 'No position'}</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <button onClick={() => openEditModal(member)} className="p-2 hover:bg-[#0B1220] rounded-lg transition-colors">
-                    <Edit className="w-4 h-4 text-[#E5E7EB]" />
+                  <button onClick={() => openEditModal(member)} className="p-2 hover:bg-[#F3F8FF] rounded-lg transition-colors">
+                    <Edit className="w-4 h-4 text-[#475569]" />
                   </button>
-                  <button onClick={() => handleDelete(member.id)} className="p-2 hover:bg-red-900/20 rounded-lg transition-colors">
-                    <Trash2 className="w-4 h-4 text-red-400" />
+                  <button onClick={() => handleDelete(member.id)} className="p-2 hover:bg-[#FEE2E2] rounded-lg transition-colors">
+                    <Trash2 className="w-4 h-4 text-[#EF4444]" />
                   </button>
                 </div>
               </div>
@@ -660,30 +666,30 @@ function MembersView({
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-md bg-[#1F2937] border-[#334155]">
+        <DialogContent className="max-w-md bg-white border-[#E5E7EB]">
           <DialogHeader>
-            <DialogTitle className="text-[#F3F4F6]">{editingMember ? 'Edit Member' : 'Add Member'}</DialogTitle>
+            <DialogTitle className="text-[#0F172A]">{editingMember ? 'Edit Member' : 'Add Member'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <Label htmlFor="name" className="text-[#CBD5E1]">Name *</Label>
+              <Label htmlFor="name" className="text-[#475569]">Name *</Label>
               <Input 
                 id="name" 
                 value={formData.name} 
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
                 placeholder="Enter full name"
-                className="bg-[#0B1220] border-[#334155] text-[#F3F4F6] placeholder:text-[#94A3B8]"
+                className="bg-white border-[#E5E7EB] text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#3B82F6]"
               />
             </div>
             <div>
-              <Label htmlFor="username" className="text-[#CBD5E1]">Username *</Label>
+              <Label htmlFor="username" className="text-[#475569]">Username *</Label>
               <Input 
                 id="username" 
                 value={formData.username} 
                 onChange={(e) => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/\s/g, '') })} 
                 placeholder="Enter username (for login)"
                 disabled={!!editingMember}
-                className="bg-[#0B1220] border-[#334155] text-[#F3F4F6] placeholder:text-[#94A3B8]"
+                className="bg-white border-[#E5E7EB] text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#3B82F6]"
               />
               {!editingMember && (
                 <p className="text-xs text-[#94A3B8] mt-1">
@@ -707,7 +713,7 @@ function MembersView({
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#94A3B8] hover:text-[#0F172A]"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -726,7 +732,7 @@ function MembersView({
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#94A3B8] hover:text-[#0F172A]"
                     >
                       {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -882,8 +888,8 @@ function NewsView({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-heading text-2xl text-[#F3F4F6]">News</h2>
-        <Button onClick={openAddModal} className="bg-[#38BDF8] text-[#0B1220] hover:bg-[#0EA5E9]">
+        <h2 className="font-heading text-2xl text-[#1E40AF]">News</h2>
+        <Button onClick={openAddModal} className="bg-[#3B82F6] text-white hover:bg-[#2563EB]">
           <Plus className="w-4 h-4 mr-2" />
           Add News
         </Button>
@@ -892,9 +898,9 @@ function NewsView({
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="bg-[#1F2937] border border-[#334155] rounded-xl p-4 animate-pulse">
-              <div className="h-5 w-2/3 bg-[#0B1220] rounded mb-2" />
-              <div className="h-4 w-full bg-[#0B1220] rounded" />
+            <div key={i} className="bg-white border border-[#E5E7EB] rounded-xl p-4 animate-pulse shadow-sm">
+              <div className="h-5 w-2/3 bg-[#F3F8FF] rounded mb-2" />
+              <div className="h-4 w-full bg-[#F3F8FF] rounded" />
             </div>
           ))}
         </div>
@@ -905,9 +911,9 @@ function NewsView({
       ) : (
         <div className="space-y-4">
           {news.map((item) => (
-            <div key={item.id} className="bg-[#1F2937] border border-[#334155] rounded-xl p-4 flex items-start justify-between">
+            <div key={item.id} className="bg-white border border-[#E5E7EB] rounded-xl p-4 flex items-start justify-between shadow-sm">
               <div className="flex-1 min-w-0 mr-4">
-                <h3 className="font-medium text-[#F3F4F6]">{item.title}</h3>
+                <h3 className="font-medium text-[#0F172A]">{item.title}</h3>
                 <p className="text-sm text-[#94A3B8] line-clamp-2 mt-1">
                   {item.summary || item.content.substring(0, 150)}
                 </p>
@@ -917,11 +923,11 @@ function NewsView({
                 </div>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <button onClick={() => openEditModal(item)} className="p-2 hover:bg-[#0B1220] rounded-lg transition-colors">
-                  <Edit className="w-4 h-4 text-[#E5E7EB]" />
+                <button onClick={() => openEditModal(item)} className="p-2 hover:bg-[#F3F8FF] rounded-lg transition-colors">
+                  <Edit className="w-4 h-4 text-[#475569]" />
                 </button>
-                <button onClick={() => handleDelete(item.id)} className="p-2 hover:bg-red-900/20 rounded-lg transition-colors">
-                  <Trash2 className="w-4 h-4 text-red-400" />
+                <button onClick={() => handleDelete(item.id)} className="p-2 hover:bg-[#FEE2E2] rounded-lg transition-colors">
+                  <Trash2 className="w-4 h-4 text-[#EF4444]" />
                 </button>
               </div>
             </div>
@@ -930,25 +936,25 @@ function NewsView({
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto bg-[#1F2937] border-[#334155]">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto bg-white border-[#E5E7EB]">
           <DialogHeader>
-            <DialogTitle className="text-[#F3F4F6]">{editingNews ? 'Edit News' : 'Add News'}</DialogTitle>
+            <DialogTitle className="text-[#0F172A]">{editingNews ? 'Edit News' : 'Add News'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <Label htmlFor="title" className="text-[#CBD5E1]">Title *</Label>
-              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-[#0B1220] border-[#334155] text-[#F3F4F6]" />
+              <Label htmlFor="title" className="text-[#475569]">Title *</Label>
+              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-white border-[#E5E7EB] text-[#0F172A] focus:border-[#3B82F6]" />
             </div>
             <div>
-              <Label htmlFor="summary" className="text-[#CBD5E1]">Summary</Label>
-              <Input id="summary" value={formData.summary} onChange={(e) => setFormData({ ...formData, summary: e.target.value })} placeholder="Brief summary for preview" className="bg-[#0B1220] border-[#334155] text-[#F3F4F6] placeholder:text-[#94A3B8]" />
+              <Label htmlFor="summary" className="text-[#475569]">Summary</Label>
+              <Input id="summary" value={formData.summary} onChange={(e) => setFormData({ ...formData, summary: e.target.value })} placeholder="Brief summary for preview" className="bg-white border-[#E5E7EB] text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#3B82F6]" />
             </div>
             <div>
-              <Label htmlFor="content" className="text-[#CBD5E1]">Content *</Label>
-              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={6} className="bg-[#0B1220] border-[#334155] text-[#F3F4F6]" />
+              <Label htmlFor="content" className="text-[#475569]">Content *</Label>
+              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={6} className="bg-white border-[#E5E7EB] text-[#0F172A] focus:border-[#3B82F6]" />
             </div>
             <div>
-              <Label htmlFor="imageUrl" className="text-[#CBD5E1]">Image URL</Label>
+              <Label htmlFor="imageUrl" className="text-[#475569]">Image URL</Label>
               <Input id="imageUrl" value={formData.imageUrl} onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })} placeholder="https://" />
             </div>
             <div>
@@ -1052,8 +1058,8 @@ function NoticesView({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-heading text-2xl text-[#F3F4F6]">Notices</h2>
-        <Button onClick={openAddModal} className="bg-[#38BDF8] text-[#0B1220] hover:bg-[#0EA5E9]">
+        <h2 className="font-heading text-2xl text-[#1E40AF]">Notices</h2>
+        <Button onClick={openAddModal} className="bg-[#3B82F6] text-white hover:bg-[#2563EB]">
           <Plus className="w-4 h-4 mr-2" />
           Add Notice
         </Button>
@@ -1062,9 +1068,9 @@ function NoticesView({
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="bg-[#1F2937] border border-[#334155] rounded-xl p-4 animate-pulse">
-              <div className="h-5 w-2/3 bg-[#0B1220] rounded mb-2" />
-              <div className="h-4 w-full bg-[#0B1220] rounded" />
+            <div key={i} className="bg-white border border-[#E5E7EB] rounded-xl p-4 animate-pulse shadow-sm">
+              <div className="h-5 w-2/3 bg-[#F3F8FF] rounded mb-2" />
+              <div className="h-4 w-full bg-[#F3F8FF] rounded" />
             </div>
           ))}
         </div>
@@ -1075,12 +1081,12 @@ function NoticesView({
       ) : (
         <div className="space-y-4">
           {notices.map((notice) => (
-            <div key={notice.id} className="bg-[#1F2937] border border-[#334155] rounded-xl p-4 flex items-start justify-between">
+            <div key={notice.id} className="bg-white border border-[#E5E7EB] rounded-xl p-4 flex items-start justify-between shadow-sm">
               <div className="flex-1 min-w-0 mr-4">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-medium text-[#F3F4F6]">{notice.title}</h3>
+                  <h3 className="font-medium text-[#0F172A]">{notice.title}</h3>
                   {notice.priority === 'important' && (
-                    <span className="px-2 py-0.5 rounded text-xs font-medium bg-red-900/20 text-red-400">
+                    <span className="px-2 py-0.5 rounded text-xs font-medium bg-[#FEE2E2] text-[#EF4444]">
                       Important
                     </span>
                   )}
@@ -1091,11 +1097,11 @@ function NoticesView({
                 </p>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <button onClick={() => openEditModal(notice)} className="p-2 hover:bg-[#0B1220] rounded-lg transition-colors">
-                  <Edit className="w-4 h-4 text-[#E5E7EB]" />
+                <button onClick={() => openEditModal(notice)} className="p-2 hover:bg-[#F3F8FF] rounded-lg transition-colors">
+                  <Edit className="w-4 h-4 text-[#475569]" />
                 </button>
-                <button onClick={() => handleDelete(notice.id)} className="p-2 hover:bg-red-900/20 rounded-lg transition-colors">
-                  <Trash2 className="w-4 h-4 text-red-400" />
+                <button onClick={() => handleDelete(notice.id)} className="p-2 hover:bg-[#FEE2E2] rounded-lg transition-colors">
+                  <Trash2 className="w-4 h-4 text-[#EF4444]" />
                 </button>
               </div>
             </div>
@@ -1104,24 +1110,24 @@ function NoticesView({
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-lg bg-[#1F2937] border-[#334155]">
+        <DialogContent className="max-w-lg bg-white border-[#E5E7EB]">
           <DialogHeader>
-            <DialogTitle className="text-[#F3F4F6]">{editingNotice ? 'Edit Notice' : 'Add Notice'}</DialogTitle>
+            <DialogTitle className="text-[#0F172A]">{editingNotice ? 'Edit Notice' : 'Add Notice'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <Label htmlFor="title" className="text-[#CBD5E1]">Title *</Label>
-              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-[#0B1220] border-[#334155] text-[#F3F4F6]" />
+              <Label htmlFor="title" className="text-[#475569]">Title *</Label>
+              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-white border-[#E5E7EB] text-[#0F172A] focus:border-[#3B82F6]" />
             </div>
             <div>
-              <Label htmlFor="content" className="text-[#CBD5E1]">Content *</Label>
-              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={4} className="bg-[#0B1220] border-[#334155] text-[#F3F4F6]" />
+              <Label htmlFor="content" className="text-[#475569]">Content *</Label>
+              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={4} className="bg-white border-[#E5E7EB] text-[#0F172A] focus:border-[#3B82F6]" />
             </div>
             <div>
-              <Label htmlFor="priority" className="text-[#CBD5E1]">Priority</Label>
+              <Label htmlFor="priority" className="text-[#475569]">Priority</Label>
               <Select value={formData.priority} onValueChange={(v) => setFormData({ ...formData, priority: v as 'normal' | 'important' })}>
-                <SelectTrigger className="bg-[#0B1220] border-[#334155] text-[#F3F4F6]"><SelectValue /></SelectTrigger>
-                <SelectContent className="bg-[#1F2937] border-[#334155]">
+                <SelectTrigger className="bg-white border-[#E5E7EB] text-[#0F172A]"><SelectValue /></SelectTrigger>
+                <SelectContent className="bg-white border-[#E5E7EB]">
                   <SelectItem value="normal">Normal</SelectItem>
                   <SelectItem value="important">Important</SelectItem>
                 </SelectContent>
@@ -1129,8 +1135,8 @@ function NoticesView({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)} className="border-[#334155] text-[#CBD5E1] hover:bg-[#0B1220]">Cancel</Button>
-            <Button onClick={handleSave} disabled={saving} className="bg-[#38BDF8] text-[#0B1220] hover:bg-[#0EA5E9]">
+            <Button variant="outline" onClick={() => setIsModalOpen(false)} className="border-[#E5E7EB] text-[#475569] hover:bg-[#F3F8FF]">Cancel</Button>
+            <Button onClick={handleSave} disabled={saving} className="bg-[#3B82F6] text-white hover:bg-[#2563EB]">
               {saving ? 'Saving...' : 'Save'}
             </Button>
           </DialogFooter>
@@ -1185,12 +1191,12 @@ function SettingsView({
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="h-8 w-48 bg-[#1F2937] rounded animate-pulse" />
-        <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6 space-y-4 animate-pulse">
-          <div className="h-4 w-32 bg-[#0B1220] rounded" />
-          <div className="h-10 w-full bg-[#0B1220] rounded" />
-          <div className="h-4 w-32 bg-[#0B1220] rounded" />
-          <div className="h-24 w-full bg-[#0B1220] rounded" />
+        <div className="h-8 w-48 bg-white rounded animate-pulse" />
+        <div className="bg-white border border-[#E5E7EB] rounded-xl p-6 space-y-4 animate-pulse shadow-sm">
+          <div className="h-4 w-32 bg-[#F3F8FF] rounded" />
+          <div className="h-10 w-full bg-[#F3F8FF] rounded" />
+          <div className="h-4 w-32 bg-[#F3F8FF] rounded" />
+          <div className="h-24 w-full bg-[#F3F8FF] rounded" />
         </div>
       </div>
     );
@@ -1198,11 +1204,11 @@ function SettingsView({
 
   return (
     <div>
-      <h2 className="font-heading text-2xl text-[#F3F4F6] mb-6">Site Settings</h2>
-      <div className="bg-[#1F2937] border border-[#334155] rounded-xl p-6 max-w-2xl">
+      <h2 className="font-heading text-2xl text-[#1E40AF] mb-6">Site Settings</h2>
+      <div className="bg-white border border-[#E5E7EB] rounded-xl p-6 max-w-2xl shadow-sm">
         <div className="space-y-6">
           <div>
-            <Label htmlFor="googleScholarUrl" className="text-base font-medium text-[#F3F4F6]">Google Scholar Profile URL</Label>
+            <Label htmlFor="googleScholarUrl" className="text-base font-medium text-[#0F172A]">Google Scholar Profile URL</Label>
             <p className="text-sm text-[#94A3B8] mb-2">
               This URL is used to fetch publications for the Publications page.
             </p>
@@ -1211,11 +1217,11 @@ function SettingsView({
               value={formData.googleScholarUrl}
               onChange={(e) => setFormData({ ...formData, googleScholarUrl: e.target.value })}
               placeholder="https://scholar.google.com/citations?user=..."
-              className="bg-[#0B1220] border-[#334155] text-[#F3F4F6] placeholder:text-[#94A3B8]"
+              className="bg-white border-[#E5E7EB] text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#3B82F6]"
             />
           </div>
           <div>
-            <Label htmlFor="aboutUs" className="text-base font-medium text-[#F3F4F6]">About Us</Label>
+            <Label htmlFor="aboutUs" className="text-base font-medium text-[#0F172A]">About Us</Label>
             <p className="text-sm text-[#94A3B8] mb-2">
               This text appears on the homepage About Us section.
             </p>
@@ -1224,10 +1230,10 @@ function SettingsView({
               value={formData.aboutUs}
               onChange={(e) => setFormData({ ...formData, aboutUs: e.target.value })}
               rows={6}
-              className="bg-[#0B1220] border-[#334155] text-[#F3F4F6]"
+              className="bg-white border-[#E5E7EB] text-[#0F172A] focus:border-[#3B82F6]"
             />
           </div>
-          <Button onClick={handleSave} disabled={saving} className="bg-[#38BDF8] text-[#0B1220] hover:bg-[#0EA5E9]">
+          <Button onClick={handleSave} disabled={saving} className="bg-[#3B82F6] text-white hover:bg-[#2563EB]">
             <Save className="w-4 h-4 mr-2" />
             {saving ? 'Saving...' : 'Save Settings'}
           </Button>

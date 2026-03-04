@@ -29,29 +29,21 @@ export default function ProjectsPage() {
   const completedCount = projects.filter(p => p.status === 'completed').length;
 
   return (
-    <div>
+    <div className="bg-[#FAFBF8]">
       {/* Hero Section */}
-      <section className="relative py-16 sm:py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src="https://images.unsplash.com/photo-1581093458791-9f3c3250a8b0?w=1920&q=80" 
-            alt="Research Projects"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-[#0B1220]/85" />
-        </div>
-        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-[#38BDF8]/20 rounded-full blur-3xl" />
+      <section className="relative py-16 sm:py-20 md:py-32 overflow-hidden bg-gradient-to-br from-[#F0F9FF] via-[#DBEAFE] to-[#F8FAFC]">
+        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-[#3B82F6]/10 rounded-full blur-3xl" />
         
         <div className="container-wide relative">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-[#F3F4F6] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-white/20">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#DBEAFE] text-[#3B82F6] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-[#DBEAFE]">
               <Beaker className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Innovation in Progress</span>
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#F3F4F6] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#1E40AF] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
               Research Projects
             </h1>
-            <p className="text-sm sm:text-lg md:text-xl text-[#CBD5E1] animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <p className="text-sm sm:text-lg md:text-xl text-[#475569] animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
               Explore our ongoing and completed research initiatives pushing the boundaries of chemistry.
             </p>
           </div>
@@ -60,42 +52,42 @@ export default function ProjectsPage() {
 
       {/* Stats & Filter Section */}
       <section className="container-wide -mt-8 sm:-mt-10 relative z-10 mb-8 sm:mb-12">
-        <div className="bg-card rounded-xl sm:rounded-xl shadow-card border border-border p-4 sm:p-6 md:p-8">
+        <div className="bg-white rounded-xl sm:rounded-xl shadow-lg border border-[#E5E7EB] p-4 sm:p-6 md:p-8">
           <div className="flex flex-col gap-4 sm:gap-6">
             {/* Stats */}
             <div className="flex items-center justify-center sm:justify-start gap-4 sm:gap-8">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#38BDF8]/15 text-[#38BDF8]">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#DBEAFE] text-[#3B82F6]">
                   <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#38BDF8]">{ongoingCount}</div>
-                  <div className="text-[10px] sm:text-xs text-muted-foreground">Ongoing</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#3B82F6]">{ongoingCount}</div>
+                  <div className="text-[10px] sm:text-xs text-[#94A3B8]">Ongoing</div>
                 </div>
               </div>
-              <div className="w-px h-10 sm:h-12 bg-border" />
+              <div className="w-px h-10 sm:h-12 bg-[#E5E7EB]" />
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#38BDF8]/15 text-[#38BDF8]">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#DBEAFE] text-[#3B82F6]">
                   <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#38BDF8]">{completedCount}</div>
-                  <div className="text-[10px] sm:text-xs text-muted-foreground">Completed</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#3B82F6]">{completedCount}</div>
+                  <div className="text-[10px] sm:text-xs text-[#94A3B8]">Completed</div>
                 </div>
               </div>
             </div>
             
             {/* Filter */}
             <div className="flex justify-center sm:justify-end">
-              <div className="flex gap-1 sm:gap-2 bg-secondary/50 p-1 sm:p-1.5 rounded-lg sm:rounded-xl">
+              <div className="flex gap-1 sm:gap-2 bg-[#F3F8FF] p-1 sm:p-1.5 rounded-lg sm:rounded-xl">
                 {(['all', 'ongoing', 'completed'] as const).map((status) => (
                   <button
                     key={status}
                     onClick={() => setFilter(status)}
                     className={`px-3 sm:px-5 py-2 sm:py-2.5 rounded-md sm:rounded-lg text-xs sm:text-sm font-medium transition-all ${
                       filter === status
-                        ? 'bg-accent text-accent-foreground shadow-md'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                        ? 'bg-[#3B82F6] text-white shadow-md'
+                        : 'bg-white text-[#475569] border border-[#E5E7EB] hover:bg-[#F3F8FF]'
                     }`}
                   >
                     {status === 'all' ? 'All' : status.charAt(0).toUpperCase() + status.slice(1)}
@@ -108,23 +100,23 @@ export default function ProjectsPage() {
       </section>
 
       {/* Projects Grid */}
-      <section className="container-wide pb-16 sm:pb-20 md:pb-32">
+      <section className="container-wide pb-16 sm:pb-20 md:pb-32 bg-[#F3F8FF] py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
           {loading ? (
             Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="card-academic p-8 animate-pulse">
-                <div className="h-6 w-24 bg-muted rounded-full mb-4" />
-                <div className="h-7 w-3/4 bg-muted rounded mb-4" />
-                <div className="h-4 w-full bg-muted rounded mb-2" />
-                <div className="h-4 w-full bg-muted rounded mb-2" />
-                <div className="h-4 w-1/2 bg-muted rounded" />
+              <div key={i} className="bg-white border border-[#E5E7EB] rounded-2xl p-8 animate-pulse">
+                <div className="h-6 w-24 bg-[#DBEAFE] rounded-full mb-4" />
+                <div className="h-7 w-3/4 bg-[#DBEAFE] rounded mb-4" />
+                <div className="h-4 w-full bg-[#DBEAFE] rounded mb-2" />
+                <div className="h-4 w-full bg-[#DBEAFE] rounded mb-2" />
+                <div className="h-4 w-1/2 bg-[#DBEAFE] rounded" />
               </div>
             ))
           ) : filteredProjects.length === 0 ? (
-            <div className="col-span-2 text-center py-20 bg-muted/30 rounded-3xl">
-              <FolderKanban className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-              <h3 className="font-heading text-xl text-foreground mb-2">No projects found</h3>
-              <p className="text-muted-foreground">
+            <div className="col-span-2 text-center py-20 bg-white border border-[#E5E7EB] rounded-3xl">
+              <FolderKanban className="w-16 h-16 mx-auto text-[#94A3B8] mb-4" />
+              <h3 className="font-heading text-xl text-[#0F172A] mb-2">No projects found</h3>
+              <p className="text-[#475569]">
                 {filter !== 'all' ? `No ${filter} projects at the moment.` : 'Projects will appear here once added.'}
               </p>
             </div>
@@ -142,14 +134,14 @@ export default function ProjectsPage() {
 function ProjectCard({ project, delay }: { project: Project; delay: string }) {
   const statusConfig = {
     ongoing: {
-      bg: 'bg-emerald-100',
-      text: 'text-emerald-700',
+      bg: 'bg-green-100',
+      text: 'text-green-700',
       icon: <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />,
       label: 'Ongoing'
     },
     completed: {
-      bg: 'bg-blue-100',
-      text: 'text-blue-700',
+      bg: 'bg-[#DBEAFE]',
+      text: 'text-[#3B82F6]',
       icon: <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />,
       label: 'Completed'
     }
@@ -159,11 +151,11 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
 
   return (
     <div
-      className="group bg-card rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-elevated hover:border-[#38BDF8]/25 transition-all duration-300 animate-fade-in-up"
+      className="group bg-white rounded-xl sm:rounded-2xl border border-[#E5E7EB] overflow-hidden hover:shadow-lg hover:border-[#3B82F6]/25 transition-all duration-300 animate-fade-in-up"
       style={{ animationDelay: delay }}
     >
       {/* Header with gradient */}
-      <div className="relative h-24 sm:h-32 bg-gradient-to-br from-[#38BDF8]/20 via-[#38BDF8]/10 to-transparent p-4 sm:p-6">
+      <div className="relative h-24 sm:h-32 bg-gradient-to-br from-[#DBEAFE]/40 via-[#F0F9FF] to-transparent p-4 sm:p-6">
         <div className="absolute top-4 sm:top-6 right-4 sm:right-6">
           <span className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold ${status.bg} ${status.text}`}>
             {status.icon}
@@ -171,24 +163,24 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
           </span>
         </div>
         <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6">
-          <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#38BDF8]/20 border border-[#38BDF8]/30">
-            <FolderKanban className="w-4 h-4 sm:w-6 sm:h-6 text-[#38BDF8]" />
+          <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#DBEAFE] border border-[#DBEAFE]">
+            <FolderKanban className="w-4 h-4 sm:w-6 sm:h-6 text-[#3B82F6]" />
           </div>
         </div>
       </div>
       
       {/* Content */}
       <div className="p-4 sm:p-6 pt-3 sm:pt-4">
-        <h3 className="font-heading text-base sm:text-xl font-semibold text-foreground group-hover:text-[#38BDF8] transition-colors mb-2 sm:mb-3 line-clamp-2">
+        <h3 className="font-heading text-base sm:text-xl font-semibold text-[#0F172A] group-hover:text-[#3B82F6] transition-colors mb-2 sm:mb-3 line-clamp-2">
           {project.title}
         </h3>
 
-        <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 line-clamp-3">
+        <p className="text-[#475569] text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 line-clamp-3">
           {project.description}
         </p>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 pt-3 sm:pt-4 border-t border-border">
-          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 pt-3 sm:pt-4 border-t border-[#E5E7EB]">
+          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-[#94A3B8]">
             <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
             <span>
               {new Date(project.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
@@ -201,7 +193,7 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
               href={project.researchLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-[#38BDF8] hover:text-[#0EA5E9] font-medium transition-colors group/link"
+              className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-[#3B82F6] hover:text-[#2563EB] font-medium transition-colors group/link"
             >
               Details
               <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover/link:translate-x-0.5" />

@@ -7,132 +7,108 @@
 /* 
   Design System for Yunus Ahmed Lab
   Academic Research Group Website
-  Color Palette: Academic Navy + Ice Blue (Research-Grade)
+  Color Palette: White-Cream + Sky Blue (Research-Grade)
   Typography: Playfair Display (headings) + Inter (body)
+  Reference: MIT, Stanford AI Lab, DeepMind, OpenAI
 */
 
 @layer base {
   :root {
-    /* Light Theme - Clean Academic White */
-    /* Primary background: #FFFFFF */
-    --background: 0 0% 100%;
-    /* Primary text - Deep Slate: #0F172A */
+    /* ================================================
+       RESEARCH WEBSITE COLOR SCHEME
+       White-Cream Background + Sky Blue Accent
+       Clean, Trustworthy, Intelligent, Calm
+       ================================================ */
+    
+    /* Background Colors */
+    /* Main Background - Soft Cream: #FAFBF8 */
+    --background: 80 20% 98%;
+    /* Primary text - Dark Slate: #0F172A */
     --foreground: 222 47% 11%;
 
-    /* Secondary background / cards: #FFFFFF */
+    /* Cards/Panels - Pure White: #FFFFFF */
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    /* Primary text: #0F172A */
-    --primary: 222 47% 11%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary Brand - Sky Research Blue: #3B82F6 */
+    --primary: 217 91% 60%;
+    /* Primary text on blue background */
+    --primary-foreground: 0 0% 100%;
 
-    /* Secondary background: #F8FAFC */
-    --secondary: 210 40% 98%;
-    /* Secondary text - Neutral Slate Gray: #334155 */
-    --secondary-foreground: 215 25% 27%;
+    /* Secondary Section - Very Light Blue: #F3F8FF */
+    --secondary: 216 100% 98%;
+    /* Secondary text - Muted Gray: #475569 */
+    --secondary-foreground: 215 16% 34%;
 
-    --muted: 210 40% 96%;
-    /* Muted / Meta Text - Soft Gray: #64748B */
-    --muted-foreground: 215 16% 47%;
+    /* Muted backgrounds - Soft cream/gray */
+    --muted: 220 13% 95%;
+    /* Muted text - Soft Gray: #94A3B8 */
+    --muted-foreground: 215 16% 65%;
 
-    /* Accent: Ice Blue #0284C7 (Light mode) */
-    --accent: 201 96% 40%;
+    /* Accent - Primary Blue (same as primary): #3B82F6 */
+    --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
-    /* Hover / Active Accent - Darker Blue: #0369A1 */
-    --accent-hover: 201 90% 33%;
+    /* Hover - Darker blue: #2563EB */
+    --accent-hover: 222 83% 53%;
+    /* Light accent background: #DBEAFE */
+    --accent-light: 214 95% 93%;
 
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 98%;
+    /* Primary Dark - Deep Academic Blue: #1E40AF */
+    --primary-dark: 224 70% 40%;
+    /* Primary Light - Soft Sky Blue: #93C5FD */
+    --primary-light: 213 97% 78%;
 
-    /* Dividers / Borders: #E2E8F0 */
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 201 96% 40%;
+    /* Cyan Secondary - Cyan Sky: #06B6D4 */
+    --cyan: 189 94% 43%;
+    /* Cyan Light: #CFFAFE */
+    --cyan-light: 183 92% 90%;
 
-    --radius: 0.625rem;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Success/Warning/Error */
+    --success: 142 71% 45%;
+    --warning: 38 92% 50%;
+    --error: 0 84% 60%;
+    --info: 217 91% 60%;
+
+    /* Borders - Light Gray: #E5E7EB */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.5rem;
 
     /* Custom tokens */
     --heading-font: 'Playfair Display', Georgia, serif;
     --body-font: 'Inter', system-ui, sans-serif;
-    
-    /* Ice Blue */
-    --ice-blue: 199 89% 60%;
-    --ice-blue-light: 199 92% 74%;
-    
-    /* Navy shades */
-    --navy-deep: 222 47% 11%;
-    --slate-blue: 217 33% 17%;
-    
-    --shadow-subtle: 0 1px 3px hsl(220 20% 15% / 0.08);
-    --shadow-card: 0 4px 20px hsl(220 20% 15% / 0.1);
-    --shadow-elevated: 0 10px 40px hsl(220 20% 15% / 0.15);
 
-    --sidebar-background: 0 0% 98%;
+    /* Link color: #2563EB */
+    --link: 222 83% 53%;
+    --link-hover: 224 70% 40%;
+    
+    /* Hero/Dark sections - Deep Academic Blue: #1E40AF */
+    --hero-bg: 224 70% 40%;
+    --hero-fg: 0 0% 100%;
+    --hero-muted: 214 95% 93%;
+    
+    /* Shadows - very subtle for academic look */
+    --shadow-subtle: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-card: 0 4px 20px rgba(0,0,0,0.05);
+    --shadow-elevated: 0 8px 30px rgba(0,0,0,0.08);
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 201 96% 40%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent: 216 100% 98%;
     --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 201 96% 40%;
-  }
-
-  .dark {
-    /* Dark Theme - Deep Navy Blue #0B1220 */
-    --background: 220 47% 8%;
-    /* Primary Text - Near-White Neutral: #F3F4F6 */
-    --foreground: 220 14% 96%;
-
-    /* Card backgrounds: #1F2937 */
-    --card: 218 23% 17%;
-    /* Primary Text on cards: #F3F4F6 */
-    --card-foreground: 220 14% 96%;
-
-    --popover: 218 23% 17%;
-    --popover-foreground: 220 14% 96%;
-
-    --primary: 220 47% 8%;
-    --primary-foreground: 220 14% 96%;
-
-    /* Secondary backgrounds: #111827 */
-    --secondary: 220 40% 11%;
-    /* Secondary Text - Cool Light Gray: #CBD5E1 */
-    --secondary-foreground: 214 32% 84%;
-
-    --muted: 218 23% 17%;
-    /* Muted / Tertiary Text - Muted Blue-Gray: #94A3B8 */
-    --muted-foreground: 215 20% 65%;
-
-    /* Accent - Ice Blue: #38BDF8 (Dark mode) */
-    --accent: 199 89% 60%;
-    --accent-foreground: 220 47% 8%;
-    /* Hover / Active Accent - Brighter ice blue: #0EA5E9 */
-    --accent-hover: 199 89% 48%;
-
-    --destructive: 0 60% 45%;
-    --destructive-foreground: 0 0% 98%;
-
-    /* Dividers / Borders: #334155 */
-    --border: 217 24% 27%;
-    --input: 217 24% 27%;
-    --ring: 199 89% 60%;
-    
-    --shadow-subtle: 0 1px 3px hsl(222 47% 5% / 0.2);
-    --shadow-card: 0 4px 20px hsl(222 47% 5% / 0.25);
-    --shadow-elevated: 0 10px 40px hsl(222 47% 5% / 0.35);
-
-    --sidebar-background: 220 47% 8%;
-    --sidebar-foreground: 220 13% 91%;
-    --sidebar-primary: 199 89% 60%;
-    --sidebar-primary-foreground: 220 47% 8%;
-    --sidebar-accent: 218 23% 17%;
-    --sidebar-accent-foreground: 220 13% 91%;
-    --sidebar-border: 217 24% 27%;
-    --sidebar-ring: 199 89% 60%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217 91% 60%;
   }
 }
 
@@ -191,34 +167,35 @@
     @apply py-16 sm:py-20 md:py-28;
   }
 
+  /* Card styles using CSS variables */
   .card-academic {
-    @apply bg-[#1F2937] rounded-xl border border-[#334155] shadow-card hover:shadow-elevated transition-all duration-300;
+    @apply bg-card rounded-xl border border-border shadow-card hover:shadow-elevated transition-all duration-300;
   }
 
-  .badge-ice {
+  /* Badge using accent color */
+  .badge-accent {
     @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium;
-    background: rgba(56, 189, 248, 0.15);
-    color: #38BDF8;
+    @apply bg-accent/15 text-accent;
   }
   
-  /* Navbar styles */
+  /* Navbar styles using variables */
   .navbar-link {
     @apply relative text-[15px] font-medium transition-colors duration-200;
-    color: rgba(203, 213, 225, 0.85);
+    @apply text-muted-foreground;
   }
   
   .navbar-link:hover {
-    color: #38BDF8;
+    @apply text-accent;
   }
   
   .navbar-link.active {
-    color: #38BDF8;
+    @apply text-accent;
   }
   
   .navbar-link::after {
     content: '';
     @apply absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300;
-    background: #38BDF8;
+    @apply bg-accent;
   }
   
   .navbar-link:hover::after,
@@ -226,64 +203,45 @@
     @apply w-full;
   }
 
-  /* Button styles */
+  /* Button styles using variables */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg;
-    background: #38BDF8;
-    color: #0B1220;
-  }
-
-  .btn-primary:hover {
-    background: #0EA5E9;
+    @apply bg-accent text-accent-foreground hover:brightness-110;
   }
 
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent rounded-xl font-semibold transition-all duration-200;
-    color: #38BDF8;
-    border: 2px solid #38BDF8;
-  }
-
-  .btn-secondary:hover {
-    background: rgba(56, 189, 248, 0.1);
+    @apply text-accent border-2 border-accent hover:bg-accent/10;
   }
 
   .link-underline {
     @apply relative inline-block transition-colors duration-200;
-    color: #F3F4F6;
-  }
-
-  .link-underline:hover {
-    color: #38BDF8;
+    @apply text-foreground hover:text-accent;
   }
 
   .link-underline::after {
     content: '';
     @apply absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300;
-    background: #38BDF8;
+    @apply bg-accent;
   }
 
   .link-underline:hover::after {
     @apply w-full;
   }
 
+  /* Stat card using variables */
   .stat-card {
     @apply p-6 rounded-xl;
-    background: #1F2937;
-    border: 1px solid #334155;
-    box-shadow: 0 4px 20px hsl(222 47% 5% / 0.25);
+    @apply bg-card border border-border shadow-card;
   }
 
   .stat-number {
     font-family: var(--heading-font);
-    @apply text-4xl font-bold;
-    /* Use accent ice blue for metrics */
-    color: #38BDF8;
+    @apply text-4xl font-bold text-accent;
   }
 
   .stat-label {
-    @apply text-sm mt-1;
-    /* Secondary text color */
-    color: #94A3B8;
+    @apply text-sm mt-1 text-muted-foreground;
   }
 
   .page-header {
@@ -291,23 +249,41 @@
   }
 
   .page-title {
-    @apply mb-4;
-    color: #F3F4F6;
+    @apply mb-4 text-foreground;
   }
 
   .page-subtitle {
-    @apply text-lg max-w-2xl mx-auto;
-    color: #94A3B8;
+    @apply text-lg max-w-2xl mx-auto text-muted-foreground;
   }
 
+  /* Form inputs using variables */
   .form-input-academic {
-    @apply w-full px-4 py-3 rounded-xl border border-[#334155] bg-[#0B1220] text-[#F3F4F6];
-    @apply focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50 focus:border-transparent;
-    @apply placeholder:text-[#94A3B8] transition-all duration-200;
+    @apply w-full px-4 py-3 rounded-xl;
+    @apply border border-border bg-background text-foreground;
+    @apply focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent;
+    @apply placeholder:text-muted-foreground transition-all duration-200;
   }
 
   .shadow-elevated {
-    box-shadow: 0 10px 40px -10px hsl(222 47% 5% / 0.4), 0 4px 6px -2px hsl(222 47% 5% / 0.2);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  /* Hero section styles (dark sections) */
+  .hero-section {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .hero-section .dark-mode-only {
+    @apply hidden dark:block;
+  }
+
+  /* Icon container styles */
+  .icon-container {
+    @apply p-3 rounded-xl bg-accent/15 text-accent;
+  }
+
+  .icon-container-solid {
+    @apply p-3 rounded-xl bg-accent text-accent-foreground;
   }
 }
 
