@@ -64,6 +64,7 @@ const TITLE_OPTIONS = [
   // Administrative titles
   'Lab Technician',
   'Lab Assistant',
+  'Office Secretary',
 ];
 
 export default function AdminDashboardPage() {
