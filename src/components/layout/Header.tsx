@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { FlaskConical, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const navItems = [
   { label: 'Home', path: '/' },
@@ -16,7 +17,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#E5E7EB]">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
       <div className="container-wide">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
@@ -39,8 +40,8 @@ export function Header() {
                 to={item.path}
                 className={`text-[15px] font-medium transition-colors duration-200 ${
                   location.pathname === item.path
-                    ? 'text-[#1E40AF]'
-                    : 'text-[#475569] hover:text-[#2563EB]'
+                    ? 'text-accent'
+                    : 'text-muted-foreground hover:text-accent'
                 }`}
               >
                 {item.label}
@@ -48,23 +49,30 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 hover:bg-[#F3F8FF] rounded-lg transition-colors text-[#475569]"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle className="hidden md:inline-flex" />
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <nav className="md:hidden pb-4 animate-fade-in">
+            <div className="px-4 pb-3">
+              <ThemeToggle className="w-full justify-center" />
+            </div>
             <div className="flex flex-col gap-1">
               {navItems.map((item) => (
                 <Link
@@ -73,8 +81,8 @@ export function Header() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-4 py-3 rounded-lg text-[15px] font-medium transition-colors ${
                     location.pathname === item.path
-                      ? 'bg-[#3B82F6] text-white'
-                      : 'text-[#475569] hover:bg-[#F3F8FF] hover:text-[#2563EB]'
+                      ? 'bg-accent text-accent-foreground'
+                      : 'text-muted-foreground hover:bg-secondary hover:text-accent'
                   }`}
                 >
                   {item.label}

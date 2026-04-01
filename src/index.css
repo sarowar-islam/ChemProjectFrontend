@@ -110,6 +110,62 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217 91% 60%;
   }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 96%;
+
+    --card: 222 35% 16%;
+    --card-foreground: 210 40% 96%;
+
+    --popover: 222 35% 16%;
+    --popover-foreground: 210 40% 96%;
+
+    --primary: 213 94% 68%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 222 30% 20%;
+    --secondary-foreground: 210 40% 90%;
+
+    --muted: 222 24% 22%;
+    --muted-foreground: 215 20% 74%;
+
+    --accent: 213 94% 68%;
+    --accent-foreground: 222 47% 11%;
+    --accent-hover: 213 94% 74%;
+    --accent-light: 213 60% 24%;
+
+    --destructive: 0 72% 54%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 222 24% 26%;
+    --input: 222 24% 26%;
+    --ring: 213 94% 68%;
+
+    --link: 213 94% 74%;
+    --link-hover: 213 94% 80%;
+
+    --hero-bg: 222 47% 11%;
+    --hero-fg: 210 40% 98%;
+    --hero-muted: 215 20% 74%;
+
+    --shadow-subtle: 0 1px 3px rgba(0,0,0,0.25);
+    --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
+    --shadow-elevated: 0 8px 30px rgba(0,0,0,0.35);
+
+    --sidebar-background: 222 35% 16%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 213 94% 68%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 30% 20%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 222 24% 26%;
+    --sidebar-ring: 213 94% 68%;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
 }
 
 @layer base {

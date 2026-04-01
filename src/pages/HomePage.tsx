@@ -54,8 +54,8 @@ export default function HomePage() {
             </div>
             
             <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#1E40AF] mb-4 sm:mb-6 animate-fade-in-up leading-[1.1]" style={{ animationDelay: '0.1s', letterSpacing: '-0.02em' }}>
-              Prof. Dr. Yunus Ahmed<br />
-              <span className="text-[#3B82F6]">Research Group</span>
+              Bio-Chemical and Environmental<br />
+              <span className="text-[#3B82F6]">Research Lab</span>
             </h1>
             
             <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
