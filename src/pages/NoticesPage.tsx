@@ -24,12 +24,12 @@ export default function NoticesPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FAFBF8]">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-[#F0F9FF] via-[#DBEAFE] to-[#F8FAFC] py-12 sm:py-16">
+      <div className="bg-gradient-to-br from-[#F0F9FF] dark:from-slate-950 via-[#DBEAFE] dark:via-slate-900 to-[#F8FAFC] dark:to-slate-950 py-12 sm:py-16">
         <div className="container-wide text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1E40AF] mb-4">Notices</h1>
-          <p className="text-sm sm:text-base lg:text-lg text-[#475569] max-w-2xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1E40AF] dark:text-foreground mb-4">Notices</h1>
+          <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto">
             Stay updated with the latest announcements and news from our research group.
           </p>
         </div>
@@ -42,17 +42,17 @@ export default function NoticesPage() {
         {loading ? (
           <div className="space-y-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-white border border-[#E5E7EB] rounded-xl p-6 animate-pulse">
-                <div className="h-5 w-3/4 bg-[#F3F8FF] rounded mb-3" />
-                <div className="h-4 w-full bg-[#F3F8FF] rounded mb-2" />
-                <div className="h-4 w-2/3 bg-[#F3F8FF] rounded" />
+              <div key={i} className="bg-card border border-border rounded-xl p-6 animate-pulse">
+                <div className="h-5 w-3/4 bg-secondary rounded mb-3" />
+                <div className="h-4 w-full bg-secondary rounded mb-2" />
+                <div className="h-4 w-2/3 bg-secondary rounded" />
               </div>
             ))}
           </div>
         ) : notices.length === 0 ? (
           <div className="text-center py-12">
-            <Bell className="w-12 h-12 mx-auto text-[#94A3B8] mb-4" />
-            <p className="text-[#475569]">No notices available.</p>
+            <Bell className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+            <p className="text-muted-foreground">No notices available.</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -72,7 +72,7 @@ function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
 
   return (
     <div
-      className={`bg-white border border-[#E5E7EB] rounded-xl p-4 sm:p-6 animate-fade-in-up ${
+      className={`bg-card border border-border rounded-xl p-4 sm:p-6 animate-fade-in-up ${
         isImportant ? 'border-l-4 border-l-red-500' : ''
       }`}
       style={{ animationDelay: delay }}
@@ -82,7 +82,7 @@ function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
           className={`p-1.5 sm:p-2 rounded-md sm:rounded-lg shrink-0 ${
             isImportant
               ? 'bg-red-100 text-red-500'
-              : 'bg-[#DBEAFE] text-[#3B82F6]'
+              : 'bg-accent/15 text-accent'
           }`}
         >
           {isImportant ? (
@@ -93,7 +93,7 @@ function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 sm:gap-4 mb-1.5 sm:mb-2">
-            <h3 className="font-heading text-base sm:text-lg font-semibold text-[#0F172A]">
+            <h3 className="font-heading text-base sm:text-lg font-semibold text-foreground">
               {notice.title}
             </h3>
             {isImportant && (
@@ -102,10 +102,10 @@ function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
               </span>
             )}
           </div>
-          <p className="text-[#475569] text-xs sm:text-sm leading-relaxed mb-2 sm:mb-3">
+          <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed mb-2 sm:mb-3">
             {notice.content}
           </p>
-          <p className="text-[10px] sm:text-xs text-[#94A3B8]">
+          <p className="text-[10px] sm:text-xs text-muted-foreground">
             {new Date(notice.date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',

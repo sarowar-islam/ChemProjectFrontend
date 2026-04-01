@@ -55,25 +55,25 @@ export default function MemberProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAFBF8]">
+      <div className="min-h-screen bg-background">
         <div className="container-wide py-12">
           <div className="max-w-5xl mx-auto animate-pulse">
-            <div className="h-6 w-24 bg-[#F3F8FF] rounded mb-8" />
+            <div className="h-6 w-24 bg-secondary rounded mb-8" />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-1">
-                <div className="bg-white border border-[#E5E7EB] rounded-xl p-6 text-center">
-                  <div className="w-48 h-48 bg-[#F3F8FF] rounded-full mx-auto mb-4" />
-                  <div className="h-6 w-32 bg-[#F3F8FF] rounded mx-auto mb-2" />
-                  <div className="h-4 w-24 bg-[#F3F8FF] rounded mx-auto" />
+                <div className="bg-card border border-border rounded-xl p-6 text-center">
+                  <div className="w-48 h-48 bg-secondary rounded-full mx-auto mb-4" />
+                  <div className="h-6 w-32 bg-secondary rounded mx-auto mb-2" />
+                  <div className="h-4 w-24 bg-secondary rounded mx-auto" />
                 </div>
               </div>
               <div className="lg:col-span-2">
-                <div className="bg-white border border-[#E5E7EB] rounded-xl p-6">
-                  <div className="h-8 w-48 bg-[#F3F8FF] rounded mb-4" />
+                <div className="bg-card border border-border rounded-xl p-6">
+                  <div className="h-8 w-48 bg-secondary rounded mb-4" />
                   <div className="space-y-2">
-                    <div className="h-4 w-full bg-[#F3F8FF] rounded" />
-                    <div className="h-4 w-full bg-[#F3F8FF] rounded" />
-                    <div className="h-4 w-2/3 bg-[#F3F8FF] rounded" />
+                    <div className="h-4 w-full bg-secondary rounded" />
+                    <div className="h-4 w-full bg-secondary rounded" />
+                    <div className="h-4 w-2/3 bg-secondary rounded" />
                   </div>
                 </div>
               </div>
@@ -86,15 +86,15 @@ export default function MemberProfilePage() {
 
   if (!member) {
     return (
-      <div className="min-h-screen bg-[#FAFBF8] flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="font-heading text-2xl text-[#0F172A] mb-4">Member Not Found</h1>
-          <p className="text-[#475569] mb-6">
+          <h1 className="font-heading text-2xl text-foreground mb-4">Member Not Found</h1>
+          <p className="text-muted-foreground mb-6">
             The team member you're looking for doesn't exist.
           </p>
           <Link
             to="/team"
-            className="inline-flex items-center gap-2 text-[#3B82F6] hover:text-[#2563EB] font-medium"
+            className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-medium"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Team
@@ -105,13 +105,13 @@ export default function MemberProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFBF8]">
+    <div className="min-h-screen bg-background">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-br from-[#F0F9FF] via-[#DBEAFE] to-[#F8FAFC]">
+      <div className="bg-gradient-to-br from-[#F0F9FF] dark:from-slate-950 via-[#DBEAFE] dark:via-slate-900 to-[#F8FAFC] dark:to-slate-950">
         <div className="container-wide py-8">
           <Link
             to="/team"
-            className="inline-flex items-center gap-2 text-[#475569] hover:text-[#0F172A] transition-colors text-sm"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Team
@@ -124,10 +124,10 @@ export default function MemberProfilePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Profile Card */}
             <div className="lg:col-span-1">
-              <div className="bg-white border border-[#E5E7EB] rounded-xl p-6 text-center sticky top-8">
+              <div className="bg-card border border-border rounded-xl p-6 text-center sticky top-8">
                 {/* Profile Image */}
                 <div className="relative -mt-20 mb-4">
-                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-[#3B82F6] shadow-xl bg-[#F3F8FF]">
+                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-[#3B82F6] shadow-xl bg-secondary">
                     <img
                       src={member.photoUrl || '/photos/blank_profile.png'}
                       alt={member.name}
@@ -137,16 +137,16 @@ export default function MemberProfilePage() {
                 </div>
 
                 {/* Name & Title */}
-                <h1 className="font-heading text-2xl font-bold text-[#0F172A] mb-1">
+                <h1 className="font-heading text-2xl font-bold text-foreground mb-1">
                   {member.name}
                 </h1>
-                <p className="text-[#3B82F6] font-medium mb-3">
+                <p className="text-accent font-medium mb-3">
                   {member.title}
                 </p>
 
                 {/* Research Area Badge */}
                 {member.researchArea && (
-                  <span className="inline-block px-4 py-1.5 bg-[#DBEAFE] text-[#3B82F6] rounded-full text-sm font-semibold border border-[#3B82F6]/30 mb-4">
+                  <span className="inline-block px-4 py-1.5 bg-accent/15 text-accent rounded-full text-sm font-semibold border border-[#3B82F6]/30 mb-4">
                     {member.researchArea}
                   </span>
                 )}
@@ -158,7 +158,7 @@ export default function MemberProfilePage() {
                       href={`https://mail.google.com/mail/?view=cm&to=${member.email}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-[#3B82F6] text-white rounded-lg text-sm font-medium hover:bg-[#2563EB] transition-colors"
+                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-accent text-primary-foreground rounded-lg text-sm font-medium hover:bg-accent/90 transition-colors"
                     >
                       <Mail className="w-4 h-4" />
                       Send Email
@@ -169,7 +169,7 @@ export default function MemberProfilePage() {
                       href={member.googleScholarLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-[#F3F8FF] text-[#0F172A] rounded-lg text-sm font-medium hover:bg-[#DBEAFE] transition-colors border border-[#E5E7EB]"
+                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-secondary text-foreground rounded-lg text-sm font-medium hover:bg-accent/15 transition-colors border border-border"
                     >
                       <BookOpen className="w-4 h-4" />
                       Google Scholar
@@ -178,26 +178,26 @@ export default function MemberProfilePage() {
                 </div>
 
                 {/* Quick Info */}
-                <div className="border-t border-[#E5E7EB] pt-4 space-y-3 text-left">
+                <div className="border-t border-border pt-4 space-y-3 text-left">
                   {member.phone && (
                     <div className="flex items-center gap-3 text-sm">
-                      <Phone className="w-4 h-4 text-[#3B82F6]" />
-                      <span className="text-[#475569]">{member.phone}</span>
+                      <Phone className="w-4 h-4 text-accent" />
+                      <span className="text-muted-foreground">{member.phone}</span>
                     </div>
                   )}
                   {member.email && (
                     <div className="flex items-center gap-3 text-sm">
-                      <Mail className="w-4 h-4 text-[#3B82F6]" />
-                      <span className="text-[#475569] truncate">{member.email}</span>
+                      <Mail className="w-4 h-4 text-accent" />
+                      <span className="text-muted-foreground truncate">{member.email}</span>
                     </div>
                   )}
                   <div className="flex items-center gap-3 text-sm">
-                    <MapPin className="w-4 h-4 text-[#3B82F6]" />
-                    <span className="text-[#475569]">CUET, Chittagong</span>
+                    <MapPin className="w-4 h-4 text-accent" />
+                    <span className="text-muted-foreground">CUET, Chittagong</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
-                    <Calendar className="w-4 h-4 text-[#3B82F6]" />
-                    <span className="text-[#475569]">
+                    <Calendar className="w-4 h-4 text-accent" />
+                    <span className="text-muted-foreground">
                       Member since {new Date(member.joinedDate).getFullYear()}
                     </span>
                   </div>
@@ -208,13 +208,13 @@ export default function MemberProfilePage() {
             {/* Right Column - Details */}
             <div className="lg:col-span-2">
               {/* Tabs */}
-              <div className="flex gap-4 mb-6 border-b border-[#E5E7EB] bg-white rounded-t-xl px-2">
+              <div className="flex gap-4 mb-6 border-b border-border bg-card rounded-t-xl px-2">
                 <button
                   onClick={() => setActiveTab('overview')}
                   className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors border-b-2 -mb-px ${
                     activeTab === 'overview'
-                      ? 'border-[#3B82F6] text-[#3B82F6]'
-                      : 'border-transparent text-[#94A3B8] hover:text-[#0F172A]'
+                      ? 'border-[#3B82F6] text-accent'
+                      : 'border-transparent text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   <Briefcase className="w-4 h-4" />
@@ -224,14 +224,14 @@ export default function MemberProfilePage() {
                   onClick={() => setActiveTab('publications')}
                   className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors border-b-2 -mb-px ${
                     activeTab === 'publications'
-                      ? 'border-[#3B82F6] text-[#3B82F6]'
-                      : 'border-transparent text-[#94A3B8] hover:text-[#0F172A]'
+                      ? 'border-[#3B82F6] text-accent'
+                      : 'border-transparent text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   <BookOpen className="w-4 h-4" />
                   Publications
                   {publications.length > 0 && (
-                    <span className="text-xs bg-[#DBEAFE] text-[#3B82F6] px-2 py-0.5 rounded-full">
+                    <span className="text-xs bg-accent/15 text-accent px-2 py-0.5 rounded-full">
                       {publications.length}
                     </span>
                   )}
@@ -241,17 +241,17 @@ export default function MemberProfilePage() {
               {activeTab === 'overview' && (
                 <div className="space-y-6">
                   {/* Biography */}
-                  <div className="bg-white border border-[#E5E7EB] rounded-xl p-6">
-                    <h2 className="font-heading text-xl text-[#1E40AF] mb-4 flex items-center gap-2">
-                      <Award className="w-5 h-5 text-[#3B82F6]" />
+                  <div className="bg-card border border-border rounded-xl p-6">
+                    <h2 className="font-heading text-xl text-foreground mb-4 flex items-center gap-2">
+                      <Award className="w-5 h-5 text-accent" />
                       About
                     </h2>
                     {member.bio ? (
-                      <p className="text-[#475569] leading-relaxed whitespace-pre-line">
+                      <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                         {member.bio}
                       </p>
                     ) : (
-                      <p className="text-[#94A3B8] italic">
+                      <p className="text-muted-foreground italic">
                         No biography available yet.
                       </p>
                     )}
@@ -259,16 +259,16 @@ export default function MemberProfilePage() {
 
                   {/* Expertise */}
                   {member.expertise && member.expertise.length > 0 && (
-                    <div className="bg-white border border-[#E5E7EB] rounded-xl p-6">
-                      <h2 className="font-heading text-xl text-[#1E40AF] mb-4 flex items-center gap-2">
-                        <GraduationCap className="w-5 h-5 text-[#3B82F6]" />
+                    <div className="bg-card border border-border rounded-xl p-6">
+                      <h2 className="font-heading text-xl text-foreground mb-4 flex items-center gap-2">
+                        <GraduationCap className="w-5 h-5 text-accent" />
                         Areas of Expertise
                       </h2>
                       <div className="flex flex-wrap gap-2">
                         {member.expertise.map((item) => (
                           <span
                             key={item}
-                            className="inline-flex items-center px-4 py-2 bg-[#DBEAFE] text-[#3B82F6] rounded-lg text-sm font-medium border border-[#3B82F6]/20"
+                            className="inline-flex items-center px-4 py-2 bg-accent/15 text-accent rounded-lg text-sm font-medium border border-[#3B82F6]/20"
                           >
                             {item}
                           </span>
@@ -279,37 +279,37 @@ export default function MemberProfilePage() {
 
                   {/* Research Stats */}
                   {(publications.length > 0 || scholarProfile) && (
-                    <div className="bg-white border border-[#E5E7EB] rounded-xl p-6">
-                      <h2 className="font-heading text-xl text-[#1E40AF] mb-4 flex items-center gap-2">
-                        <BookOpen className="w-5 h-5 text-[#3B82F6]" />
+                    <div className="bg-card border border-border rounded-xl p-6">
+                      <h2 className="font-heading text-xl text-foreground mb-4 flex items-center gap-2">
+                        <BookOpen className="w-5 h-5 text-accent" />
                         Research Metrics
                       </h2>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div className="bg-[#F3F8FF] rounded-xl p-4 text-center">
-                          <p className="text-3xl font-bold text-[#3B82F6] mb-1">
+                        <div className="bg-secondary rounded-xl p-4 text-center">
+                          <p className="text-3xl font-bold text-accent mb-1">
                             {publications.length}
                           </p>
-                          <p className="text-sm text-[#94A3B8]">Publications</p>
+                          <p className="text-sm text-muted-foreground">Publications</p>
                         </div>
-                        <div className="bg-[#F3F8FF] rounded-xl p-4 text-center">
-                          <p className="text-3xl font-bold text-[#3B82F6] mb-1">
+                        <div className="bg-secondary rounded-xl p-4 text-center">
+                          <p className="text-3xl font-bold text-accent mb-1">
                             {scholarProfile?.totalCitations || publications.reduce((sum, pub) => sum + (parseInt(pub.citedBy) || 0), 0)}
                           </p>
-                          <p className="text-sm text-[#94A3B8]">Total Citations</p>
+                          <p className="text-sm text-muted-foreground">Total Citations</p>
                         </div>
                         {scholarProfile && (
                           <>
-                            <div className="bg-[#F3F8FF] rounded-xl p-4 text-center">
-                              <p className="text-3xl font-bold text-[#3B82F6] mb-1">
+                            <div className="bg-secondary rounded-xl p-4 text-center">
+                              <p className="text-3xl font-bold text-accent mb-1">
                                 {scholarProfile.hIndex}
                               </p>
-                              <p className="text-sm text-[#94A3B8]">h-index</p>
+                              <p className="text-sm text-muted-foreground">h-index</p>
                             </div>
-                            <div className="bg-[#F3F8FF] rounded-xl p-4 text-center">
-                              <p className="text-3xl font-bold text-[#3B82F6] mb-1">
+                            <div className="bg-secondary rounded-xl p-4 text-center">
+                              <p className="text-3xl font-bold text-accent mb-1">
                                 {scholarProfile.i10Index}
                               </p>
-                              <p className="text-sm text-[#94A3B8]">i10-index</p>
+                              <p className="text-sm text-muted-foreground">i10-index</p>
                             </div>
                           </>
                         )}
@@ -327,7 +327,7 @@ export default function MemberProfilePage() {
                       <button
                         onClick={() => member && fetchPublications(member.id)}
                         disabled={pubsLoading}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-white hover:bg-[#F3F8FF] text-[#94A3B8] rounded-lg transition-colors disabled:opacity-50 border border-[#E5E7EB]"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-card hover:bg-secondary text-muted-foreground rounded-lg transition-colors disabled:opacity-50 border border-border"
                       >
                         <RefreshCw className={`w-4 h-4 ${pubsLoading ? 'animate-spin' : ''}`} />
                         Refresh
@@ -336,29 +336,29 @@ export default function MemberProfilePage() {
                   )}
                   
                   {pubsLoading ? (
-                    <div className="bg-white border border-[#E5E7EB] rounded-xl p-8">
+                    <div className="bg-card border border-border rounded-xl p-8">
                       <div className="space-y-4">
                         {Array.from({ length: 3 }).map((_, i) => (
                           <div key={i} className="animate-pulse">
-                            <div className="h-5 w-3/4 bg-[#F3F8FF] rounded mb-2" />
-                            <div className="h-4 w-1/2 bg-[#F3F8FF] rounded mb-2" />
-                            <div className="h-4 w-1/3 bg-[#F3F8FF] rounded" />
+                            <div className="h-5 w-3/4 bg-secondary rounded mb-2" />
+                            <div className="h-4 w-1/2 bg-secondary rounded mb-2" />
+                            <div className="h-4 w-1/3 bg-secondary rounded" />
                           </div>
                         ))}
                       </div>
-                      <p className="text-sm text-[#94A3B8] text-center mt-4">
+                      <p className="text-sm text-muted-foreground text-center mt-4">
                         Fetching publications from Google Scholar...
                       </p>
                     </div>
                   ) : pubsError ? (
-                    <div className="bg-white border border-[#E5E7EB] rounded-xl p-8 text-center">
-                      <BookOpen className="w-12 h-12 text-[#94A3B8]/50 mx-auto mb-4" />
-                      <p className="text-[#475569] mb-2">Could not load publications.</p>
-                      <p className="text-xs text-[#94A3B8] mb-4">{pubsError}</p>
+                    <div className="bg-card border border-border rounded-xl p-8 text-center">
+                      <BookOpen className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-2">Could not load publications.</p>
+                      <p className="text-xs text-muted-foreground mb-4">{pubsError}</p>
                       {member?.googleScholarLink && (
                         <button
                           onClick={() => member && fetchPublications(member.id)}
-                          className="inline-flex items-center gap-2 px-4 py-2 bg-[#3B82F6] text-white rounded-lg hover:bg-[#2563EB] transition-colors"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-primary-foreground rounded-lg hover:bg-accent/90 transition-colors"
                         >
                           <RefreshCw className="w-4 h-4" />
                           Try Again
@@ -370,25 +370,25 @@ export default function MemberProfilePage() {
                       {publications.slice(0, 20).map((pub, index) => (
                         <div
                           key={pub.scholarId || index}
-                          className="bg-white border border-[#E5E7EB] rounded-xl p-5 hover:shadow-md transition-shadow"
+                          className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-shadow"
                         >
                           <div className="flex gap-4">
-                            <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-lg bg-[#DBEAFE] text-[#3B82F6] font-bold shrink-0">
+                            <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-lg bg-accent/15 text-accent font-bold shrink-0">
                               {index + 1}
                             </div>
                             <div className="flex-1">
-                              <h3 className="font-medium text-[#0F172A] mb-2 leading-snug">
+                              <h3 className="font-medium text-foreground mb-2 leading-snug">
                                 {pub.title}
                               </h3>
-                              <p className="text-sm text-[#475569] mb-2">
+                              <p className="text-sm text-muted-foreground mb-2">
                                 {pub.authors?.join(', ') || 'Authors not available'}
                               </p>
                               <div className="flex flex-wrap items-center gap-3">
-                                <span className="text-xs text-[#94A3B8] italic">
+                                <span className="text-xs text-muted-foreground italic">
                                   {pub.journal || 'Journal not specified'} {pub.year && `• ${pub.year}`}
                                 </span>
                                 {pub.citedBy && parseInt(pub.citedBy) > 0 && (
-                                  <span className="inline-flex items-center gap-1 text-xs bg-[#DBEAFE] text-[#3B82F6] px-2 py-0.5 rounded-full font-medium">
+                                  <span className="inline-flex items-center gap-1 text-xs bg-accent/15 text-accent px-2 py-0.5 rounded-full font-medium">
                                     <Quote className="w-3 h-3" />
                                     Cited by {pub.citedBy}
                                   </span>
@@ -398,7 +398,7 @@ export default function MemberProfilePage() {
                                     href={pub.articleUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-xs text-[#3B82F6] hover:text-[#2563EB] hover:underline font-medium"
+                                    className="inline-flex items-center gap-1 text-xs text-accent hover:text-accent/80 hover:underline font-medium"
                                   >
                                     View Paper
                                     <ExternalLink className="w-3 h-3" />
@@ -410,14 +410,14 @@ export default function MemberProfilePage() {
                         </div>
                       ))}
                       {publications.length > 20 && (
-                        <div className="bg-white border border-[#E5E7EB] rounded-xl p-4 text-center">
-                          <p className="text-sm text-[#475569]">
+                        <div className="bg-card border border-border rounded-xl p-4 text-center">
+                          <p className="text-sm text-muted-foreground">
                             Showing 20 of {publications.length} publications.{' '}
                             <a
                               href={member.googleScholarLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[#3B82F6] hover:text-[#2563EB] hover:underline font-medium"
+                              className="text-accent hover:text-accent/80 hover:underline font-medium"
                             >
                               View all on Google Scholar
                             </a>
@@ -426,12 +426,12 @@ export default function MemberProfilePage() {
                       )}
                     </div>
                   ) : (
-                    <div className="bg-white border border-[#E5E7EB] rounded-xl p-8 text-center">
-                      <BookOpen className="w-12 h-12 text-[#94A3B8]/50 mx-auto mb-4" />
-                      <h3 className="font-heading text-lg text-[#1E40AF] mb-2">
+                    <div className="bg-card border border-border rounded-xl p-8 text-center">
+                      <BookOpen className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+                      <h3 className="font-heading text-lg text-foreground mb-2">
                         No Publications Yet
                       </h3>
-                      <p className="text-[#475569]">
+                      <p className="text-muted-foreground">
                         Publications will appear here once they are linked to a Google Scholar profile.
                       </p>
                     </div>

@@ -13,7 +13,7 @@ export interface TeamMember {
   name: string;
   email: string;
   phone?: string;
-  position: 'team_leader' | 'faculty' | 'researcher' | 'student' | 'staff';
+  position: 'team_leader' | 'faculty' | 'researcher' | 'student' | 'Administrative';
   title: string;
   researchArea: string;
   bio: string;

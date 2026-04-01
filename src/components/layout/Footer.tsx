@@ -3,20 +3,20 @@ import { FlaskConical, Mail, MapPin, ExternalLink, Facebook, Linkedin, Graduatio
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-[#E5E7EB]">
+    <footer className="bg-card border-t border-border">
       <div className="container-wide section-padding">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {/* Brand */}
           <div>
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-lg bg-[#1E40AF]/10 text-[#1E40AF]">
+              <div className="p-2 rounded-lg bg-[#1E40AF]/10 text-[#1E40AF] dark:text-foreground">
                 <FlaskConical className="w-5 h-5" />
               </div>
-              <span className="font-heading text-lg font-semibold text-[#1E40AF]">
+              <span className="font-heading text-lg font-semibold text-[#1E40AF] dark:text-foreground">
                 Yunus Ahmed Lab
               </span>
             </Link>
-            <p className="text-[#475569] text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               Advancing the frontiers of chemistry through innovative research 
               and collaborative discovery at CUET.
             </p>
@@ -24,7 +24,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-heading text-lg mb-4 text-[#1E40AF]">Quick Links</h4>
+            <h4 className="font-heading text-lg mb-4 text-[#1E40AF] dark:text-foreground">Quick Links</h4>
             <nav className="flex flex-col gap-2">
               {[
                 { label: 'Research Projects', path: '/projects' },
@@ -36,14 +36,14 @@ export function Footer() {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="text-[#475569] hover:text-[#3B82F6] text-sm transition-colors"
+                  className="text-muted-foreground hover:text-accent text-sm transition-colors"
                 >
                   {link.label}
                 </Link>
               ))}
               <Link
                 to="/teamlogin"
-                className="inline-flex items-center gap-2 text-[#475569] hover:text-[#3B82F6] text-sm transition-colors mt-2 pt-2 border-t border-[#E5E7EB]"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-accent text-sm transition-colors mt-2 pt-2 border-t border-border"
               >
                 <LogIn className="w-4 h-4" />
                 Team Member Login
@@ -53,34 +53,34 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-heading text-lg mb-4 text-[#1E40AF]">Contact</h4>
+            <h4 className="font-heading text-lg mb-4 text-[#1E40AF] dark:text-foreground">Contact</h4>
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 mt-0.5 text-[#1E40AF]" />
-                <span className="text-[#475569]">
+                <MapPin className="w-4 h-4 mt-0.5 text-[#1E40AF] dark:text-foreground" />
+                <span className="text-muted-foreground">
                   Department of Chemistry<br />
                   Chittagong University of Engineering & Technology<br />
                   Chittagong, Bangladesh
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-[#1E40AF]" />
+                <Mail className="w-4 h-4 text-[#1E40AF] dark:text-foreground" />
                 <a
                   href="https://mail.google.com/mail/?view=cm&to=yunus@cuet.ac.bd"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#475569] hover:text-[#3B82F6] transition-colors"
+                  className="text-muted-foreground hover:text-accent transition-colors"
                 >
                   yunus@cuet.ac.bd
                 </a>
               </div>
               <div className="flex items-center gap-3">
-                <ExternalLink className="w-4 h-4 text-[#1E40AF]" />
+                <ExternalLink className="w-4 h-4 text-[#1E40AF] dark:text-foreground" />
                 <a
                   href="https://cuet.ac.bd"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#475569] hover:text-[#3B82F6] transition-colors"
+                  className="text-muted-foreground hover:text-accent transition-colors"
                 >
                   CUET Official Website
                 </a>
@@ -90,14 +90,14 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-[#E5E7EB]">
+        <div className="mt-12 pt-8 border-t border-border">
           {/* Social Media Links */}
           <div className="flex justify-center gap-6 mb-6">
             <a
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-full hover:bg-[#3B82F6]/10 text-[#475569] hover:text-[#3B82F6] transition-all"
+              className="p-2 rounded-full hover:bg-accent/10 text-muted-foreground hover:text-accent transition-all"
               aria-label="Facebook"
             >
               <Facebook className="w-5 h-5" />
@@ -106,7 +106,7 @@ export function Footer() {
               href="https://linkedin.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-full hover:bg-[#3B82F6]/10 text-[#475569] hover:text-[#3B82F6] transition-all"
+              className="p-2 rounded-full hover:bg-accent/10 text-muted-foreground hover:text-accent transition-all"
               aria-label="LinkedIn"
             >
               <Linkedin className="w-5 h-5" />
@@ -115,14 +115,14 @@ export function Footer() {
               href="https://scholar.google.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-full hover:bg-[#3B82F6]/10 text-[#475569] hover:text-[#3B82F6] transition-all"
+              className="p-2 rounded-full hover:bg-accent/10 text-muted-foreground hover:text-accent transition-all"
               aria-label="Google Scholar"
             >
               <GraduationCap className="w-5 h-5" />
             </a>
           </div>
           
-          <p className="text-center text-sm text-[#94A3B8]">
+          <p className="text-center text-sm text-muted-foreground">
             © {new Date().getFullYear()} Yunus Ahmed Lab. All rights reserved.
           </p>
         </div>

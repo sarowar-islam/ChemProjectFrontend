@@ -29,21 +29,21 @@ export default function ProjectsPage() {
   const completedCount = projects.filter(p => p.status === 'completed').length;
 
   return (
-    <div className="bg-[#FAFBF8]">
+    <div className="bg-background">
       {/* Hero Section */}
-      <section className="relative py-16 sm:py-20 md:py-32 overflow-hidden bg-gradient-to-br from-[#F0F9FF] via-[#DBEAFE] to-[#F8FAFC]">
-        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-[#3B82F6]/10 rounded-full blur-3xl" />
+      <section className="relative py-16 sm:py-20 md:py-32 overflow-hidden bg-gradient-to-br from-[#F0F9FF] dark:from-slate-950 via-[#DBEAFE] dark:via-slate-900 to-[#F8FAFC] dark:to-slate-950">
+        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-accent/10 rounded-full blur-3xl" />
         
         <div className="container-wide relative">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#DBEAFE] text-[#3B82F6] text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-[#DBEAFE]">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-accent/15 text-accent text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-[#DBEAFE]">
               <Beaker className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Innovation in Progress</span>
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#1E40AF] mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#1E40AF] dark:text-foreground mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
               Research Projects
             </h1>
-            <p className="text-sm sm:text-lg md:text-xl text-[#475569] animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <p className="text-sm sm:text-lg md:text-xl text-muted-foreground animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
               Explore our ongoing and completed research initiatives pushing the boundaries of chemistry.
             </p>
           </div>
@@ -52,42 +52,42 @@ export default function ProjectsPage() {
 
       {/* Stats & Filter Section */}
       <section className="container-wide -mt-8 sm:-mt-10 relative z-10 mb-8 sm:mb-12">
-        <div className="bg-white rounded-xl sm:rounded-xl shadow-lg border border-[#E5E7EB] p-4 sm:p-6 md:p-8">
+        <div className="bg-card rounded-xl sm:rounded-xl shadow-lg border border-border p-4 sm:p-6 md:p-8">
           <div className="flex flex-col gap-4 sm:gap-6">
             {/* Stats */}
             <div className="flex items-center justify-center sm:justify-start gap-4 sm:gap-8">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#DBEAFE] text-[#3B82F6]">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
                   <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#3B82F6]">{ongoingCount}</div>
-                  <div className="text-[10px] sm:text-xs text-[#94A3B8]">Ongoing</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-accent">{ongoingCount}</div>
+                  <div className="text-[10px] sm:text-xs text-muted-foreground">Ongoing</div>
                 </div>
               </div>
               <div className="w-px h-10 sm:h-12 bg-[#E5E7EB]" />
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#DBEAFE] text-[#3B82F6]">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
                   <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <div className="font-heading text-xl sm:text-2xl font-bold text-[#3B82F6]">{completedCount}</div>
-                  <div className="text-[10px] sm:text-xs text-[#94A3B8]">Completed</div>
+                  <div className="font-heading text-xl sm:text-2xl font-bold text-accent">{completedCount}</div>
+                  <div className="text-[10px] sm:text-xs text-muted-foreground">Completed</div>
                 </div>
               </div>
             </div>
             
             {/* Filter */}
             <div className="flex justify-center sm:justify-end">
-              <div className="flex gap-1 sm:gap-2 bg-[#F3F8FF] p-1 sm:p-1.5 rounded-lg sm:rounded-xl">
+              <div className="flex gap-1 sm:gap-2 bg-secondary p-1 sm:p-1.5 rounded-lg sm:rounded-xl">
                 {(['all', 'ongoing', 'completed'] as const).map((status) => (
                   <button
                     key={status}
                     onClick={() => setFilter(status)}
                     className={`px-3 sm:px-5 py-2 sm:py-2.5 rounded-md sm:rounded-lg text-xs sm:text-sm font-medium transition-all ${
                       filter === status
-                        ? 'bg-[#3B82F6] text-white shadow-md'
-                        : 'bg-white text-[#475569] border border-[#E5E7EB] hover:bg-[#F3F8FF]'
+                        ? 'bg-accent text-primary-foreground shadow-md'
+                        : 'bg-card text-muted-foreground border border-border hover:bg-secondary'
                     }`}
                   >
                     {status === 'all' ? 'All' : status.charAt(0).toUpperCase() + status.slice(1)}
@@ -100,23 +100,23 @@ export default function ProjectsPage() {
       </section>
 
       {/* Projects Grid */}
-      <section className="container-wide pb-16 sm:pb-20 md:pb-32 bg-[#F3F8FF] py-12">
+      <section className="container-wide pb-16 sm:pb-20 md:pb-32 bg-secondary py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
           {loading ? (
             Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-white border border-[#E5E7EB] rounded-2xl p-8 animate-pulse">
-                <div className="h-6 w-24 bg-[#DBEAFE] rounded-full mb-4" />
-                <div className="h-7 w-3/4 bg-[#DBEAFE] rounded mb-4" />
-                <div className="h-4 w-full bg-[#DBEAFE] rounded mb-2" />
-                <div className="h-4 w-full bg-[#DBEAFE] rounded mb-2" />
-                <div className="h-4 w-1/2 bg-[#DBEAFE] rounded" />
+              <div key={i} className="bg-card border border-border rounded-2xl p-8 animate-pulse">
+                <div className="h-6 w-24 bg-accent/15 rounded-full mb-4" />
+                <div className="h-7 w-3/4 bg-accent/15 rounded mb-4" />
+                <div className="h-4 w-full bg-accent/15 rounded mb-2" />
+                <div className="h-4 w-full bg-accent/15 rounded mb-2" />
+                <div className="h-4 w-1/2 bg-accent/15 rounded" />
               </div>
             ))
           ) : filteredProjects.length === 0 ? (
-            <div className="col-span-2 text-center py-20 bg-white border border-[#E5E7EB] rounded-3xl">
-              <FolderKanban className="w-16 h-16 mx-auto text-[#94A3B8] mb-4" />
-              <h3 className="font-heading text-xl text-[#0F172A] mb-2">No projects found</h3>
-              <p className="text-[#475569]">
+            <div className="col-span-2 text-center py-20 bg-card border border-border rounded-3xl">
+              <FolderKanban className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+              <h3 className="font-heading text-xl text-foreground mb-2">No projects found</h3>
+              <p className="text-muted-foreground">
                 {filter !== 'all' ? `No ${filter} projects at the moment.` : 'Projects will appear here once added.'}
               </p>
             </div>
@@ -140,8 +140,8 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
       label: 'Ongoing'
     },
     completed: {
-      bg: 'bg-[#DBEAFE]',
-      text: 'text-[#3B82F6]',
+      bg: 'bg-accent/15',
+      text: 'text-accent',
       icon: <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />,
       label: 'Completed'
     }
@@ -151,7 +151,7 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
 
   return (
     <div
-      className="group bg-white rounded-xl sm:rounded-2xl border border-[#E5E7EB] overflow-hidden hover:shadow-lg hover:border-[#3B82F6]/25 transition-all duration-300 animate-fade-in-up"
+      className="group bg-card rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-lg hover:border-[#3B82F6]/25 transition-all duration-300 animate-fade-in-up"
       style={{ animationDelay: delay }}
     >
       {/* Header with gradient */}
@@ -163,24 +163,24 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
           </span>
         </div>
         <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6">
-          <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-[#DBEAFE] border border-[#DBEAFE]">
-            <FolderKanban className="w-4 h-4 sm:w-6 sm:h-6 text-[#3B82F6]" />
+          <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 border border-[#DBEAFE]">
+            <FolderKanban className="w-4 h-4 sm:w-6 sm:h-6 text-accent" />
           </div>
         </div>
       </div>
       
       {/* Content */}
       <div className="p-4 sm:p-6 pt-3 sm:pt-4">
-        <h3 className="font-heading text-base sm:text-xl font-semibold text-[#0F172A] group-hover:text-[#3B82F6] transition-colors mb-2 sm:mb-3 line-clamp-2">
+        <h3 className="font-heading text-base sm:text-xl font-semibold text-foreground group-hover:text-accent transition-colors mb-2 sm:mb-3 line-clamp-2">
           {project.title}
         </h3>
 
-        <p className="text-[#475569] text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 line-clamp-3">
+        <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 line-clamp-3">
           {project.description}
         </p>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 pt-3 sm:pt-4 border-t border-[#E5E7EB]">
-          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-[#94A3B8]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 pt-3 sm:pt-4 border-t border-border">
+          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground">
             <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
             <span>
               {new Date(project.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
@@ -193,7 +193,7 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
               href={project.researchLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-[#3B82F6] hover:text-[#2563EB] font-medium transition-colors group/link"
+              className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-accent hover:text-accent/80 font-medium transition-colors group/link"
             >
               Details
               <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover/link:translate-x-0.5" />

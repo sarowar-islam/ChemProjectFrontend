@@ -22,11 +22,11 @@ export function Header() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
-            <div className="p-1.5 sm:p-2 rounded-lg bg-[#1E40AF] text-white group-hover:scale-105 transition-transform">
+            <div className="p-1.5 sm:p-2 rounded-lg bg-accent text-accent-foreground group-hover:scale-105 transition-transform">
               <FlaskConical className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="hidden xs:block sm:block">
-              <span className="font-heading text-base sm:text-lg lg:text-xl font-semibold text-[#1E40AF]">
+              <span className="font-heading text-base sm:text-lg lg:text-xl font-semibold text-[#1E40AF] dark:text-foreground">
                 Yunus Ahmed Lab
               </span>
             </div>
