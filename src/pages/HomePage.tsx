@@ -60,7 +60,7 @@ export default function HomePage() {
             
             <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <div className="w-10 sm:w-16 h-1 bg-accent rounded-full" />
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground font-medium">Professor of Chemistry, CUET</p>
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground font-medium">Department of Chemistry, CUET</p>
             </div>
             
             <p className="text-base sm:text-lg lg:text-xl text-muted-foreground mb-6 sm:mb-8 md:mb-10 max-w-2xl animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.3s' }}>
