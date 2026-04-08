@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { FlaskConical, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -22,12 +22,20 @@ export function Header() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
-            <div className="p-1.5 sm:p-2 rounded-lg bg-accent text-accent-foreground group-hover:scale-105 transition-transform">
-              <FlaskConical className="w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="w-[3.6rem] h-[3.6rem] sm:w-[4.5rem] sm:h-[4.5rem] shrink-0 group-hover:scale-105 transition-transform">
+              <img
+                src="/photos/Logo.png"
+                alt="Yunus Ahmed Lab logo"
+                className="w-full h-full object-contain"
+              />
             </div>
-            <div className="hidden xs:block sm:block">
-              <span className="font-heading text-base sm:text-lg lg:text-xl font-semibold text-[#1E40AF] dark:text-foreground">
-                Yunus Ahmed Lab
+            <div className="hidden sm:flex flex-col leading-tight">
+              <span className="font-heading text-sm lg:text-base font-semibold text-foreground">
+                <span>Bio-Chemical and </span>
+                <span className="text-[#0D8B4E]">Environmental</span>
+              </span>
+              <span className="text-[10px] lg:text-xs uppercase tracking-[0.35em] text-[#0D8B4E] font-medium mt-0.5">
+                Research Lab
               </span>
             </div>
           </Link>

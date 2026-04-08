@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FlaskConical, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { authService } from '@/services/auth.service';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -47,8 +47,12 @@ export default function TeamLoginPage() {
         <div className="bg-card rounded-2xl p-8 shadow-lg animate-fade-in-up border border-border">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center p-3 rounded-xl bg-accent/15 text-accent mb-4">
-              <FlaskConical className="w-6 h-6" />
+            <div className="inline-flex items-center justify-center w-14 h-14 mb-4">
+              <img
+                src="/photos/Logo.png"
+                alt="Yunus Ahmed Lab logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <h1 className="font-heading text-2xl font-bold text-foreground">Team Member Login</h1>
             <p className="text-muted-foreground text-sm mt-2">

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  FlaskConical,
   LogOut,
   Save,
   Loader2,
@@ -260,14 +259,24 @@ export default function MemberDashboardPage() {
               {sidebarOpen ? <XIcon className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
             <Link to="/" className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-accent/15">
-                <FlaskConical className="w-5 h-5 text-accent" />
+              <div className="w-9 h-9 shrink-0">
+                <img
+                  src="/photos/Logo.png"
+                  alt="Yunus Ahmed Lab logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <div className="hidden sm:block">
-                <span className="font-heading font-semibold text-sm text-foreground">
-                  Prof. Dr. Yunus Research Group
-                </span>
-                <span className="text-muted-foreground mx-2">|</span>
+              <div className="hidden sm:flex items-center gap-2">
+                <div className="flex flex-col leading-tight">
+                  <span className="font-heading text-xs lg:text-sm font-semibold text-foreground">
+                    <span>Bio-Chemical and </span>
+                    <span className="text-[#0D8B4E]">Environmental</span>
+                  </span>
+                  <span className="text-[9px] lg:text-[10px] uppercase tracking-[0.3em] text-[#0D8B4E] font-medium mt-0.5">
+                    Research Lab
+                  </span>
+                </div>
+                <span className="text-muted-foreground">|</span>
                 <span className="text-xs text-muted-foreground">Member Portal</span>
               </div>
             </Link>

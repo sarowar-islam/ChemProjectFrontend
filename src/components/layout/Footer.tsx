@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FlaskConical, Mail, MapPin, ExternalLink, Facebook, Linkedin, GraduationCap, LogIn } from 'lucide-react';
+import { Mail, MapPin, ExternalLink, Facebook, Linkedin, GraduationCap, LogIn } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -9,12 +9,22 @@ export function Footer() {
           {/* Brand */}
           <div>
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-lg bg-[#1E40AF]/10 text-[#1E40AF] dark:text-foreground">
-                <FlaskConical className="w-5 h-5" />
+              <div className="w-9 h-9 shrink-0">
+                <img
+                  src="/photos/Logo.png"
+                  alt="Yunus Ahmed Lab logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <span className="font-heading text-lg font-semibold text-[#1E40AF] dark:text-foreground">
-                Yunus Ahmed Lab
-              </span>
+              <div className="flex flex-col leading-tight">
+                <span className="font-heading text-sm lg:text-base font-semibold text-foreground">
+                  <span>Bio-Chemical and </span>
+                  <span className="text-[#0D8B4E]">Environmental</span>
+                </span>
+                <span className="text-[10px] lg:text-xs uppercase tracking-[0.35em] text-[#0D8B4E] font-medium mt-0.5">
+                  Research Lab
+                </span>
+              </div>
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Advancing the frontiers of chemistry through innovative research 
