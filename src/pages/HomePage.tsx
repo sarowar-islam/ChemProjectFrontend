@@ -285,7 +285,7 @@ export default function HomePage() {
                   <Link to="/teamlogin" className="inline-flex items-center justify-center gap-2 bg-background hover:bg-secondary text-foreground font-medium rounded-lg text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 transition-colors">
                     Team Portal <ArrowRight className="w-4 h-4" />
                   </Link>
-                  <a href="https://mail.google.com/mail/?view=cm&to=yunus@cuet.ac.bd" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 border-2 border-white text-primary-foreground hover:bg-card/10 font-medium rounded-lg text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 transition-colors">
+                  <a href="https://mail.google.com/mail/?view=cm&to=yunusahmed@cuet.ac.bd" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 border-2 border-white text-primary-foreground hover:bg-card/10 font-medium rounded-lg text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 transition-colors">
                     Contact Us
                   </a>
                 </div>

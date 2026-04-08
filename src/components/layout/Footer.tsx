@@ -76,12 +76,12 @@ export function Footer() {
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-[#166534] dark:text-foreground" />
                 <a
-                  href="https://mail.google.com/mail/?view=cm&to=yunus@cuet.ac.bd"
+                  href="https://mail.google.com/mail/?view=cm&to=yunusahmed@cuet.ac.bd"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-accent transition-colors"
                 >
-                  yunus@cuet.ac.bd
+                  yunusahmed@cuet.ac.bd
                 </a>
               </div>
               <div className="flex items-center gap-3">
