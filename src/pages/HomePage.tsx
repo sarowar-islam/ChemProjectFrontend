@@ -37,23 +37,23 @@ export default function HomePage() {
   return (
     <div>
       {/* Hero Section with Light Gradient Background */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-[#F0F9FF] dark:from-slate-950 via-[#DBEAFE] dark:via-slate-900 to-[#F8FAFC] dark:to-slate-950">
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
         {/* Floating Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-64 h-64 bg-accent/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-          <Atom className="absolute top-32 right-20 w-16 h-16 text-accent/30 animate-spin" style={{ animationDuration: '20s' }} />
-          <Beaker className="absolute bottom-32 left-20 w-12 h-12 text-accent/30" />
+          <div className="absolute top-20 left-10 w-64 h-64 bg-secondary/70 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/60 rounded-full blur-3xl" />
+          <Atom className="absolute top-32 right-20 w-16 h-16 text-secondary-foreground/45 animate-spin" style={{ animationDuration: '20s' }} />
+          <Beaker className="absolute bottom-32 left-20 w-12 h-12 text-secondary-foreground/45" />
         </div>
 
-        <div className="container-wide relative z-10 py-12 sm:py-16 md:py-24">
+        <div className="container-wide relative z-10 py-6 sm:py-8 md:py-12">
           <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-accent/15 text-accent text-xs sm:text-sm font-medium mb-6 sm:mb-8 animate-fade-in border border-accent/30">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-secondary/80 text-secondary-foreground text-xs sm:text-sm font-medium mb-6 sm:mb-4 animate-fade-in border border-secondary-foreground/20">
               <FlaskConical className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Pioneering Chemistry Research</span>
             </div>
             
-            <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#1E40AF] dark:text-foreground mb-4 sm:mb-6 animate-fade-in-up leading-[1.1]" style={{ animationDelay: '0.1s', letterSpacing: '-0.02em' }}>
+            <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#166534] dark:text-foreground mb-4 sm:mb-6 animate-fade-in-up leading-[1.1]" style={{ animationDelay: '0.1s', letterSpacing: '-0.02em' }}>
               Bio-Chemical and Environmental<br />
               <span className="text-accent">Research Lab</span>
             </h1>
@@ -63,7 +63,7 @@ export default function HomePage() {
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground font-medium">Department of Chemistry, CUET</p>
             </div>
             
-            <p className="text-base sm:text-lg lg:text-xl text-muted-foreground mb-6 sm:mb-8 md:mb-10 max-w-2xl animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.3s' }}>
+            <p className="text-base sm:text-lg lg:text-xl text-muted-foreground mb-6 sm:mb-4 md:mb-5 max-w-2xl animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.3s' }}>
               Chittagong University of Engineering & Technology — Advancing the frontiers of sustainable chemistry through innovative research and collaboration.
             </p>
             
@@ -80,7 +80,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section - Floating Cards */}
-      <section className="container-wide -mt-12 sm:-mt-16 relative z-20 pb-12 sm:pb-16 md:pb-20">
+      <section className="container-wide mt-4 sm:mt-6 relative z-20 pb-6 sm:pb-8 md:pb-10">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {loading ? (
             Array.from({ length: 4 }).map((_, i) => (
@@ -91,20 +91,20 @@ export default function HomePage() {
             ))
           ) : (
             <>
-              <StatCard icon={<FolderKanban className="w-6 h-6" />} number={stats.totalProjects} label="Research Projects" delay="0s" color="bg-accent/15" />
-              <StatCard icon={<BookOpen className="w-6 h-6" />} number={stats.totalPublications} label="Publications" delay="0.1s" color="bg-accent/15" />
-              <StatCard icon={<Users className="w-6 h-6" />} number={stats.totalMembers} label="Team Members" delay="0.2s" color="bg-accent/15" />
-              <StatCard icon={<FlaskConical className="w-6 h-6" />} number={stats.ongoingProjects} label="Ongoing Projects" delay="0.3s" color="bg-accent/15" />
+              <StatCard icon={<FolderKanban className="w-6 h-6" />} number={stats.totalProjects} label="Research Projects" delay="0s" color="bg-secondary text-secondary-foreground" />
+              <StatCard icon={<BookOpen className="w-6 h-6" />} number={stats.totalPublications} label="Publications" delay="0.1s" color="bg-secondary text-secondary-foreground" />
+              <StatCard icon={<Users className="w-6 h-6" />} number={stats.totalMembers} label="Team Members" delay="0.2s" color="bg-secondary text-secondary-foreground" />
+              <StatCard icon={<FlaskConical className="w-6 h-6" />} number={stats.ongoingProjects} label="Ongoing Projects" delay="0.3s" color="bg-secondary text-secondary-foreground" />
             </>
           )}
         </div>
       </section>
 
       {/* About Us Section - Enhanced */}
-      <section className="py-24 md:py-36 relative overflow-hidden bg-background">
+      <section className="py-12 md:py-16 relative overflow-hidden bg-background">
         <div className="absolute inset-0 bg-gradient-to-br from-background/50 via-background to-background/30" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-secondary/65 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/50 rounded-full blur-3xl" />
         
         <div className="container-wide relative">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -135,26 +135,26 @@ export default function HomePage() {
             
             {/* Content Side */}
             <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-accent/15 text-accent text-xs sm:text-sm font-medium mb-4 sm:mb-6">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-secondary/80 text-secondary-foreground text-xs sm:text-sm font-medium mb-4 sm:mb-6 border border-secondary-foreground/20">
                 <Info className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span>About Our Research Group</span>
               </div>
               
-              <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#1E40AF] dark:text-foreground mb-4 sm:mb-6 leading-tight" style={{ letterSpacing: '-0.02em' }}>
+              <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#166534] dark:text-foreground mb-4 sm:mb-6 leading-tight" style={{ letterSpacing: '-0.02em' }}>
                 Pushing the Boundaries of <span className="text-accent">Chemical Science</span>
               </h2>
               
               {aboutUs ? (
-                <p className="text-muted-foreground text-lg leading-relaxed mb-8">{aboutUs}</p>
+                <p className="text-muted-foreground text-lg leading-relaxed mb-4">{aboutUs}</p>
               ) : (
-                <p className="text-muted-foreground text-lg leading-relaxed mb-8">
+                <p className="text-muted-foreground text-lg leading-relaxed mb-4">
                   Welcome to Yunus Ahmed Lab at CUET. Our research group is dedicated to advancing the frontiers of chemistry through innovative approaches in environmental remediation, resource recovery, nanomaterials, and cutting-edge wastewater treatment technologies for sustainable development.
                 </p>
               )}
               
-              <div className="grid sm:grid-cols-2 gap-4 mb-8">
+              <div className="grid sm:grid-cols-2 gap-4 mb-4">
                 <div className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border">
-                  <div className="p-2 rounded-lg bg-accent/15 text-accent">
+                  <div className="p-2 rounded-lg bg-secondary text-secondary-foreground">
                     <Target className="w-5 h-5" />
                   </div>
                   <div>
@@ -163,7 +163,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border">
-                  <div className="p-2 rounded-lg bg-accent/15 text-accent">
+                  <div className="p-2 rounded-lg bg-secondary text-secondary-foreground">
                     <Sparkles className="w-5 h-5" />
                   </div>
                   <div>
@@ -182,18 +182,18 @@ export default function HomePage() {
       </section>
 
       {/* Research Focus - Enhanced */}
-      <section className="py-24 md:py-36 bg-secondary relative overflow-hidden">
+      <section className="py-12 md:py-16 bg-secondary relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%231E40AF" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+          <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%230891B2" fill-opacity="0.35"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
         </div>
         
         <div className="container-wide relative">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/15 text-accent text-sm font-medium mb-6">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/85 text-secondary-foreground text-sm font-medium mb-6 border border-secondary-foreground/20">
               <Microscope className="w-4 h-4" />
               <span>What We Do</span>
             </div>
-            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl text-[#1E40AF] dark:text-foreground mb-4" style={{ letterSpacing: '-0.02em' }}>Our Research Focus</h2>
+            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl text-[#166534] dark:text-foreground mb-4" style={{ letterSpacing: '-0.02em' }}>Our Research Focus</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
               Exploring innovative solutions across multiple domains of chemistry to address global challenges.
             </p>
@@ -225,14 +225,14 @@ export default function HomePage() {
       </section>
 
       {/* Recent Notices - Enhanced */}
-      <section className="container-wide py-24 md:py-36 bg-background">
-        <div className="flex items-center justify-between mb-12">
+      <section className="container-wide py-12 md:py-16 bg-background">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/15 text-accent text-sm font-medium mb-4">
               <Bell className="w-4 h-4" />
               <span>Stay Updated</span>
             </div>
-            <h2 className="font-heading text-3xl md:text-4xl text-[#1E40AF] dark:text-foreground" style={{ letterSpacing: '-0.02em' }}>Recent Notices</h2>
+            <h2 className="font-heading text-3xl md:text-4xl text-[#166534] dark:text-foreground" style={{ letterSpacing: '-0.02em' }}>Recent Notices</h2>
           </div>
           <Link to="/notices" className="hidden sm:inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-card text-foreground font-medium hover:bg-secondary transition-colors border border-border">
             View All <ArrowRight className="w-4 h-4" />
@@ -249,7 +249,7 @@ export default function HomePage() {
               </div>
             ))
           ) : recentNotices.length === 0 ? (
-            <div className="col-span-3 text-center py-12 bg-secondary rounded-xl border border-border">
+            <div className="col-span-3 text-center py-6 bg-secondary rounded-xl border border-border">
               <Bell className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-muted-foreground">No notices yet. Check back soon!</p>
             </div>
@@ -260,7 +260,7 @@ export default function HomePage() {
           )}
         </div>
         
-        <div className="mt-8 text-center sm:hidden">
+        <div className="mt-4 text-center sm:hidden">
           <Link to="/notices" className="inline-flex items-center gap-2 text-accent font-medium hover:text-accent/80 transition-all">
             View All Notices <ArrowRight className="w-4 h-4" />
           </Link>
@@ -268,17 +268,17 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="container-wide pb-16 sm:pb-20 md:pb-32">
+      <section className="container-wide pb-8 sm:pb-10 md:pb-16">
         <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
           <div className="absolute inset-0 bg-primary" />
           <div className="absolute inset-0 bg-gradient-to-br from-primary via-accent to-primary" />
-          <div className="relative flex items-center py-16 sm:py-20">
+          <div className="relative flex items-center py-8 sm:py-10">
             <div className="container-wide">
               <div className="max-w-xl px-2">
                 <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-primary-foreground mb-3 sm:mb-4" style={{ letterSpacing: '-0.02em' }}>
                   Interested in Joining Our Research?
                 </h2>
-                <p className="text-primary-foreground/80 text-sm sm:text-base mb-6 sm:mb-8 leading-relaxed">
+                <p className="text-primary-foreground/80 text-sm sm:text-base mb-6 sm:mb-4 leading-relaxed">
                   We're always looking for passionate researchers and students to join our team. Explore opportunities to contribute to groundbreaking chemistry research.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">

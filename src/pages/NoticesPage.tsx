@@ -26,16 +26,16 @@ export default function NoticesPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-[#F0F9FF] dark:from-slate-950 via-[#DBEAFE] dark:via-slate-900 to-[#F8FAFC] dark:to-slate-950 py-12 sm:py-16">
+      <div className="bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background py-6 sm:py-8">
         <div className="container-wide text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1E40AF] dark:text-foreground mb-4">Notices</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#166534] dark:text-foreground mb-4">Notices</h1>
           <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto">
             Stay updated with the latest announcements and news from our research group.
           </p>
         </div>
       </div>
 
-      <div className="container-wide py-8 sm:py-12">
+      <div className="container-wide py-4 sm:py-6">
 
       {/* Notices List */}
       <div className="max-w-3xl mx-auto">
@@ -50,7 +50,7 @@ export default function NoticesPage() {
             ))}
           </div>
         ) : notices.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-6">
             <Bell className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground">No notices available.</p>
           </div>

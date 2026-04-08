@@ -148,9 +148,9 @@ export default function AdminDashboardPage() {
               <div className="hidden sm:flex flex-col leading-tight">
                 <span className="font-heading text-xs lg:text-sm font-semibold text-foreground">
                   <span>Bio-Chemical and </span>
-                  <span className="text-[#0D8B4E]">Environmental</span>
+                  <span className="text-[#15803D]">Environmental</span>
                 </span>
-                <span className="text-[9px] lg:text-[10px] uppercase tracking-[0.3em] text-[#0D8B4E] font-medium mt-0.5">
+                <span className="text-[9px] lg:text-[10px] uppercase tracking-[0.3em] text-[#15803D] font-medium mt-0.5">
                   Research Lab
                 </span>
               </div>
@@ -184,7 +184,7 @@ export default function AdminDashboardPage() {
 
         {/* Sidebar */}
         <aside
-          className={`fixed lg:static inset-y-0 left-0 z-50 lg:z-auto bg-card border-r border-border transition-all duration-300 flex flex-col pt-16 lg:pt-0 ${
+          className={`fixed lg:static inset-y-0 left-0 z-50 lg:z-auto bg-card border-r border-border transition-all duration-300 flex flex-col pt-8 lg:pt-0 ${
             mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
           } ${sidebarCollapsed ? 'w-16' : 'w-64'}`}
         >
@@ -407,7 +407,7 @@ function ProjectsView({
           ))}
         </div>
       ) : projects.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
+        <div className="text-center py-6 text-muted-foreground">
           No projects yet. Click "Add Project" to create one.
         </div>
       ) : (
@@ -643,7 +643,7 @@ function MembersView({
           ))}
         </div>
       ) : members.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
+        <div className="text-center py-6 text-muted-foreground">
           No members yet. Click "Add Member" to add one.
         </div>
       ) : (
@@ -688,7 +688,7 @@ function MembersView({
                 value={formData.name} 
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
                 placeholder="Enter full name"
-                className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-[#3B82F6]"
+                className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
               />
             </div>
             <div>
@@ -699,7 +699,7 @@ function MembersView({
                 onChange={(e) => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/\s/g, '') })} 
                 placeholder="Enter username (for login)"
                 disabled={!!editingMember}
-                className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-[#3B82F6]"
+                className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
               />
               {!editingMember && (
                 <p className="text-xs text-muted-foreground mt-1">
@@ -915,7 +915,7 @@ function NewsView({
           ))}
         </div>
       ) : news.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
+        <div className="text-center py-6 text-muted-foreground">
           No news yet. Click "Add News" to publish one.
         </div>
       ) : (
@@ -953,15 +953,15 @@ function NewsView({
           <div className="space-y-4 py-4">
             <div>
               <Label htmlFor="title" className="text-muted-foreground">Title *</Label>
-              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-card border-border text-foreground focus:border-[#3B82F6]" />
+              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-card border-border text-foreground focus:border-primary" />
             </div>
             <div>
               <Label htmlFor="summary" className="text-muted-foreground">Summary</Label>
-              <Input id="summary" value={formData.summary} onChange={(e) => setFormData({ ...formData, summary: e.target.value })} placeholder="Brief summary for preview" className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-[#3B82F6]" />
+              <Input id="summary" value={formData.summary} onChange={(e) => setFormData({ ...formData, summary: e.target.value })} placeholder="Brief summary for preview" className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary" />
             </div>
             <div>
               <Label htmlFor="content" className="text-muted-foreground">Content *</Label>
-              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={6} className="bg-card border-border text-foreground focus:border-[#3B82F6]" />
+              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={6} className="bg-card border-border text-foreground focus:border-primary" />
             </div>
             <div>
               <Label htmlFor="imageUrl" className="text-muted-foreground">Image URL</Label>
@@ -1085,7 +1085,7 @@ function NoticesView({
           ))}
         </div>
       ) : notices.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
+        <div className="text-center py-6 text-muted-foreground">
           No notices yet. Click "Add Notice" to create one.
         </div>
       ) : (
@@ -1127,11 +1127,11 @@ function NoticesView({
           <div className="space-y-4 py-4">
             <div>
               <Label htmlFor="title" className="text-muted-foreground">Title *</Label>
-              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-card border-border text-foreground focus:border-[#3B82F6]" />
+              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-card border-border text-foreground focus:border-primary" />
             </div>
             <div>
               <Label htmlFor="content" className="text-muted-foreground">Content *</Label>
-              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={4} className="bg-card border-border text-foreground focus:border-[#3B82F6]" />
+              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={4} className="bg-card border-border text-foreground focus:border-primary" />
             </div>
             <div>
               <Label htmlFor="priority" className="text-muted-foreground">Priority</Label>
@@ -1227,7 +1227,7 @@ function SettingsView({
               value={formData.googleScholarUrl}
               onChange={(e) => setFormData({ ...formData, googleScholarUrl: e.target.value })}
               placeholder="https://scholar.google.com/citations?user=..."
-              className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-[#3B82F6]"
+              className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
             />
           </div>
           <div>
@@ -1240,7 +1240,7 @@ function SettingsView({
               value={formData.aboutUs}
               onChange={(e) => setFormData({ ...formData, aboutUs: e.target.value })}
               rows={6}
-              className="bg-card border-border text-foreground focus:border-[#3B82F6]"
+              className="bg-card border-border text-foreground focus:border-primary"
             />
           </div>
           <Button onClick={handleSave} disabled={saving} className="bg-accent text-primary-foreground hover:bg-accent/90">

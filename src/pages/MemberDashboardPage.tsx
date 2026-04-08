@@ -270,9 +270,9 @@ export default function MemberDashboardPage() {
                 <div className="flex flex-col leading-tight">
                   <span className="font-heading text-xs lg:text-sm font-semibold text-foreground">
                     <span>Bio-Chemical and </span>
-                    <span className="text-[#0D8B4E]">Environmental</span>
+                    <span className="text-[#15803D]">Environmental</span>
                   </span>
-                  <span className="text-[9px] lg:text-[10px] uppercase tracking-[0.3em] text-[#0D8B4E] font-medium mt-0.5">
+                  <span className="text-[9px] lg:text-[10px] uppercase tracking-[0.3em] text-[#15803D] font-medium mt-0.5">
                     Research Lab
                   </span>
                 </div>
@@ -323,9 +323,9 @@ export default function MemberDashboardPage() {
       >
         <div className="p-4">
           {/* Member Info Card */}
-          <div className="mb-6 p-4 rounded-xl bg-secondary border border-[#DBEAFE]">
+          <div className="mb-6 p-4 rounded-xl bg-secondary border border-secondary-foreground/20">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#DBEAFE]">
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary-foreground/20">
                 <img
                   src={photoUrl || member?.photoUrl || '/photos/blank_profile.png'}
                   alt={member?.name}
@@ -372,7 +372,7 @@ export default function MemberDashboardPage() {
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 pt-16 min-h-screen">
+      <main className="lg:ml-64 pt-8 min-h-screen">
         <div className="p-6 lg:p-8 max-w-5xl">
           {/* Dashboard Section */}
           {activeSection === 'dashboard' && (
@@ -380,12 +380,12 @@ export default function MemberDashboardPage() {
               <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">
                 Welcome back, {member?.name?.split(' ')[0]}!
               </h1>
-              <p className="text-muted-foreground mb-8">
+              <p className="text-muted-foreground mb-4">
                 Here's an overview of your profile and research activities.
               </p>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
                   <div className="flex items-center gap-4">
                     <div className="p-3 rounded-xl bg-accent/15 text-accent">
@@ -538,7 +538,7 @@ export default function MemberDashboardPage() {
 
               {/* Scholar Stats */}
               {scholarProfile && (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
                   <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
                     <p className="text-2xl font-bold text-accent">{scholarProfile.totalCitations || 0}</p>
                     <p className="text-xs text-muted-foreground">Citations</p>
@@ -559,7 +559,7 @@ export default function MemberDashboardPage() {
               )}
 
               {pubsLoading ? (
-                <div className="flex items-center justify-center py-12">
+                <div className="flex items-center justify-center py-6">
                   <Loader2 className="w-8 h-8 animate-spin text-accent" />
                 </div>
               ) : publications.length === 0 ? (
@@ -618,7 +618,7 @@ export default function MemberDashboardPage() {
           {activeSection === 'skills' && (
             <div className="animate-fade-in">
               <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">Skills & Expertise</h1>
-              <p className="text-muted-foreground mb-8">
+              <p className="text-muted-foreground mb-4">
                 Manage your areas of expertise and skills
               </p>
 
@@ -637,7 +637,7 @@ export default function MemberDashboardPage() {
                       {item}
                       <button
                         onClick={() => handleRemoveExpertise(item)}
-                        className="hover:bg-[#BFDBFE] rounded-full p-0.5 transition-colors"
+                        className="hover:bg-secondary rounded-full p-0.5 transition-colors"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -656,7 +656,7 @@ export default function MemberDashboardPage() {
                     value={newExpertise}
                     onChange={(e) => setNewExpertise(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddExpertise())}
-                    className="flex-1 bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6]"
+                    className="flex-1 bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                     placeholder="e.g., Organic Chemistry, Spectroscopy, Catalysis..."
                   />
                   <button
@@ -698,7 +698,7 @@ export default function MemberDashboardPage() {
           {activeSection === 'info' && (
             <div className="animate-fade-in">
               <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">Profile Information</h1>
-              <p className="text-muted-foreground mb-8">
+              <p className="text-muted-foreground mb-4">
                 Update your profile details and contact information
               </p>
 
@@ -768,7 +768,7 @@ export default function MemberDashboardPage() {
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-card border border-border rounded-lg pl-10 pr-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6]"
+                          className="w-full bg-card border border-border rounded-lg pl-10 pr-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                           placeholder="your.email@example.com"
                         />
                       </div>
@@ -781,7 +781,7 @@ export default function MemberDashboardPage() {
                           type="tel"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          className="w-full bg-card border border-border rounded-lg pl-10 pr-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6]"
+                          className="w-full bg-card border border-border rounded-lg pl-10 pr-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                           placeholder="+880 1XXX-XXXXXX"
                         />
                       </div>
@@ -804,7 +804,7 @@ export default function MemberDashboardPage() {
                       }
                     }}
                     rows={6}
-                    className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6] resize-none"
+                    className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary resize-none"
                     placeholder="Write a short biography about yourself, your research interests, achievements, and academic journey..."
                   />
                   <div className="flex justify-between items-center mt-2">
@@ -827,7 +827,7 @@ export default function MemberDashboardPage() {
                     type="url"
                     value={googleScholarLink}
                     onChange={(e) => setGoogleScholarLink(e.target.value)}
-                    className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6]"
+                    className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                     placeholder="https://scholar.google.com/citations?user=..."
                   />
                   <p className="text-xs text-muted-foreground mt-2">
@@ -868,7 +868,7 @@ export default function MemberDashboardPage() {
           {activeSection === 'settings' && (
             <div className="animate-fade-in">
               <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">Settings</h1>
-              <p className="text-muted-foreground mb-8">
+              <p className="text-muted-foreground mb-4">
                 Manage your account settings and security
               </p>
 
@@ -886,7 +886,7 @@ export default function MemberDashboardPage() {
                         type="text"
                         value={settingsName}
                         onChange={(e) => setSettingsName(e.target.value)}
-                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6]"
+                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                         placeholder="Your full name"
                       />
                     </div>
@@ -896,7 +896,7 @@ export default function MemberDashboardPage() {
                         type="text"
                         value={settingsUsername}
                         onChange={(e) => setSettingsUsername(e.target.value)}
-                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6]"
+                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                         placeholder="username"
                       />
                       <p className="text-xs text-muted-foreground mt-1">Used for login</p>
@@ -952,7 +952,7 @@ export default function MemberDashboardPage() {
                           type={showCurrentPassword ? 'text' : 'password'}
                           value={currentPassword}
                           onChange={(e) => setCurrentPassword(e.target.value)}
-                          className="w-full bg-card border border-border rounded-lg px-4 py-2 pr-10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6]"
+                          className="w-full bg-card border border-border rounded-lg px-4 py-2 pr-10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                           placeholder="••••••••"
                         />
                         <button
@@ -971,7 +971,7 @@ export default function MemberDashboardPage() {
                           type={showNewPassword ? 'text' : 'password'}
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
-                          className="w-full bg-card border border-border rounded-lg px-4 py-2 pr-10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6]"
+                          className="w-full bg-card border border-border rounded-lg px-4 py-2 pr-10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                           placeholder="••••••••"
                         />
                         <button
@@ -989,7 +989,7 @@ export default function MemberDashboardPage() {
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6]"
+                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                         placeholder="••••••••"
                       />
                     </div>

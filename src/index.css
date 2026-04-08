@@ -7,78 +7,61 @@
 /* 
   Design System for Yunus Ahmed Lab
   Academic Research Group Website
-  Color Palette: White-Cream + Sky Blue (Research-Grade)
+  Color Palette: Tree Green + Water Cyan (Research-Grade)
   Typography: Playfair Display (headings) + Inter (body)
   Reference: MIT, Stanford AI Lab, DeepMind, OpenAI
 */
 
 @layer base {
   :root {
-    /* ================================================
+     /* ================================================
        RESEARCH WEBSITE COLOR SCHEME
-       White-Cream Background + Sky Blue Accent
-       Clean, Trustworthy, Intelligent, Calm
+       Tree Green Primary + Water Cyan Secondary
+       Clean, Trustworthy, Organic, Calm
        ================================================ */
     
     /* Background Colors */
-    /* Main Background - Soft Cream: #FAFBF8 */
-    --background: 80 20% 98%;
-    /* Primary text - Dark Slate: #0F172A */
-    --foreground: 222 47% 11%;
+    --background: 144 28% 97%;
+    --foreground: 157 30% 13%;
 
-    /* Cards/Panels - Pure White: #FFFFFF */
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 157 30% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 157 30% 13%;
 
-    /* Primary Brand - Sky Research Blue: #3B82F6 */
-    --primary: 217 91% 60%;
-    /* Primary text on blue background */
+    --primary: 145 74% 33%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary Section - Very Light Blue: #F3F8FF */
-    --secondary: 216 100% 98%;
-    /* Secondary text - Muted Gray: #475569 */
-    --secondary-foreground: 215 16% 34%;
+    --secondary: 192 70% 94%;
+    --secondary-foreground: 192 48% 28%;
 
-    /* Muted backgrounds - Soft cream/gray */
-    --muted: 220 13% 95%;
-    /* Muted text - Soft Gray: #94A3B8 */
-    --muted-foreground: 215 16% 65%;
+    --muted: 145 20% 93%;
+    --muted-foreground: 160 12% 42%;
 
-    /* Accent - Primary Blue (same as primary): #3B82F6 */
-    --accent: 217 91% 60%;
+    --accent: 145 74% 33%;
     --accent-foreground: 0 0% 100%;
-    /* Hover - Darker blue: #2563EB */
-    --accent-hover: 222 83% 53%;
-    /* Light accent background: #DBEAFE */
-    --accent-light: 214 95% 93%;
+    --accent-hover: 145 72% 27%;
+    --accent-light: 145 62% 90%;
 
-    /* Primary Dark - Deep Academic Blue: #1E40AF */
-    --primary-dark: 224 70% 40%;
-    /* Primary Light - Soft Sky Blue: #93C5FD */
-    --primary-light: 213 97% 78%;
+    --primary-dark: 145 66% 24%;
+    --primary-light: 145 70% 74%;
 
-    /* Cyan Secondary - Cyan Sky: #06B6D4 */
-    --cyan: 189 94% 43%;
-    /* Cyan Light: #CFFAFE */
-    --cyan-light: 183 92% 90%;
+    --cyan: 192 82% 42%;
+    --cyan-light: 191 84% 89%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     /* Success/Warning/Error */
-    --success: 142 71% 45%;
+    --success: 146 65% 40%;
     --warning: 38 92% 50%;
     --error: 0 84% 60%;
-    --info: 217 91% 60%;
+    --info: 192 82% 42%;
 
-    /* Borders - Light Gray: #E5E7EB */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 217 91% 60%;
+    --border: 150 16% 86%;
+    --input: 150 16% 86%;
+    --ring: 145 74% 33%;
 
     --radius: 0.5rem;
 
@@ -86,14 +69,12 @@
     --heading-font: 'Playfair Display', Georgia, serif;
     --body-font: 'Inter', system-ui, sans-serif;
 
-    /* Link color: #2563EB */
-    --link: 222 83% 53%;
-    --link-hover: 224 70% 40%;
+    --link: 192 82% 38%;
+    --link-hover: 192 82% 32%;
     
-    /* Hero/Dark sections - Deep Academic Blue: #1E40AF */
-    --hero-bg: 224 70% 40%;
+    --hero-bg: 145 66% 24%;
     --hero-fg: 0 0% 100%;
-    --hero-muted: 214 95% 93%;
+    --hero-muted: 145 62% 90%;
     
     /* Shadows - very subtle for academic look */
     --shadow-subtle: 0 1px 3px rgba(0,0,0,0.05);
@@ -102,65 +83,65 @@
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 217 91% 60%;
+    --sidebar-foreground: 157 30% 13%;
+    --sidebar-primary: 145 74% 33%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 216 100% 98%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-accent: 192 70% 94%;
+    --sidebar-accent-foreground: 157 30% 13%;
+    --sidebar-border: 150 16% 86%;
+    --sidebar-ring: 145 74% 33%;
   }
 
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 96%;
+    --background: 156 26% 9%;
+    --foreground: 168 18% 92%;
 
-    --card: 222 35% 16%;
-    --card-foreground: 210 40% 96%;
+    --card: 158 22% 14%;
+    --card-foreground: 168 18% 92%;
 
-    --popover: 222 35% 16%;
-    --popover-foreground: 210 40% 96%;
+    --popover: 158 22% 14%;
+    --popover-foreground: 168 18% 92%;
 
-    --primary: 213 94% 68%;
-    --primary-foreground: 222 47% 11%;
+    --primary: 146 56% 58%;
+    --primary-foreground: 156 26% 9%;
 
-    --secondary: 222 30% 20%;
-    --secondary-foreground: 210 40% 90%;
+    --secondary: 191 42% 22%;
+    --secondary-foreground: 188 44% 88%;
 
-    --muted: 222 24% 22%;
-    --muted-foreground: 215 20% 74%;
+    --muted: 160 17% 21%;
+    --muted-foreground: 170 14% 71%;
 
-    --accent: 213 94% 68%;
-    --accent-foreground: 222 47% 11%;
-    --accent-hover: 213 94% 74%;
-    --accent-light: 213 60% 24%;
+    --accent: 146 56% 58%;
+    --accent-foreground: 156 26% 9%;
+    --accent-hover: 146 55% 64%;
+    --accent-light: 191 35% 28%;
 
     --destructive: 0 72% 54%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 222 24% 26%;
-    --input: 222 24% 26%;
-    --ring: 213 94% 68%;
+    --border: 160 16% 28%;
+    --input: 160 16% 28%;
+    --ring: 146 56% 58%;
 
-    --link: 213 94% 74%;
-    --link-hover: 213 94% 80%;
+    --link: 191 72% 70%;
+    --link-hover: 191 76% 77%;
 
-    --hero-bg: 222 47% 11%;
-    --hero-fg: 210 40% 98%;
-    --hero-muted: 215 20% 74%;
+    --hero-bg: 156 26% 9%;
+    --hero-fg: 168 18% 96%;
+    --hero-muted: 170 14% 71%;
 
     --shadow-subtle: 0 1px 3px rgba(0,0,0,0.25);
     --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
     --shadow-elevated: 0 8px 30px rgba(0,0,0,0.35);
 
-    --sidebar-background: 222 35% 16%;
-    --sidebar-foreground: 210 40% 96%;
-    --sidebar-primary: 213 94% 68%;
-    --sidebar-primary-foreground: 222 47% 11%;
-    --sidebar-accent: 222 30% 20%;
-    --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 222 24% 26%;
-    --sidebar-ring: 213 94% 68%;
+    --sidebar-background: 158 22% 14%;
+    --sidebar-foreground: 168 18% 92%;
+    --sidebar-primary: 146 56% 58%;
+    --sidebar-primary-foreground: 156 26% 9%;
+    --sidebar-accent: 191 42% 22%;
+    --sidebar-accent-foreground: 168 18% 92%;
+    --sidebar-border: 160 16% 28%;
+    --sidebar-ring: 146 56% 58%;
   }
 
   html.dark {
@@ -220,7 +201,7 @@
   }
 
   .section-padding {
-    @apply py-16 sm:py-20 md:py-28;
+    @apply py-8 sm:py-10 md:py-14;
   }
 
   /* Card styles using CSS variables */
@@ -301,7 +282,7 @@
   }
 
   .page-header {
-    @apply text-center mb-16;
+    @apply text-center mb-8;
   }
 
   .page-title {

@@ -102,16 +102,16 @@ export default function TeamPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative py-16 sm:py-20 md:py-28 overflow-hidden bg-gradient-to-br from-[#F0F9FF] dark:from-slate-950 via-[#DBEAFE] dark:via-slate-900 to-[#F8FAFC] dark:to-slate-950">
-        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-accent/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 sm:bottom-20 left-10 sm:left-20 w-64 sm:w-96 h-64 sm:h-96 bg-accent/5 rounded-full blur-3xl" />
+      <section className="relative py-8 sm:py-10 md:py-14 overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
+        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-secondary/70 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 sm:bottom-20 left-10 sm:left-20 w-64 sm:w-96 h-64 sm:h-96 bg-secondary/55 rounded-full blur-3xl" />
         
         <div className="container-wide relative">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#1E40AF] dark:text-foreground mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#166534] dark:text-foreground mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
               Our Research Team
             </h1>
-            <p className="text-sm sm:text-lg md:text-xl text-muted-foreground animate-fade-in-up px-4 mb-8" style={{ animationDelay: '0.1s' }}>
+            <p className="text-sm sm:text-lg md:text-xl text-muted-foreground animate-fade-in-up px-4 mb-4" style={{ animationDelay: '0.1s' }}>
               Meet the dedicated researchers and students driving our scientific discoveries and pushing the boundaries of chemistry.
             </p>
             
@@ -128,24 +128,24 @@ export default function TeamPage() {
       </section>
 
       {/* Team Stats */}
-      <section className="container-wide -mt-8 sm:-mt-10 relative z-10 mb-12 sm:mb-16">
+      <section className="container-wide -mt-4 sm:-mt-10 relative z-10 mb-6 sm:mb-8">
         <div className="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto">
           <div className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up">
-            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-accent/15 text-accent flex items-center justify-center mx-auto mb-2 sm:mb-3">
+            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
               <GraduationCap className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
             <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{teamLeaders.length + faculty.length}</div>
             <div className="text-[10px] sm:text-xs text-muted-foreground">Faculty</div>
           </div>
           <div className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-accent/15 text-accent flex items-center justify-center mx-auto mb-2 sm:mb-3">
+            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
               <Microscope className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
             <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{researchers.length}</div>
             <div className="text-[10px] sm:text-xs text-muted-foreground">Researchers</div>
           </div>
           <div className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-accent/15 text-accent flex items-center justify-center mx-auto mb-2 sm:mb-3">
+            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
               <BookUser className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
             <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{students.length}</div>
@@ -155,7 +155,7 @@ export default function TeamPage() {
       </section>
 
       {/* Team Members */}
-      <section className="container-wide pb-20 md:pb-32 bg-background">
+      <section className="container-wide pb-10 md:pb-16 bg-background">
         {loading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -167,7 +167,7 @@ export default function TeamPage() {
             ))}
           </div>
         ) : members.length === 0 ? (
-          <div className="text-center py-20 bg-secondary rounded-3xl">
+          <div className="text-center py-10 bg-secondary rounded-3xl">
             <Users className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
             <h3 className="font-heading text-xl text-foreground mb-2">No team members found</h3>
             <p className="text-muted-foreground">Team members will appear here once added.</p>
@@ -254,15 +254,15 @@ function TeamSection({
 }) {
   return (
     <div>
-      <div className="flex items-center gap-4 mb-8">
-        <div className="p-3 rounded-xl bg-accent/15 text-accent">
+      <div className="flex items-center gap-4 mb-4">
+        <div className="p-3 rounded-xl bg-secondary text-secondary-foreground">
           {icon}
         </div>
         <div>
-          <h2 className="font-heading text-2xl md:text-3xl text-[#1E40AF] dark:text-foreground">{title}</h2>
+          <h2 className="font-heading text-2xl md:text-3xl text-[#166534] dark:text-foreground">{title}</h2>
           <p className="text-sm text-muted-foreground">{subtitle}</p>
         </div>
-        <div className="flex-1 h-px bg-gradient-to-r from-[#E5E7EB] to-transparent ml-4" />
+        <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent ml-4" />
       </div>
       <div className={`grid grid-cols-1 ${featured ? 'sm:grid-cols-2 lg:grid-cols-3' : 'xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'} gap-4 sm:gap-6`}>
         {members.map((member, index) => (
@@ -282,13 +282,13 @@ function MemberCard({ member, delay, featured }: { member: TeamMember; delay: st
   return (
     <Link
       to={`/team/${member.username}`}
-      className={`group relative bg-card rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-elevated hover:border-[#3B82F6]/25 transition-all duration-300 animate-fade-in-up ${featured ? 'p-4 sm:p-8' : 'p-4 sm:p-6'}`}
+      className={`group relative bg-card rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-elevated hover:border-accent/30 transition-all duration-300 animate-fade-in-up ${featured ? 'p-4 sm:p-8' : 'p-4 sm:p-6'}`}
       style={{ animationDelay: delay }}
     >
-      <div className="absolute top-0 left-0 right-0 h-16 sm:h-24 bg-gradient-to-b from-[#DBEAFE]/50 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-16 sm:h-24 bg-gradient-to-b from-secondary/80 to-transparent" />
       
       <div className="relative text-center">
-        <div className={`relative mx-auto mb-3 sm:mb-4 overflow-hidden rounded-full border-2 sm:border-4 border-white shadow-lg group-hover:border-[#3B82F6] transition-colors ${featured ? 'w-24 h-24 sm:w-36 sm:h-36' : 'w-20 h-20 sm:w-28 sm:h-28'}`}>
+        <div className={`relative mx-auto mb-3 sm:mb-4 overflow-hidden rounded-full border-2 sm:border-4 border-white shadow-lg group-hover:border-[#15803D] transition-colors ${featured ? 'w-24 h-24 sm:w-36 sm:h-36' : 'w-20 h-20 sm:w-28 sm:h-28'}`}>
           <img
             src={member.photoUrl || '/photos/blank_profile.png'}
             alt={member.name}
@@ -299,10 +299,10 @@ function MemberCard({ member, delay, featured }: { member: TeamMember; delay: st
         <h3 className={`font-heading font-semibold text-foreground group-hover:text-accent transition-colors ${featured ? 'text-base sm:text-xl' : 'text-sm sm:text-lg'}`}>
           {member.name}
         </h3>
-        <p className="text-xs sm:text-sm text-accent mt-1">{member.title}</p>
+        <p className="text-xs sm:text-sm text-secondary-foreground mt-1">{member.title}</p>
         
         {member.researchArea && (
-          <div className="mt-2 sm:mt-3 inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-accent/15 text-accent text-[10px] sm:text-xs font-medium">
+          <div className="mt-2 sm:mt-3 inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-secondary text-secondary-foreground text-[10px] sm:text-xs font-medium">
             {member.researchArea}
           </div>
         )}

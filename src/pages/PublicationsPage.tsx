@@ -70,16 +70,16 @@ export default function PublicationsPage() {
   return (
     <div className="bg-background">
       {/* Hero Section */}
-      <section className="relative py-16 sm:py-20 md:py-32 overflow-hidden bg-gradient-to-br from-[#F0F9FF] dark:from-slate-950 via-[#DBEAFE] dark:via-slate-900 to-[#F8FAFC] dark:to-slate-950">
-        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-accent/10 rounded-full blur-3xl" />
+      <section className="relative py-8 sm:py-10 md:py-16 overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
+        <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-secondary/70 rounded-full blur-3xl" />
         
         <div className="container-wide relative">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-accent/15 text-accent text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-[#3B82F6]/20">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-secondary/80 text-secondary-foreground text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-secondary-foreground/20">
               <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Research Publications</span>
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#1E40AF] dark:text-foreground mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#166534] dark:text-foreground mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
               Publications
             </h1>
             <p className="text-sm sm:text-lg md:text-xl text-muted-foreground animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
@@ -90,13 +90,13 @@ export default function PublicationsPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="container-wide -mt-8 sm:-mt-10 relative z-10 mb-8 sm:mb-12">
+      <section className="container-wide -mt-4 sm:-mt-10 relative z-10 mb-4 sm:mb-6">
         <div className="bg-card rounded-xl sm:rounded-xl shadow-card border border-border p-4 sm:p-6 md:p-8">
           <div className="flex flex-col gap-4 sm:gap-6">
             {/* Stats */}
             <div className="flex items-center justify-center sm:justify-start gap-4 sm:gap-8 flex-wrap">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground">
                   <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
@@ -104,9 +104,9 @@ export default function PublicationsPage() {
                   <div className="text-[10px] sm:text-xs text-muted-foreground">Publications</div>
                 </div>
               </div>
-              <div className="w-px h-10 sm:h-12 bg-[#E5E7EB]" />
+              <div className="w-px h-10 sm:h-12 bg-border" />
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
+                <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground">
                   <Quote className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
@@ -116,9 +116,9 @@ export default function PublicationsPage() {
               </div>
               {profile && (
                 <>
-                  <div className="w-px h-10 sm:h-12 bg-[#E5E7EB] hidden sm:block" />
+                  <div className="w-px h-10 sm:h-12 bg-border hidden sm:block" />
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
+                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground">
                       <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <div>
@@ -126,9 +126,9 @@ export default function PublicationsPage() {
                       <div className="text-[10px] sm:text-xs text-muted-foreground">h-index</div>
                     </div>
                   </div>
-                  <div className="w-px h-10 sm:h-12 bg-[#E5E7EB] hidden sm:block" />
+                  <div className="w-px h-10 sm:h-12 bg-border hidden sm:block" />
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent">
+                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground">
                       <Award className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <div>
@@ -143,7 +143,7 @@ export default function PublicationsPage() {
               <button
                 onClick={fetchPublications}
                 disabled={loading}
-                className="ml-auto p-2 rounded-lg bg-secondary hover:bg-accent/15 text-accent transition-colors disabled:opacity-50"
+                className="ml-auto p-2 rounded-lg bg-secondary hover:bg-secondary/80 text-accent transition-colors disabled:opacity-50"
                 title="Refresh publications"
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -181,7 +181,7 @@ export default function PublicationsPage() {
       </section>
 
       {/* Publications List */}
-      <section className="container-wide pb-20 md:pb-32 bg-background">
+      <section className="container-wide pb-10 md:pb-16 bg-background">
         {loading ? (
           <div className="space-y-4">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -191,12 +191,12 @@ export default function PublicationsPage() {
                 <div className="h-4 w-1/3 bg-secondary rounded" />
               </div>
             ))}
-            <p className="text-sm text-muted-foreground text-center mt-8">
+            <p className="text-sm text-muted-foreground text-center mt-4">
               Fetching publications from Google Scholar...
             </p>
           </div>
         ) : error ? (
-          <div className="text-center py-20 bg-secondary rounded-3xl border border-border">
+          <div className="text-center py-10 bg-secondary rounded-3xl border border-border">
             <BookOpen className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
             <h3 className="font-heading text-xl text-foreground mb-2">Could not load publications</h3>
             <p className="text-sm text-muted-foreground mb-4">{error}</p>
@@ -209,7 +209,7 @@ export default function PublicationsPage() {
             </button>
           </div>
         ) : filteredPublications.length === 0 ? (
-          <div className="text-center py-20 bg-secondary rounded-3xl border border-border">
+          <div className="text-center py-10 bg-secondary rounded-3xl border border-border">
             <BookOpen className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
             <h3 className="font-heading text-xl text-foreground mb-2">No publications found</h3>
             <p className="text-muted-foreground">Publications will appear here once the Google Scholar profile is configured.</p>
@@ -225,14 +225,14 @@ export default function PublicationsPage() {
               .map(([year, pubs]) => (
                 <div key={year}>
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="p-2 rounded-lg bg-accent/15 text-accent">
+                    <div className="p-2 rounded-lg bg-secondary text-secondary-foreground">
                       <GraduationCap className="w-5 h-5" />
                     </div>
-                    <h2 className="font-heading text-2xl text-[#1E40AF] dark:text-foreground">{year}</h2>
-                    <span className="px-3 py-1 rounded-full bg-accent/15 text-accent text-sm">
+                    <h2 className="font-heading text-2xl text-[#166534] dark:text-foreground">{year}</h2>
+                    <span className="px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-sm">
                       {pubs.length} {pubs.length === 1 ? 'paper' : 'papers'}
                     </span>
-                    <div className="flex-1 h-px bg-gradient-to-r from-[#E5E7EB] to-transparent" />
+                    <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
                   </div>
                   <div className="space-y-4">
                     {pubs.map((publication, index) => (
@@ -249,8 +249,8 @@ export default function PublicationsPage() {
         )}
 
         {/* Google Scholar Link */}
-        <div className="mt-12 sm:mt-16 relative rounded-xl sm:rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#3B82F6] via-accent to-primary" />
+        <div className="mt-6 sm:mt-8 relative rounded-xl sm:rounded-2xl overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary via-[hsl(var(--cyan))] to-primary" />
           <div className="relative p-6 sm:p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6">
             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 text-center sm:text-left">
               <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-card/15">
@@ -267,7 +267,7 @@ export default function PublicationsPage() {
               href={scholarUrl || "https://scholar.google.com/citations?user=5oILmB0AAAAJ&hl=en"}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-card text-accent rounded-lg sm:rounded-xl font-semibold hover:bg-[#F0F9FF] transition-colors shrink-0 text-sm sm:text-base"
+              className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-card text-accent rounded-lg sm:rounded-xl font-semibold hover:bg-secondary transition-colors shrink-0 text-sm sm:text-base"
             >
               Google Scholar
               <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -290,11 +290,11 @@ function PublicationCard({
   
   return (
     <div
-      className="group bg-card rounded-lg sm:rounded-xl border border-border p-4 sm:p-6 hover:shadow-lg hover:border-[#3B82F6]/25 transition-all duration-300 animate-fade-in-up"
+      className="group bg-card rounded-lg sm:rounded-xl border border-border p-4 sm:p-6 hover:shadow-lg hover:border-accent/30 transition-all duration-300 animate-fade-in-up"
       style={{ animationDelay: delay }}
     >
       <div className="flex items-start gap-3 sm:gap-4">
-        <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-accent/15 text-accent shrink-0 group-hover:bg-accent group-hover:text-primary-foreground transition-colors">
+        <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground shrink-0 group-hover:bg-accent group-hover:text-primary-foreground transition-colors">
           <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
         </div>
         <div className="flex-1 min-w-0">

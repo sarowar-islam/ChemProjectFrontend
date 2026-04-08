@@ -56,9 +56,9 @@ export default function MemberProfilePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="container-wide py-12">
+        <div className="container-wide py-6">
           <div className="max-w-5xl mx-auto animate-pulse">
-            <div className="h-6 w-24 bg-secondary rounded mb-8" />
+            <div className="h-6 w-24 bg-secondary rounded mb-4" />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-1">
                 <div className="bg-card border border-border rounded-xl p-6 text-center">
@@ -107,8 +107,8 @@ export default function MemberProfilePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-br from-[#F0F9FF] dark:from-slate-950 via-[#DBEAFE] dark:via-slate-900 to-[#F8FAFC] dark:to-slate-950">
-        <div className="container-wide py-8">
+      <div className="bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
+        <div className="container-wide py-4">
           <Link
             to="/team"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
@@ -119,15 +119,15 @@ export default function MemberProfilePage() {
         </div>
       </div>
 
-      <div className="container-wide py-8 -mt-8">
+      <div className="container-wide py-4 -mt-4">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Profile Card */}
             <div className="lg:col-span-1">
               <div className="bg-card border border-border rounded-xl p-6 text-center sticky top-8">
                 {/* Profile Image */}
-                <div className="relative -mt-20 mb-4">
-                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-[#3B82F6] shadow-xl bg-secondary">
+                <div className="relative -mt-10 mb-4">
+                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-[#15803D] shadow-xl bg-secondary">
                     <img
                       src={member.photoUrl || '/photos/blank_profile.png'}
                       alt={member.name}
@@ -146,7 +146,7 @@ export default function MemberProfilePage() {
 
                 {/* Research Area Badge */}
                 {member.researchArea && (
-                  <span className="inline-block px-4 py-1.5 bg-accent/15 text-accent rounded-full text-sm font-semibold border border-[#3B82F6]/30 mb-4">
+                  <span className="inline-block px-4 py-1.5 bg-accent/15 text-accent rounded-full text-sm font-semibold border border-[#15803D]/30 mb-4">
                     {member.researchArea}
                   </span>
                 )}
@@ -213,7 +213,7 @@ export default function MemberProfilePage() {
                   onClick={() => setActiveTab('overview')}
                   className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors border-b-2 -mb-px ${
                     activeTab === 'overview'
-                      ? 'border-[#3B82F6] text-accent'
+                      ? 'border-[#15803D] text-accent'
                       : 'border-transparent text-muted-foreground hover:text-foreground'
                   }`}
                 >
@@ -224,7 +224,7 @@ export default function MemberProfilePage() {
                   onClick={() => setActiveTab('publications')}
                   className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors border-b-2 -mb-px ${
                     activeTab === 'publications'
-                      ? 'border-[#3B82F6] text-accent'
+                      ? 'border-[#15803D] text-accent'
                       : 'border-transparent text-muted-foreground hover:text-foreground'
                   }`}
                 >
@@ -268,7 +268,7 @@ export default function MemberProfilePage() {
                         {member.expertise.map((item) => (
                           <span
                             key={item}
-                            className="inline-flex items-center px-4 py-2 bg-accent/15 text-accent rounded-lg text-sm font-medium border border-[#3B82F6]/20"
+                            className="inline-flex items-center px-4 py-2 bg-accent/15 text-accent rounded-lg text-sm font-medium border border-[#15803D]/20"
                           >
                             {item}
                           </span>

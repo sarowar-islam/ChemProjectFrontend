@@ -37,7 +37,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-[#F3F8FF] to-[#FAFBF8]">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-secondary/60 dark:from-secondary/20 to-background">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 right-10 w-64 h-64 bg-accent/10 rounded-full blur-3xl" />
         <div className="absolute bottom-20 left-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
@@ -46,7 +46,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md relative z-10">
         <div className="bg-card rounded-2xl p-8 shadow-lg animate-fade-in-up border border-border">
           {/* Header */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-4">
             <div className="inline-flex items-center justify-center w-14 h-14 mb-4">
               <img
                 src="/photos/Logo.png"
@@ -71,7 +71,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-[#3B82F6] transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                 placeholder="admin@cuet.ac.bd"
                 required
               />
@@ -87,7 +87,7 @@ export default function AdminLoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-[#3B82F6] transition-all pr-10"
+                  className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all pr-10"
                   placeholder="••••••••"
                   required
                 />

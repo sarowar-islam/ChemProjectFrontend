@@ -19,9 +19,9 @@ export function Footer() {
               <div className="flex flex-col leading-tight">
                 <span className="font-heading text-sm lg:text-base font-semibold text-foreground">
                   <span>Bio-Chemical and </span>
-                  <span className="text-[#0D8B4E]">Environmental</span>
+                  <span className="text-[#15803D]">Environmental</span>
                 </span>
-                <span className="text-[10px] lg:text-xs uppercase tracking-[0.35em] text-[#0D8B4E] font-medium mt-0.5">
+                <span className="text-[10px] lg:text-xs uppercase tracking-[0.35em] text-[#15803D] font-medium mt-0.5">
                   Research Lab
                 </span>
               </div>
@@ -34,7 +34,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-heading text-lg mb-4 text-[#1E40AF] dark:text-foreground">Quick Links</h4>
+            <h4 className="font-heading text-lg mb-4 text-[#166534] dark:text-foreground">Quick Links</h4>
             <nav className="flex flex-col gap-2">
               {[
                 { label: 'Research Projects', path: '/projects' },
@@ -63,10 +63,10 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-heading text-lg mb-4 text-[#1E40AF] dark:text-foreground">Contact</h4>
+            <h4 className="font-heading text-lg mb-4 text-[#166534] dark:text-foreground">Contact</h4>
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 mt-0.5 text-[#1E40AF] dark:text-foreground" />
+                <MapPin className="w-4 h-4 mt-0.5 text-[#166534] dark:text-foreground" />
                 <span className="text-muted-foreground">
                   Department of Chemistry<br />
                   Chittagong University of Engineering & Technology<br />
@@ -74,7 +74,7 @@ export function Footer() {
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-[#1E40AF] dark:text-foreground" />
+                <Mail className="w-4 h-4 text-[#166534] dark:text-foreground" />
                 <a
                   href="https://mail.google.com/mail/?view=cm&to=yunus@cuet.ac.bd"
                   target="_blank"
@@ -85,7 +85,7 @@ export function Footer() {
                 </a>
               </div>
               <div className="flex items-center gap-3">
-                <ExternalLink className="w-4 h-4 text-[#1E40AF] dark:text-foreground" />
+                <ExternalLink className="w-4 h-4 text-[#166534] dark:text-foreground" />
                 <a
                   href="https://cuet.ac.bd"
                   target="_blank"
@@ -100,7 +100,7 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-border">
+        <div className="mt-6 pt-4 border-t border-border">
           {/* Social Media Links */}
           <div className="flex justify-center gap-6 mb-6">
             <a
