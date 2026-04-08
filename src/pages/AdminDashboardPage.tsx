@@ -53,7 +53,6 @@ const TITLE_OPTIONS = [
   'Research Associate',
   "Master's Fellowship",
   'Research Assistant',
-  'Research Assistant (RA)',
   'Visiting Researcher',
   // Student titles (seniority: PhD > MPhil > MSc > BSc)
   'PhD Student',
@@ -64,6 +63,7 @@ const TITLE_OPTIONS = [
   'Lab Technician',
   'Lab Assistant',
   'Office Secretary',
+  'Office Assistant',
 ];
 
 export default function AdminDashboardPage() {

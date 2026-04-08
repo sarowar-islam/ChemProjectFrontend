@@ -35,6 +35,7 @@ const TITLE_SENIORITY: Record<string, number> = {
   'BSc Researcher': 80,
   // Administrative titles
   'Office Secretary': 85,
+  'Office Assistant': 86,
   'Lab Technician': 90,
   'Lab Assistant': 95,
 };
