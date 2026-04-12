@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { ExternalLink, FolderKanban, Beaker, Clock, CheckCircle2, Calendar, ArrowRight } from 'lucide-react';
 import { projectService } from '@/services/project.service';
 import { Project } from '@/services/types';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'ongoing' | 'completed'>('all');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -122,16 +124,60 @@ export default function ProjectsPage() {
             </div>
           ) : (
             filteredProjects.map((project, index) => (
-              <ProjectCard key={project.id} project={project} delay={`${index * 0.1}s`} />
+              <ProjectCard
+                key={project.id}
+                project={project}
+                delay={`${index * 0.1}s`}
+                onClick={() => setSelectedProject(project)}
+              />
             ))
           )}
         </div>
       </section>
+
+      <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
+        <DialogContent className="max-w-2xl bg-card border border-border max-h-[90vh] overflow-y-auto">
+          {selectedProject && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="font-heading text-2xl text-foreground">{selectedProject.title}</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Calendar className="w-4 h-4 text-accent" />
+                  <span>
+                    {new Date(selectedProject.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+                    {selectedProject.endDate && ` - ${new Date(selectedProject.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}`}
+                  </span>
+                </div>
+                <div>
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${selectedProject.status === 'ongoing' ? 'bg-accent/15 text-accent' : 'bg-secondary text-secondary-foreground'}`}>
+                    {selectedProject.status === 'ongoing' ? <Clock className="w-3.5 h-3.5" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                    {selectedProject.status === 'ongoing' ? 'Ongoing' : 'Completed'}
+                  </span>
+                </div>
+                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{selectedProject.description}</p>
+                {selectedProject.researchLink && (
+                  <a
+                    href={selectedProject.researchLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-accent font-medium hover:text-accent/80 transition-colors"
+                  >
+                    Open Research Link
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                )}
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
 
-function ProjectCard({ project, delay }: { project: Project; delay: string }) {
+function ProjectCard({ project, delay, onClick }: { project: Project; delay: string; onClick: () => void }) {
   const statusConfig = {
     ongoing: {
       bg: 'bg-accent/15',
@@ -150,8 +196,9 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
   const status = statusConfig[project.status];
 
   return (
-    <div
-      className="group bg-card rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-lg hover:border-accent/30 transition-all duration-300 animate-fade-in-up"
+    <article
+      onClick={onClick}
+      className="group bg-card rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-lg hover:border-accent/30 transition-all duration-300 animate-fade-in-up cursor-pointer"
       style={{ animationDelay: delay }}
     >
       {/* Header with gradient */}
@@ -193,6 +240,7 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
               href={project.researchLink}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-accent hover:text-accent/80 font-medium transition-colors group/link"
             >
               Details
@@ -201,6 +249,6 @@ function ProjectCard({ project, delay }: { project: Project; delay: string }) {
           )}
         </div>
       </div>
-    </div>
+    </article>
   );
 }

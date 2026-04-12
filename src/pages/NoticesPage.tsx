@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Bell, AlertCircle } from 'lucide-react';
 import { noticeService } from '@/services/notice.service';
 import { Notice } from '@/services/types';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function NoticesPage() {
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedNotice, setSelectedNotice] = useState<Notice | null>(null);
 
   useEffect(() => {
     const fetchNotices = async () => {
@@ -57,24 +59,60 @@ export default function NoticesPage() {
         ) : (
           <div className="space-y-4">
             {notices.map((notice, index) => (
-              <NoticeCard key={notice.id} notice={notice} delay={`${index * 0.05}s`} />
+              <NoticeCard
+                key={notice.id}
+                notice={notice}
+                delay={`${index * 0.05}s`}
+                onClick={() => setSelectedNotice(notice)}
+              />
             ))}
           </div>
         )}
       </div>
       </div>
+
+      <Dialog open={!!selectedNotice} onOpenChange={() => setSelectedNotice(null)}>
+        <DialogContent className="max-w-2xl bg-card border border-border max-h-[90vh] overflow-y-auto">
+          {selectedNotice && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="font-heading text-2xl text-foreground">{selectedNotice.title}</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                  {selectedNotice.priority === 'important' && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-300">
+                      <AlertCircle className="w-3.5 h-3.5" />
+                      Important
+                    </span>
+                  )}
+                  <span>
+                    {new Date(selectedNotice.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </div>
+                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{selectedNotice.content}</p>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
 
-function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
+function NoticeCard({ notice, delay, onClick }: { notice: Notice; delay: string; onClick: () => void }) {
   const isImportant = notice.priority === 'important';
 
   return (
-    <div
+    <article
+      onClick={onClick}
       className={`bg-card border border-border rounded-xl p-4 sm:p-6 animate-fade-in-up ${
         isImportant ? 'border-l-4 border-l-red-500' : ''
-      }`}
+      } cursor-pointer hover:shadow-md hover:border-accent/30 transition-all duration-300`}
       style={{ animationDelay: delay }}
     >
       <div className="flex items-start gap-3 sm:gap-4">
@@ -114,6 +152,6 @@ function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
           </p>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

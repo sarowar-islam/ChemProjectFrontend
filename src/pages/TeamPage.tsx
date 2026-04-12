@@ -76,6 +76,13 @@ export default function TeamPage() {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   useEffect(() => {
     const fetchMembers = async () => {
       const res = await teamService.getMembers();
@@ -131,27 +138,41 @@ export default function TeamPage() {
       {/* Team Stats */}
       <section className="container-wide -mt-4 sm:-mt-10 relative z-10 mb-6 sm:mb-8">
         <div className="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto">
-          <div className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up">
+          <button
+            type="button"
+            onClick={() => scrollToSection('team-leader-section')}
+            className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
+          >
             <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
               <GraduationCap className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
             <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{teamLeaders.length + faculty.length}</div>
             <div className="text-[10px] sm:text-xs text-muted-foreground">Faculty</div>
-          </div>
-          <div className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection('researchers-section')}
+            className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
+            style={{ animationDelay: '0.1s' }}
+          >
             <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
               <Microscope className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
             <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{researchers.length}</div>
             <div className="text-[10px] sm:text-xs text-muted-foreground">Researchers</div>
-          </div>
-          <div className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection('students-section')}
+            className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
+            style={{ animationDelay: '0.2s' }}
+          >
             <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
               <BookUser className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
             <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{students.length}</div>
             <div className="text-[10px] sm:text-xs text-muted-foreground">Students</div>
-          </div>
+          </button>
         </div>
       </section>
 
@@ -177,14 +198,16 @@ export default function TeamPage() {
           <div className="space-y-20">
             {/* Team Leader */}
             {teamLeaders.length > 0 && (
-              <TeamSection 
-                title="Team Leader" 
-                subtitle="Leading our research group"
-                icon={<Crown className="w-5 h-5" />}
-                members={teamLeaders} 
-                startIndex={0}
-                featured
-              />
+              <div id="team-leader-section">
+                <TeamSection 
+                  title="Team Leader" 
+                  subtitle="Leading our research group"
+                  icon={<Crown className="w-5 h-5" />}
+                  members={teamLeaders} 
+                  startIndex={0}
+                  featured
+                />
+              </div>
             )}
 
             {/* Faculty */}
@@ -201,24 +224,28 @@ export default function TeamPage() {
 
             {/* Researchers */}
             {researchers.length > 0 && (
-              <TeamSection
-                title="Researchers"
-                subtitle="PhD scholars and research associates"
-                icon={<Microscope className="w-5 h-5" />}
-                members={researchers}
-                startIndex={teamLeaders.length + faculty.length}
-              />
+              <div id="researchers-section">
+                <TeamSection
+                  title="Researchers"
+                  subtitle="PhD scholars and research associates"
+                  icon={<Microscope className="w-5 h-5" />}
+                  members={researchers}
+                  startIndex={teamLeaders.length + faculty.length}
+                />
+              </div>
             )}
 
             {/* Students */}
             {students.length > 0 && (
-              <TeamSection
-                title="Students"
-                subtitle="The future of chemistry research"
-                icon={<BookUser className="w-5 h-5" />}
-                members={students}
-                startIndex={teamLeaders.length + faculty.length + researchers.length}
-              />
+              <div id="students-section">
+                <TeamSection
+                  title="Students"
+                  subtitle="The future of chemistry research"
+                  icon={<BookUser className="w-5 h-5" />}
+                  members={students}
+                  startIndex={teamLeaders.length + faculty.length + researchers.length}
+                />
+              </div>
             )}
 
             {/* Administrative */}

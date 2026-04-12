@@ -91,10 +91,10 @@ export default function HomePage() {
             ))
           ) : (
             <>
-              <StatCard icon={<FolderKanban className="w-6 h-6" />} number={stats.totalProjects} label="Research Projects" delay="0s" color="bg-secondary text-secondary-foreground" />
-              <StatCard icon={<BookOpen className="w-6 h-6" />} number={stats.totalPublications} label="Publications" delay="0.1s" color="bg-secondary text-secondary-foreground" />
-              <StatCard icon={<Users className="w-6 h-6" />} number={stats.totalMembers} label="Team Members" delay="0.2s" color="bg-secondary text-secondary-foreground" />
-              <StatCard icon={<FlaskConical className="w-6 h-6" />} number={stats.ongoingProjects} label="Ongoing Projects" delay="0.3s" color="bg-secondary text-secondary-foreground" />
+              <StatCard icon={<FolderKanban className="w-6 h-6" />} number={stats.totalProjects} label="Research Projects" delay="0s" color="bg-secondary text-secondary-foreground" to="/projects" />
+              <StatCard icon={<BookOpen className="w-6 h-6" />} number={stats.totalPublications} label="Publications" delay="0.1s" color="bg-secondary text-secondary-foreground" to="/publications" />
+              <StatCard icon={<Users className="w-6 h-6" />} number={stats.totalMembers} label="Team Members" delay="0.2s" color="bg-secondary text-secondary-foreground" to="/team" />
+              <StatCard icon={<FlaskConical className="w-6 h-6" />} number={stats.ongoingProjects} label="Ongoing Projects" delay="0.3s" color="bg-secondary text-secondary-foreground" to="/projects" />
             </>
           )}
         </div>
@@ -153,7 +153,7 @@ export default function HomePage() {
               )}
               
               <div className="grid sm:grid-cols-2 gap-4 mb-4">
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border">
+                <Link to="/projects" className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border hover:border-accent/30 hover:shadow-sm transition-all duration-300">
                   <div className="p-2 rounded-lg bg-secondary text-secondary-foreground">
                     <Target className="w-5 h-5" />
                   </div>
@@ -161,8 +161,8 @@ export default function HomePage() {
                     <h4 className="font-semibold text-foreground">Our Mission</h4>
                     <p className="text-sm text-muted-foreground">Sustainable solutions for environmental challenges</p>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border">
+                </Link>
+                <Link to="/publications" className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border hover:border-accent/30 hover:shadow-sm transition-all duration-300">
                   <div className="p-2 rounded-lg bg-secondary text-secondary-foreground">
                     <Sparkles className="w-5 h-5" />
                   </div>
@@ -170,7 +170,7 @@ export default function HomePage() {
                     <h4 className="font-semibold text-foreground">Our Vision</h4>
                     <p className="text-sm text-muted-foreground">Clean water and environment for all</p>
                   </div>
-                </div>
+                </Link>
               </div>
               
               <Link to="/publications" className="inline-flex items-center gap-2 text-accent font-semibold hover:text-accent/80 transition-all group">
@@ -201,14 +201,15 @@ export default function HomePage() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
-              { icon: <FlaskConical className="w-8 h-8" />, title: 'Environmental Remediation', desc: 'Developing solutions for pollution control and environmental cleanup' },
-              { icon: <Atom className="w-8 h-8" />, title: 'Nanomaterials', desc: 'Engineering nanoscale materials for water treatment and sensing' },
-              { icon: <TestTube className="w-8 h-8" />, title: 'Wastewater Treatment', desc: 'Cutting-edge technologies for industrial effluent treatment' },
-              { icon: <Beaker className="w-8 h-8" />, title: 'Resource Recovery', desc: 'Extracting valuable materials from waste streams and e-waste' },
-              { icon: <Microscope className="w-8 h-8" />, title: 'Adsorption Studies', desc: 'Novel adsorbents for heavy metal and pollutant removal' },
-              { icon: <GraduationCap className="w-8 h-8" />, title: 'Green Chemistry', desc: 'Eco-friendly synthesis and sustainable chemical processes' },
+              { icon: <FlaskConical className="w-8 h-8" />, title: 'Environmental Remediation', desc: 'Developing solutions for pollution control and environmental cleanup', to: '/projects' },
+              { icon: <Atom className="w-8 h-8" />, title: 'Nanomaterials', desc: 'Engineering nanoscale materials for water treatment and sensing', to: '/projects' },
+              { icon: <TestTube className="w-8 h-8" />, title: 'Wastewater Treatment', desc: 'Cutting-edge technologies for industrial effluent treatment', to: '/projects' },
+              { icon: <Beaker className="w-8 h-8" />, title: 'Resource Recovery', desc: 'Extracting valuable materials from waste streams and e-waste', to: '/projects' },
+              { icon: <Microscope className="w-8 h-8" />, title: 'Adsorption Studies', desc: 'Novel adsorbents for heavy metal and pollutant removal', to: '/projects' },
+              { icon: <GraduationCap className="w-8 h-8" />, title: 'Green Chemistry', desc: 'Eco-friendly synthesis and sustainable chemical processes', to: '/projects' },
             ].map((area, index) => (
-              <div 
+              <Link
+                to={area.to}
                 key={area.title} 
                 className="group p-8 rounded-xl bg-card border border-border hover:border-accent/30 transition-all duration-300 animate-fade-in-up shadow-sm"
                 style={{ animationDelay: `${index * 0.1}s` }}
@@ -218,7 +219,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="font-heading text-xl text-foreground mb-2" style={{ letterSpacing: '-0.02em' }}>{area.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{area.desc}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -298,22 +299,22 @@ export default function HomePage() {
   );
 }
 
-function StatCard({ icon, number, label, delay, color }: { icon: React.ReactNode; number: number; label: string; delay: string; color: string }) {
+function StatCard({ icon, number, label, delay, color, to }: { icon: React.ReactNode; number: number; label: string; delay: string; color: string; to: string }) {
   return (
-    <div className="bg-card rounded-xl sm:rounded-xl p-4 sm:p-6 shadow-sm border border-border hover:shadow-md hover:border-accent/30 transition-all duration-300 animate-fade-in-up group" style={{ animationDelay: delay }}>
+    <Link to={to} className="bg-card rounded-xl sm:rounded-xl p-4 sm:p-6 shadow-sm border border-border hover:shadow-md hover:border-accent/30 transition-all duration-300 animate-fade-in-up group block" style={{ animationDelay: delay }}>
       <div className="flex items-start justify-between mb-3 sm:mb-4">
         <div className={`p-2 sm:p-3 rounded-lg sm:rounded-xl ${color} text-accent group-hover:scale-110 transition-transform`}>{icon}</div>
         <div className="w-8 sm:w-12 h-1 bg-accent/30 rounded-full mt-2 sm:mt-3 hidden sm:block" />
       </div>
       <div className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-accent mb-0.5 sm:mb-1">{number}</div>
       <div className="text-xs sm:text-sm text-muted-foreground font-medium">{label}</div>
-    </div>
+    </Link>
   );
 }
 
 function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-6 hover:border-accent/30 transition-all duration-300 animate-fade-in-up group shadow-sm" style={{ animationDelay: delay }}>
+    <Link to="/notices" className="bg-card border border-border rounded-xl p-6 hover:border-accent/30 transition-all duration-300 animate-fade-in-up group shadow-sm block" style={{ animationDelay: delay }}>
       <div className="flex items-start gap-4 mb-4">
         <div className={`p-3 rounded-xl ${notice.priority === 'important' ? 'bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-300' : 'bg-accent/15 text-accent'} group-hover:scale-110 transition-transform`}>
           <Bell className="w-5 h-5" />
@@ -326,6 +327,6 @@ function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
         </div>
       </div>
       <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">{notice.content}</p>
-    </div>
+    </Link>
   );
 }
