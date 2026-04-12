@@ -3,74 +3,7 @@ import { Link } from 'react-router-dom';
 import { Users, GraduationCap, Microscope, BookUser, ExternalLink, LogIn, Crown, Wrench } from 'lucide-react';
 import { teamService } from '@/services/team.service';
 import { TeamMember } from '@/services/types';
-
-// Title seniority map (lower number = higher seniority)
-// Researchers order: Post-doctoral > PhD Fellow > Research Associate > Research Assistant
-// Students order: PhD > MPhil > MSc > BSc
-const TITLE_SENIORITY: Record<string, number> = {
-  // Faculty titles (for sorting within faculty if needed)
-  'Professor': 1,
-  'Professor & Principal Investigator': 1,
-  'Associate Professor': 2,
-  'Assistant Professor': 3,
-  // Researcher titles (seniority order)
-  'Post Doctoral Researcher': 10,
-  'Post-Doctoral Researcher': 10,
-  'Postdoctoral Researcher': 10,
-  'PhD Fellow': 20,
-  'PhD Researcher': 20,
-  'Research Associate': 30,
-  "Master's Fellowship": 35,
-  'Research Assistant': 40,
-  'Research Assistant (RA)': 40,
-  'Visiting Researcher': 45,
-  // Student titles (seniority order)
-  'PhD Student': 50,
-  'MPhil Student': 60,
-  'M.Phil Student': 60,
-  'MSc Student': 70,
-  'M.Sc Student': 70,
-  'MSc Researcher': 70,
-  'BSc Student': 80,
-  'BSc Researcher': 80,
-  // Administrative titles
-  'Office Secretary': 85,
-  'Office Assistant': 86,
-  'Lab Technician': 90,
-  'Lab Assistant': 95,
-};
-
-// Get seniority value for a title (returns high number for unknown titles)
-const getTitleSeniority = (title: string): number => {
-  // Try exact match first
-  if (TITLE_SENIORITY[title] !== undefined) {
-    return TITLE_SENIORITY[title];
-  }
-  // Try case-insensitive match
-  const lowerTitle = title.toLowerCase();
-  for (const [key, value] of Object.entries(TITLE_SENIORITY)) {
-    if (key.toLowerCase() === lowerTitle) {
-      return value;
-    }
-  }
-  // Try partial match for common patterns
-  if (lowerTitle.includes('post') && lowerTitle.includes('doc')) return 10;
-  if (lowerTitle.includes('phd') && lowerTitle.includes('fellow')) return 20;
-  if (lowerTitle.includes('phd') && !lowerTitle.includes('student')) return 20;
-  if (lowerTitle.includes('research associate')) return 30;
-  if (lowerTitle.includes('research assistant') || lowerTitle.includes('(ra)')) return 40;
-  if (lowerTitle.includes('phd') && lowerTitle.includes('student')) return 50;
-  if (lowerTitle.includes('mphil') || lowerTitle.includes('m.phil')) return 60;
-  if (lowerTitle.includes('msc') || lowerTitle.includes('m.sc') || lowerTitle.includes('master')) return 70;
-  if (lowerTitle.includes('bsc') || lowerTitle.includes('b.sc') || lowerTitle.includes('bachelor')) return 80;
-  // Unknown titles go last
-  return 100;
-};
-
-// Sort members by title seniority
-const sortByTitleSeniority = (members: TeamMember[]): TeamMember[] => {
-  return [...members].sort((a, b) => getTitleSeniority(a.title) - getTitleSeniority(b.title));
-};
+import { normalizeMemberTitle, sortMembersWithinSection } from '@/lib/memberSorting';
 
 export default function TeamPage() {
   const [members, setMembers] = useState<TeamMember[]>([]);
@@ -97,15 +30,15 @@ export default function TeamPage() {
 
   // Group and sort members by position and title seniority
   const teamLeaders = useMemo(() => 
-    sortByTitleSeniority(members.filter((m) => m.position === 'team_leader')), [members]);
+    sortMembersWithinSection(members.filter((m) => m.position === 'team_leader')), [members]);
   const faculty = useMemo(() => 
-    sortByTitleSeniority(members.filter((m) => m.position === 'faculty')), [members]);
+    sortMembersWithinSection(members.filter((m) => m.position === 'faculty')), [members]);
   const researchers = useMemo(() => 
-    sortByTitleSeniority(members.filter((m) => m.position === 'researcher')), [members]);
+    sortMembersWithinSection(members.filter((m) => m.position === 'researcher')), [members]);
   const students = useMemo(() => 
-    sortByTitleSeniority(members.filter((m) => m.position === 'student')), [members]);
+    sortMembersWithinSection(members.filter((m) => m.position === 'student')), [members]);
   const Administrative = useMemo(() => 
-    sortByTitleSeniority(members.filter((m) => m.position === 'Administrative')), [members]);
+    sortMembersWithinSection(members.filter((m) => m.position === 'Administrative')), [members]);
 
   return (
     <div>
@@ -320,14 +253,14 @@ function MemberCard({ member, delay, featured }: { member: TeamMember; delay: st
           <img
             src={member.photoUrl || '/photos/blank_profile.png'}
             alt={member.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-contain object-center [image-orientation:from-image] bg-secondary/35"
           />
         </div>
         
         <h3 className={`font-heading font-semibold text-foreground group-hover:text-accent transition-colors ${featured ? 'text-base sm:text-xl' : 'text-sm sm:text-lg'}`}>
           {member.name}
         </h3>
-        <p className="text-xs sm:text-sm text-secondary-foreground mt-1">{member.title}</p>
+        <p className="text-xs sm:text-sm text-secondary-foreground mt-1">{normalizeMemberTitle(member.title)}</p>
         
         {member.researchArea && (
           <div className="mt-2 sm:mt-3 inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-secondary text-secondary-foreground text-[10px] sm:text-xs font-medium">

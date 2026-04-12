@@ -29,6 +29,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { newsService } from '@/services/news.service';
+import { normalizeMemberTitle, sortMembersForAdmin } from '@/lib/memberSorting';
 
 type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'settings';
 
@@ -41,23 +42,25 @@ const POSITION_OPTIONS = [
   { value: 'Administrative', label: 'Administrative' },
 ] as const;
 
-// Title options - the academic/professional title (ordered by seniority)
+// Title options - ordered by seniority used across team/admin views
 const TITLE_OPTIONS = [
   // Faculty titles
   'Professor',
   'Associate Professor',
   'Assistant Professor',
-  // Researcher titles (seniority: Post-doc > PhD Fellow > Research Associate > Research Assistant)
+  'Lecturer',
+  // Researcher titles
   'Post Doctoral Researcher',
-  'PhD Fellow',
   'Research Associate',
-  "Master's Fellowship",
   'Research Assistant',
+  'PhD Research Fellow',
+  'MPhil Research Fellow',
+  'Masters Fellow',
   'Visiting Researcher',
-  // Student titles (seniority: PhD > MPhil > MSc > BSc)
+  // Student titles
   'PhD Student',
-  'M.Phil Student',
-  'M.Sc Student',
+  'MPhil Student',
+  'MSc Student',
   'BSc Student',
   // Administrative titles
   'Lab Technician',
@@ -99,7 +102,7 @@ export default function AdminDashboardPage() {
 
     if (statsRes.success && statsRes.data) setStats(statsRes.data);
     if (projectsRes.success && projectsRes.data) setProjects(projectsRes.data);
-    if (membersRes.success && membersRes.data) setMembers(membersRes.data);
+    if (membersRes.success && membersRes.data) setMembers(sortMembersForAdmin(membersRes.data));
     if (noticesRes.success && noticesRes.data) setNotices(noticesRes.data);
     if (settingsRes.success && settingsRes.data) setSettings(settingsRes.data);
     if (newsRes.success && newsRes.data) setNews(newsRes.data);
@@ -540,7 +543,7 @@ function MembersView({
       password: '',
       confirmPassword: '',
       position: member.position,
-      title: member.title,
+      title: normalizeMemberTitle(member.title),
     });
     setShowPassword(false);
     setShowConfirmPassword(false);
@@ -577,7 +580,7 @@ function MembersView({
           username: formData.username,
           email: formData.email,
           position: formData.position as TeamMember['position'],
-          title: formData.title,
+          title: normalizeMemberTitle(formData.title),
         });
         if (res.success) {
           toast({ title: 'Success', description: 'Member updated successfully' });
@@ -590,7 +593,7 @@ function MembersView({
           username: formData.username,
           email: formData.email || `${formData.username}@cuet.ac.bd`,
           position: formData.position as TeamMember['position'],
-          title: formData.title,
+          title: normalizeMemberTitle(formData.title),
           password: formData.password,
         });
         if (res.success) {
@@ -658,7 +661,7 @@ function MembersView({
                 />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-foreground truncate">{member.name}</h3>
-                  <p className="text-sm text-muted-foreground truncate">{member.title || 'No title'}</p>
+                  <p className="text-sm text-muted-foreground truncate">{normalizeMemberTitle(member.title) || 'No title'}</p>
                   <p className="text-xs text-accent/70 truncate capitalize">{member.position?.replace('_', ' ') || 'No position'}</p>
                 </div>
                 <div className="flex items-center gap-1">
