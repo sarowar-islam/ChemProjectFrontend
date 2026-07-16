@@ -5,6 +5,7 @@ import { adminService } from '@/services/admin.service';
 import { noticeService } from '@/services/notice.service';
 import { settingsService } from '@/services/settings.service';
 import { Notice } from '@/services/types';
+import HeroTitle from '@/components/HeroTitle';
 
 export default function HomePage() {
   const [stats, setStats] = useState({
@@ -53,10 +54,7 @@ export default function HomePage() {
               <span>Pioneering Chemistry Research</span>
             </div>
             
-            <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#166534] dark:text-foreground mb-4 sm:mb-6 animate-fade-in-up leading-[1.1]" style={{ animationDelay: '0.1s', letterSpacing: '-0.02em' }}>
-              Bio-Chemical and Environmental<br />
-              <span className="text-accent">Research Lab</span>
-            </h1>
+            <HeroTitle />
             
             <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <div className="w-10 sm:w-16 h-1 bg-accent rounded-full" />
@@ -112,7 +110,7 @@ export default function HomePage() {
             <div className="relative animate-fade-in-up">
               <div className="relative z-10 rounded-xl sm:rounded-2xl overflow-hidden shadow-elevated">
                 <img 
-                  src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=800&q=80" 
+                  src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=80" 
                   alt="Research Laboratory"
                   className="w-full h-[300px] sm:h-[400px] lg:h-[500px] object-cover"
                 />
