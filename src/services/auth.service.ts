@@ -1,5 +1,5 @@
 import { apiRequest } from '@/lib/api';
-import { AuthResponse, User } from './types';
+import { AuthResponse, TeamMember, User } from './types';
 
 export const authService = {
   async loginAdmin(email: string, password: string): Promise<AuthResponse> {
@@ -93,6 +93,23 @@ export const authService = {
     return {
       success: true,
       message: response.data.message,
+    };
+  },
+
+  async lookupMemberByIdentifier(identifier: string): Promise<{ success: boolean; data?: TeamMember; error?: string }> {
+    const response = await apiRequest<TeamMember>({
+      method: 'GET',
+      url: '/members/lookup',
+      params: { identifier },
+    });
+
+    if (!response.success) {
+      return { success: false, error: response.error };
+    }
+
+    return {
+      success: true,
+      data: response.data,
     };
   },
 

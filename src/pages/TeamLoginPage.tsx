@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { authService } from '@/services/auth.service';
 import { useAuth } from '@/contexts/AuthContext';
+import { TeamMember } from '@/services/types';
 
 export default function TeamLoginPage() {
   const navigate = useNavigate();
@@ -13,12 +14,16 @@ export default function TeamLoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetIdentifier, setResetIdentifier] = useState('');
   const [resetEmail, setResetEmail] = useState('');
+  const [identifiedMember, setIdentifiedMember] = useState<TeamMember | null>(null);
+  const [identifierError, setIdentifierError] = useState('');
+  const [identifierLoading, setIdentifierLoading] = useState(false);
   const [resetCode, setResetCode] = useState('');
   const [resetNewPassword, setResetNewPassword] = useState('');
   const [resetConfirmPassword, setResetConfirmPassword] = useState('');
-  const [showResetCodeForm, setShowResetCodeForm] = useState(false);
-  const [showResetPasswordForm, setShowResetPasswordForm] = useState(false);
+  const [forgotPasswordOption, setForgotPasswordOption] = useState<'email' | 'securityCode' | null>(null);
+  const [resetStep, setResetStep] = useState<'identify' | 'chooseOption' | 'enterCode' | 'setPassword'>('identify');
   const [showResetNewPassword, setShowResetNewPassword] = useState(false);
   const [showResetConfirmPassword, setShowResetConfirmPassword] = useState(false);
   const [resetError, setResetError] = useState('');
@@ -48,35 +53,76 @@ export default function TeamLoginPage() {
     setLoading(false);
   };
 
-  const openForgotPassword = () => {
-    setShowForgotPassword(true);
-    setResetError('');
-    setResetMessage('');
+  const resetState = () => {
+    setResetIdentifier('');
+    setResetEmail('');
+    setIdentifiedMember(null);
+    setIdentifierError('');
+    setIdentifierLoading(false);
     setResetCode('');
     setResetNewPassword('');
     setResetConfirmPassword('');
-    setShowResetCodeForm(false);
-    setShowResetPasswordForm(false);
+    setForgotPasswordOption(null);
+    setResetStep('identify');
     setShowResetNewPassword(false);
     setShowResetConfirmPassword(false);
-    setResetEmail('');
+    setResetError('');
+    setResetMessage('');
+    setResetLoading(false);
+  };
+
+  const openForgotPassword = () => {
+    setShowForgotPassword(true);
+    resetState();
   };
 
   const backToLogin = () => {
     setShowForgotPassword(false);
-    setResetError('');
+    resetState();
+  };
+
+  const handleVerifyIdentifier = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIdentifierError('');
     setResetMessage('');
+    setResetError('');
+    setIdentifierLoading(true);
+
+    const identifier = resetIdentifier.trim();
+    if (!identifier) {
+      setIdentifierError('Please enter your username or email.');
+      setIdentifierLoading(false);
+      return;
+    }
+
+    const response = await authService.lookupMemberByIdentifier(identifier);
+
+    if (!response.success || !response.data) {
+      setIdentifierError('Invalid username or email. Please check and try again.');
+      setIdentifierLoading(false);
+      return;
+    }
+
+    setIdentifiedMember(response.data);
+    setResetEmail(response.data.email);
+    setResetStep('chooseOption');
+    setResetMessage('We found your account. Choose how you want to verify your identity.');
+    setIdentifierLoading(false);
+  };
+
+  const resetOptionState = () => {
     setResetCode('');
     setResetNewPassword('');
     setResetConfirmPassword('');
-    setShowResetCodeForm(false);
-    setShowResetPasswordForm(false);
-    setShowResetNewPassword(false);
-    setShowResetConfirmPassword(false);
+    setResetError('');
+    setResetMessage('');
+    setResetStep('enterCode');
   };
 
-  const handleRequestResetCode = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSelectEmailReset = async () => {
+    if (!identifiedMember) return;
+
+    setForgotPasswordOption('email');
     setResetError('');
     setResetMessage('');
     setResetLoading(true);
@@ -84,13 +130,24 @@ export default function TeamLoginPage() {
     const response = await authService.requestMemberPasswordReset(resetEmail);
 
     if (response.success) {
-      setResetMessage(response.message || 'A 6-digit code has been sent to your email.');
-      setShowResetCodeForm(true);
+      setResetMessage(response.message || `A verification code was sent to ${resetEmail}.`);
+      setResetStep('enterCode');
     } else {
       setResetError(response.error || 'Unable to send the reset code. Please try again.');
     }
 
     setResetLoading(false);
+  };
+
+  const handleSelectSecurityCodeReset = () => {
+    if (!identifiedMember) return;
+
+    setForgotPasswordOption('securityCode');
+    setResetError('');
+    setResetMessage(
+      'Ask an admin to generate your security code. When you receive it, enter it below to continue.'
+    );
+    setResetStep('enterCode');
   };
 
   const handleVerifyResetCode = async (e: React.FormEvent) => {
@@ -103,7 +160,7 @@ export default function TeamLoginPage() {
 
     if (response.success) {
       setResetMessage(response.message || 'Code verified. Set your new password now.');
-      setShowResetPasswordForm(true);
+      setResetStep('setPassword');
     } else {
       setResetError(response.error || 'Invalid code. Please try again.');
     }
@@ -132,14 +189,7 @@ export default function TeamLoginPage() {
     if (response.success) {
       setResetMessage(response.message || 'Password updated successfully. You can now sign in.');
       setShowForgotPassword(false);
-      setResetEmail('');
-      setResetCode('');
-      setResetNewPassword('');
-      setResetConfirmPassword('');
-      setShowResetCodeForm(false);
-      setShowResetPasswordForm(false);
-      setShowResetNewPassword(false);
-      setShowResetConfirmPassword(false);
+      resetState();
     } else {
       setResetError(response.error || 'Unable to reset the password. Please try again.');
     }
@@ -173,32 +223,26 @@ export default function TeamLoginPage() {
 
           {showForgotPassword ? (
             <div className="space-y-5">
-              {!showResetCodeForm ? (
-                <form onSubmit={handleRequestResetCode} className="space-y-5">
+              {resetStep === 'identify' && (
+                <form onSubmit={handleVerifyIdentifier} className="space-y-5">
                   <div>
-                    <label htmlFor="reset-email" className="block text-sm font-medium text-muted-foreground mb-2">
-                      Email
+                    <label htmlFor="reset-identifier" className="block text-sm font-medium text-muted-foreground mb-2">
+                      Username or Email
                     </label>
                     <input
-                      id="reset-email"
-                      type="email"
-                      value={resetEmail}
-                      onChange={(e) => setResetEmail(e.target.value)}
+                      id="reset-identifier"
+                      type="text"
+                      value={resetIdentifier}
+                      onChange={(e) => setResetIdentifier(e.target.value)}
                       className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                      placeholder="name@university.edu"
+                      placeholder="john.doe or name@domain.edu"
                       required
                     />
                   </div>
 
-                  {resetError && (
+                  {identifierError && (
                     <div className="p-3 rounded-lg bg-red-50 text-red-600 border border-red-200 text-sm">
-                      {resetError}
-                    </div>
-                  )}
-
-                  {resetMessage && (
-                    <div className="p-3 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm">
-                      {resetMessage}
+                      {identifierError}
                     </div>
                   )}
 
@@ -212,21 +256,64 @@ export default function TeamLoginPage() {
                     </button>
                     <button
                       type="submit"
-                      disabled={resetLoading}
+                      disabled={identifierLoading}
                       className="flex-1 py-3 bg-accent text-primary-foreground rounded-xl font-semibold hover:bg-accent/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"
                     >
-                      {resetLoading ? (
+                      {identifierLoading ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />
-                          Sending...
+                          Checking...
                         </>
                       ) : (
-                        'Send Code'
+                        'Continue'
                       )}
                     </button>
                   </div>
                 </form>
-              ) : !showResetPasswordForm ? (
+              )}
+
+              {resetStep === 'chooseOption' && identifiedMember && (
+                <div className="space-y-5">
+                  <div className="rounded-2xl border border-border bg-card p-4">
+                    <h2 className="text-lg font-semibold text-foreground">Choose verification option</h2>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Account found for <strong>{identifiedMember.email}</strong>.
+                      You can either receive a verification email or use a security code generated by an admin.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <button
+                      type="button"
+                      onClick={handleSelectEmailReset}
+                      className="py-3 rounded-xl border border-border bg-card text-foreground font-semibold hover:bg-secondary transition-colors"
+                    >
+                      Receive Email
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSelectSecurityCodeReset}
+                      className="py-3 rounded-xl border border-border bg-card text-foreground font-semibold hover:bg-secondary transition-colors"
+                    >
+                      Enter Security Code
+                    </button>
+                  </div>
+
+                  {resetError && (
+                    <div className="p-3 rounded-lg bg-red-50 text-red-600 border border-red-200 text-sm">
+                      {resetError}
+                    </div>
+                  )}
+
+                  {resetMessage && (
+                    <div className="p-3 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm">
+                      {resetMessage}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {resetStep === 'enterCode' && (
                 <form onSubmit={handleVerifyResetCode} className="space-y-5">
                   <div>
                     <label htmlFor="reset-email-confirm" className="block text-sm font-medium text-muted-foreground mb-2">
@@ -257,6 +344,18 @@ export default function TeamLoginPage() {
                       required
                     />
                   </div>
+
+                  {forgotPasswordOption === 'securityCode' && (
+                    <div className="p-3 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 text-sm">
+                      Ask the admin to generate the security code first. The code is valid for 30 minutes.
+                    </div>
+                  )}
+
+                  {forgotPasswordOption === 'email' && (
+                    <div className="p-3 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 text-sm">
+                      Check your inbox for the verification code sent to {resetEmail}.
+                    </div>
+                  )}
 
                   {resetError && (
                     <div className="p-3 rounded-lg bg-red-50 text-red-600 border border-red-200 text-sm">
@@ -294,7 +393,9 @@ export default function TeamLoginPage() {
                     </button>
                   </div>
                 </form>
-              ) : (
+              )}
+
+              {resetStep === 'setPassword' && (
                 <form onSubmit={handleConfirmResetPassword} className="space-y-5">
                   <div>
                     <label htmlFor="reset-email-confirm" className="block text-sm font-medium text-muted-foreground mb-2">

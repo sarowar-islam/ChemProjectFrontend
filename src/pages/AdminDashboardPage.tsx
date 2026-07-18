@@ -507,6 +507,7 @@ function MembersView({
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [generatedCodes, setGeneratedCodes] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     name: '',
     username: '',
@@ -621,6 +622,16 @@ function MembersView({
     }
   };
 
+  const handleGenerateSecurityCode = async (memberId: string) => {
+    const result = await adminService.generateMemberSecurityCode(memberId);
+    if (result.success && result.data) {
+      setGeneratedCodes((prev) => ({ ...prev, [memberId]: result.data!.securityCode }));
+      toast({ title: 'Security code generated', description: 'Share this code with the member. It expires in 30 minutes.' });
+    } else {
+      toast({ title: 'Error', description: result.error || 'Failed to generate security code', variant: 'destructive' });
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -672,6 +683,21 @@ function MembersView({
                     <Trash2 className="w-4 h-4 text-[#EF4444]" />
                   </button>
                 </div>
+              </div>
+              <div className="mt-4 flex flex-col gap-2">
+                <button
+                  onClick={() => handleGenerateSecurityCode(member.id)}
+                  className="w-full py-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  Generate Security Code
+                </button>
+                {generatedCodes[member.id] && (
+                  <div className="rounded-xl border border-border bg-slate-50 p-3 text-sm text-foreground">
+                    <div className="font-semibold">Code generated:</div>
+                    <div className="mt-1 break-all">{generatedCodes[member.id]}</div>
+                    <div className="text-xs text-muted-foreground mt-1">Valid for 30 minutes.</div>
+                  </div>
+                )}
               </div>
             </div>
           ))}

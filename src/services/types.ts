@@ -12,6 +12,7 @@ export interface TeamMember {
   username: string;
   name: string;
   email: string;
+  securityCode?: string;
   phone?: string;
   position: 'team_leader' | 'faculty' | 'researcher' | 'student' | 'Administrative';
   title: string;
