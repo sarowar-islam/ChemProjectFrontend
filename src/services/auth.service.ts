@@ -38,6 +38,64 @@ export const authService = {
     };
   },
 
+  async requestMemberPasswordReset(email: string): Promise<{ success: boolean; message?: string; error?: string }> {
+    const response = await apiRequest<{ message: string }>({
+      method: 'POST',
+      url: '/auth/member/forgot-password/request',
+      data: { email },
+    });
+
+    if (!response.success) {
+      return { success: false, error: response.error };
+    }
+
+    return {
+      success: true,
+      message: response.data.message,
+    };
+  },
+
+  async verifyMemberPasswordResetCode(
+    email: string,
+    code: string
+  ): Promise<{ success: boolean; message?: string; error?: string }> {
+    const response = await apiRequest<{ message: string }>({
+      method: 'POST',
+      url: '/auth/member/forgot-password/verify',
+      data: { email, code },
+    });
+
+    if (!response.success) {
+      return { success: false, error: response.error };
+    }
+
+    return {
+      success: true,
+      message: response.data.message,
+    };
+  },
+
+  async confirmMemberPasswordReset(
+    email: string,
+    code: string,
+    newPassword: string
+  ): Promise<{ success: boolean; message?: string; error?: string }> {
+    const response = await apiRequest<{ message: string }>({
+      method: 'POST',
+      url: '/auth/member/forgot-password/confirm',
+      data: { email, code, newPassword },
+    });
+
+    if (!response.success) {
+      return { success: false, error: response.error };
+    }
+
+    return {
+      success: true,
+      message: response.data.message,
+    };
+  },
+
   async logout(): Promise<void> {
     // Optionally call backend logout endpoint to invalidate token
     try {

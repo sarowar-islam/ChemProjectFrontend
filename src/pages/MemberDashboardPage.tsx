@@ -269,7 +269,7 @@ export default function MemberDashboardPage() {
               <div className="hidden sm:flex items-center gap-2">
                 <div className="flex flex-col leading-tight">
                   <span className="font-heading text-xs lg:text-sm font-semibold text-foreground">
-                    <span>Biochemicaland </span>
+                    <span>Biochemical and </span>
                     <span className="text-[#15803D]">Environmental</span>
                   </span>
                   <span className="text-[9px] lg:text-[10px] uppercase tracking-[0.3em] text-[#15803D] font-medium mt-0.5">
