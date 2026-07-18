@@ -49,7 +49,7 @@ export default function HeroTitle() {
         <motion.h1
           className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.08] tracking-tight"
           style={{ transformStyle: 'preserve-3d' }}
-          aria-label="Bio-Chemical and Environmental Research Lab"
+          aria-label="Biochemicaland Environmental Research Lab"
           initial="hidden"
           animate="visible"
         >
@@ -59,7 +59,7 @@ export default function HeroTitle() {
             variants={lineVariants}
             style={{ transform: 'translateZ(36px)' }}
           >
-            Bio-Chemical and Environmental
+            Biochemicaland Environmental
           </motion.span>
           <motion.span
             className="hero-title-line hero-title-line-accent block mt-1 sm:mt-2"

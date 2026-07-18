@@ -32,7 +32,7 @@ export function Header() {
             </div>
             <div className="hidden sm:flex flex-col leading-tight">
               <span className="font-heading text-sm lg:text-base font-semibold text-foreground">
-                <span>Bio-Chemical and </span>
+                <span>Biochemicaland </span>
                 <span className="text-[#15803D]">Environmental</span>
               </span>
               <span className="text-[10px] lg:text-xs uppercase tracking-[0.35em] text-[#15803D] font-medium mt-0.5">
