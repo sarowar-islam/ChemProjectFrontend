@@ -41,6 +41,13 @@ api.interceptors.response.use(
 export async function apiRequest<T>(
   config: AxiosRequestConfig
 ): Promise<{ success: true; data: T } | { success: false; error: string }> {
+  if (config.data instanceof FormData) {
+    config.headers = {
+      ...(config.headers || {}),
+      'Content-Type': undefined,
+    };
+  }
+
   try {
     const response = await api(config);
     return { success: true, data: response.data };

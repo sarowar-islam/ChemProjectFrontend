@@ -70,6 +70,26 @@ export const newsService = {
     return { success: true, data: response.data };
   },
 
+  async uploadNewsImage(file: File): Promise<ApiResponse<{ imageUrl: string }>> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await apiRequest<{ imageUrl: string }>({
+      method: 'POST',
+      url: '/upload/news-image',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (!response.success) {
+      return { success: false, error: response.error };
+    }
+
+    return { success: true, data: response.data };
+  },
+
   async deleteNews(id: string): Promise<ApiResponse<void>> {
     const response = await apiRequest<void>({
       method: 'DELETE',

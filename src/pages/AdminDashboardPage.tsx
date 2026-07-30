@@ -857,7 +857,9 @@ function NewsView({
     imageUrl: '',
     author: '',
   });
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const openAddModal = () => {
     setEditingNews(null);
@@ -868,6 +870,7 @@ function NewsView({
       imageUrl: '',
       author: '',
     });
+    setSelectedImageFile(null);
     setIsModalOpen(true);
   };
 
@@ -880,6 +883,7 @@ function NewsView({
       imageUrl: item.imageUrl || '',
       author: item.author || '',
     });
+    setSelectedImageFile(null);
     setIsModalOpen(true);
   };
 
@@ -888,17 +892,37 @@ function NewsView({
       toast({ title: 'Error', description: 'Title and content are required', variant: 'destructive' });
       return;
     }
+
     setSaving(true);
     try {
+      let imageUrl = formData.imageUrl;
+
+      if (selectedImageFile) {
+        setUploadingImage(true);
+        const uploadRes = await newsService.uploadNewsImage(selectedImageFile);
+        if (!uploadRes.success || !uploadRes.data?.imageUrl) {
+          toast({ title: 'Error', description: uploadRes.error || 'Image upload failed', variant: 'destructive' });
+          setUploadingImage(false);
+          setSaving(false);
+          return;
+        }
+        imageUrl = uploadRes.data.imageUrl;
+      }
+
+      const payload = {
+        ...formData,
+        imageUrl,
+      };
+
       if (editingNews) {
-        const res = await newsService.updateNews(editingNews.id, formData);
+        const res = await newsService.updateNews(editingNews.id, payload);
         if (res.success) {
           toast({ title: 'Success', description: 'News updated successfully' });
         } else {
           toast({ title: 'Error', description: res.error || 'Failed to update news', variant: 'destructive' });
         }
       } else {
-        const res = await newsService.createNews(formData);
+        const res = await newsService.createNews(payload);
         if (res.success) {
           toast({ title: 'Success', description: 'News published successfully' });
         } else {
@@ -909,8 +933,10 @@ function NewsView({
       onRefresh();
     } catch (error) {
       toast({ title: 'Error', description: 'An error occurred', variant: 'destructive' });
+    } finally {
+      setUploadingImage(false);
+      setSaving(false);
     }
-    setSaving(false);
   };
 
   const handleDelete = async (id: string) => {
@@ -993,8 +1019,21 @@ function NewsView({
               <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={6} className="bg-card border-border text-foreground focus:border-primary" />
             </div>
             <div>
-              <Label htmlFor="imageUrl" className="text-muted-foreground">Image URL</Label>
-              <Input id="imageUrl" value={formData.imageUrl} onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })} placeholder="https://" />
+              <Label htmlFor="newsImage" className="text-muted-foreground">News Image</Label>
+              <Input
+                id="newsImage"
+                type="file"
+                accept="image/*"
+                onChange={(e) => setSelectedImageFile(e.target.files?.[0] || null)}
+                className="bg-card border-border text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-primary-foreground hover:file:bg-accent/90"
+              />
+              <p className="text-xs text-muted-foreground mt-1">Upload a JPG, PNG, or WEBP image. Maximum size: 5MB.</p>
+              {selectedImageFile && (
+                <p className="text-sm text-accent mt-2">Selected file: {selectedImageFile.name}</p>
+              )}
+              {!selectedImageFile && formData.imageUrl && (
+                <p className="text-sm text-muted-foreground mt-2">Current image will be kept if you do not choose a new file.</p>
+              )}
             </div>
             <div>
               <Label htmlFor="author">Author</Label>
@@ -1003,8 +1042,8 @@ function NewsView({
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave} disabled={saving}>
-              {saving ? 'Saving...' : editingNews ? 'Update' : 'Publish'}
+            <Button onClick={handleSave} disabled={saving || uploadingImage}>
+              {saving || uploadingImage ? 'Saving...' : editingNews ? 'Update' : 'Publish'}
             </Button>
           </DialogFooter>
         </DialogContent>
