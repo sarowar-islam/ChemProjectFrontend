@@ -1,32 +1,35 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FileText, ExternalLink, BookOpen, GraduationCap, Quote, Award, RefreshCw } from 'lucide-react';
 import { scholarService, ScholarPublication, ScholarProfile } from '@/services';
 import { settingsService } from '@/services/settings.service';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function PublicationsPage() {
+  const navigate = useNavigate();
   const [publications, setPublications] = useState<ScholarPublication[]>([]);
   const [profile, setProfile] = useState<ScholarProfile | null>(null);
   const [scholarUrl, setScholarUrl] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
-  const [selectedPublication, setSelectedPublication] = useState<ScholarPublication | null>(null);
+
+  const createSlug = (title: string) => {
+    if (!title) return '';
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  };
 
   const fetchPublications = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
-      // First get the scholar URL from settings
       const settingsRes = await settingsService.getSettings();
       if (settingsRes.success && settingsRes.data?.googleScholarUrl) {
         setScholarUrl(settingsRes.data.googleScholarUrl);
       }
 
-      // Fetch publications from Google Scholar
       const res = await scholarService.getMainPublications();
-      
+
       if (res.success && res.data) {
         if (res.data.success) {
           setPublications(res.data.publications || []);
@@ -40,7 +43,7 @@ export default function PublicationsPage() {
     } catch (err) {
       setError('Failed to connect to server');
     }
-    
+
     setLoading(false);
   };
 
@@ -48,8 +51,7 @@ export default function PublicationsPage() {
     fetchPublications();
   }, []);
 
-  // Get unique years from publications
-  const years = [...new Set(publications.map((p) => p.year).filter(Boolean))].sort((a, b) => 
+  const years = [...new Set(publications.map((p) => p.year).filter(Boolean))].sort((a, b) =>
     parseInt(b) - parseInt(a)
   );
 
@@ -57,7 +59,6 @@ export default function PublicationsPage() {
     ? publications.filter((p) => p.year === selectedYear)
     : publications;
 
-  // Group publications by year
   const groupedByYear = filteredPublications.reduce((acc, pub) => {
     const year = pub.year || 'Unknown';
     if (!acc[year]) acc[year] = [];
@@ -65,8 +66,7 @@ export default function PublicationsPage() {
     return acc;
   }, {} as Record<string, ScholarPublication[]>);
 
-  // Calculate total citations
-  const totalCitations = profile?.totalCitations || 
+  const totalCitations = profile?.totalCitations ||
     publications.reduce((sum, p) => sum + (parseInt(p.citedBy) || 0), 0);
 
   return (
@@ -74,7 +74,7 @@ export default function PublicationsPage() {
       {/* Hero Section */}
       <section className="relative py-8 sm:py-10 md:py-16 overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
         <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-secondary/70 rounded-full blur-3xl" />
-        
+
         <div className="container-wide relative">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-secondary/80 text-secondary-foreground text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-secondary-foreground/20">
@@ -95,7 +95,6 @@ export default function PublicationsPage() {
       <section className="container-wide -mt-4 sm:-mt-10 relative z-10 mb-4 sm:mb-6">
         <div className="bg-card rounded-xl sm:rounded-xl shadow-card border border-border p-4 sm:p-6 md:p-8">
           <div className="flex flex-col gap-4 sm:gap-6">
-            {/* Stats */}
             <div className="flex items-center justify-center sm:justify-start gap-4 sm:gap-8 flex-wrap">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground">
@@ -140,8 +139,7 @@ export default function PublicationsPage() {
                   </div>
                 </>
               )}
-              
-              {/* Refresh button */}
+
               <button
                 onClick={fetchPublications}
                 disabled={loading}
@@ -151,7 +149,7 @@ export default function PublicationsPage() {
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               </button>
             </div>
-            
+
             {/* Year Filter */}
             <div className="flex flex-wrap justify-center sm:justify-end gap-1.5 sm:gap-2">
               <button
@@ -237,14 +235,17 @@ export default function PublicationsPage() {
                     <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
                   </div>
                   <div className="space-y-4">
-                    {pubs.map((publication, index) => (
-                      <PublicationCard
-                        key={publication.scholarId || index}
-                        publication={publication}
-                        delay={`${index * 0.05}s`}
-                        onClick={() => setSelectedPublication(publication)}
-                      />
-                    ))}
+                    {pubs.map((publication, index) => {
+                      const slug = createSlug(publication.title) || publication.scholarId || String(index);
+                      return (
+                        <PublicationCard
+                          key={publication.scholarId || index}
+                          publication={publication}
+                          delay={`${index * 0.05}s`}
+                          onClick={() => navigate(`/publications/${slug}`)}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
               ))}
@@ -277,50 +278,6 @@ export default function PublicationsPage() {
             </a>
           </div>
         </div>
-
-        <Dialog open={!!selectedPublication} onOpenChange={() => setSelectedPublication(null)}>
-          <DialogContent className="max-w-3xl bg-card border border-border max-h-[90vh] overflow-y-auto">
-            {selectedPublication && (
-              <>
-                <DialogHeader>
-                  <DialogTitle className="font-heading text-xl sm:text-2xl text-foreground">
-                    {selectedPublication.title}
-                  </DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
-                    {selectedPublication.authors?.join(', ') || 'Authors not available'}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                    <span className="px-2 py-1 rounded-full bg-secondary text-secondary-foreground">
-                      {selectedPublication.year || 'Year not available'}
-                    </span>
-                    <span className="px-2 py-1 rounded-full bg-secondary text-secondary-foreground">
-                      {selectedPublication.journal || 'Journal not specified'}
-                    </span>
-                    {(parseInt(selectedPublication.citedBy) || 0) > 0 && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-accent/15 text-accent">
-                        <Quote className="w-3 h-3" />
-                        {parseInt(selectedPublication.citedBy)} citations
-                      </span>
-                    )}
-                  </div>
-                  {selectedPublication.articleUrl && (
-                    <a
-                      href={selectedPublication.articleUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-accent font-medium hover:text-accent/80 transition-colors"
-                    >
-                      Open Publication
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  )}
-                </div>
-              </>
-            )}
-          </DialogContent>
-        </Dialog>
       </section>
     </div>
   );
@@ -336,7 +293,7 @@ function PublicationCard({
   onClick: () => void;
 }) {
   const citations = parseInt(publication.citedBy) || 0;
-  
+
   return (
     <article
       onClick={onClick}

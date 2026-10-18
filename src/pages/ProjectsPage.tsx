@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ExternalLink, FolderKanban, Beaker, Clock, CheckCircle2, Calendar, ArrowRight } from 'lucide-react';
 import { projectService } from '@/services/project.service';
 import { Project } from '@/services/types';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function ProjectsPage() {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'ongoing' | 'completed'>('all');
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  const createSlug = (title: string) => {
+    if (!title) return '';
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -35,7 +40,7 @@ export default function ProjectsPage() {
       {/* Hero Section */}
       <section className="relative py-8 sm:py-10 md:py-16 overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
         <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-secondary/70 rounded-full blur-3xl" />
-        
+
         <div className="container-wide relative">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-secondary/80 text-secondary-foreground text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-fade-in border border-secondary-foreground/20">
@@ -78,7 +83,7 @@ export default function ProjectsPage() {
                 </div>
               </div>
             </div>
-            
+
             {/* Filter */}
             <div className="flex justify-center sm:justify-end">
               <div className="flex gap-1 sm:gap-2 bg-secondary p-1 sm:p-1.5 rounded-lg sm:rounded-xl">
@@ -123,56 +128,20 @@ export default function ProjectsPage() {
               </p>
             </div>
           ) : (
-            filteredProjects.map((project, index) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                delay={`${index * 0.1}s`}
-                onClick={() => setSelectedProject(project)}
-              />
-            ))
+            filteredProjects.map((project, index) => {
+              const slug = createSlug(project.title) || project.id;
+              return (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  delay={`${index * 0.1}s`}
+                  onClick={() => navigate(`/projects/${slug}`)}
+                />
+              );
+            })
           )}
         </div>
       </section>
-
-      <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-        <DialogContent className="max-w-2xl bg-card border border-border max-h-[90vh] overflow-y-auto">
-          {selectedProject && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="font-heading text-2xl text-foreground">{selectedProject.title}</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Calendar className="w-4 h-4 text-accent" />
-                  <span>
-                    {new Date(selectedProject.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-                    {selectedProject.endDate && ` - ${new Date(selectedProject.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}`}
-                  </span>
-                </div>
-                <div>
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${selectedProject.status === 'ongoing' ? 'bg-accent/15 text-accent' : 'bg-secondary text-secondary-foreground'}`}>
-                    {selectedProject.status === 'ongoing' ? <Clock className="w-3.5 h-3.5" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
-                    {selectedProject.status === 'ongoing' ? 'Ongoing' : 'Completed'}
-                  </span>
-                </div>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{selectedProject.description}</p>
-                {selectedProject.researchLink && (
-                  <a
-                    href={selectedProject.researchLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-accent font-medium hover:text-accent/80 transition-colors"
-                  >
-                    Open Research Link
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                )}
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
@@ -215,7 +184,7 @@ function ProjectCard({ project, delay, onClick }: { project: Project; delay: str
           </div>
         </div>
       </div>
-      
+
       {/* Content */}
       <div className="p-4 sm:p-6 pt-3 sm:pt-4">
         <h3 className="font-heading text-base sm:text-xl font-semibold text-foreground group-hover:text-accent transition-colors mb-2 sm:mb-3 line-clamp-2">
@@ -234,19 +203,11 @@ function ProjectCard({ project, delay, onClick }: { project: Project; delay: str
               {project.endDate && ` - ${new Date(project.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}`}
             </span>
           </div>
-          
-          {project.researchLink && (
-            <a
-              href={project.researchLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-accent hover:text-accent/80 font-medium transition-colors group/link"
-            >
-              Details
-              <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover/link:translate-x-0.5" />
-            </a>
-          )}
+
+          <div className="inline-flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-accent hover:text-accent/80 font-medium transition-colors group/link">
+            Details
+            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover/link:translate-x-0.5" />
+          </div>
         </div>
       </div>
     </article>

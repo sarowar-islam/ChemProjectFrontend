@@ -311,73 +311,7 @@ function ProjectsView({
   onRefresh: () => void;
   toast: ReturnType<typeof useToast>['toast'];
 }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    researchLink: '',
-    status: 'ongoing' as 'ongoing' | 'completed',
-    startDate: new Date().toISOString().split('T')[0],
-    endDate: '',
-  });
-  const [saving, setSaving] = useState(false);
-
-  const openAddModal = () => {
-    setEditingProject(null);
-    setFormData({
-      title: '',
-      description: '',
-      researchLink: '',
-      status: 'ongoing',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: '',
-    });
-    setIsModalOpen(true);
-  };
-
-  const openEditModal = (project: Project) => {
-    setEditingProject(project);
-    setFormData({
-      title: project.title,
-      description: project.description,
-      researchLink: project.researchLink,
-      status: project.status,
-      startDate: project.startDate,
-      endDate: project.endDate || '',
-    });
-    setIsModalOpen(true);
-  };
-
-  const handleSave = async () => {
-    if (!formData.title || !formData.description) {
-      toast({ title: 'Error', description: 'Title and description are required', variant: 'destructive' });
-      return;
-    }
-    setSaving(true);
-    try {
-      if (editingProject) {
-        const res = await adminService.updateProject(editingProject.id, formData);
-        if (res.success) {
-          toast({ title: 'Success', description: 'Project updated successfully' });
-        } else {
-          toast({ title: 'Error', description: res.error || 'Failed to update project', variant: 'destructive' });
-        }
-      } else {
-        const res = await adminService.createProject(formData);
-        if (res.success) {
-          toast({ title: 'Success', description: 'Project created successfully' });
-        } else {
-          toast({ title: 'Error', description: res.error || 'Failed to create project', variant: 'destructive' });
-        }
-      }
-      setIsModalOpen(false);
-      onRefresh();
-    } catch (error) {
-      toast({ title: 'Error', description: 'An error occurred', variant: 'destructive' });
-    }
-    setSaving(false);
-  };
+  const navigate = useNavigate();
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this project?')) return;
@@ -394,7 +328,7 @@ function ProjectsView({
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="font-heading text-2xl text-foreground">Projects</h2>
-        <Button onClick={openAddModal} className="bg-accent text-primary-foreground hover:bg-accent/90">
+        <Button onClick={() => navigate('/admin/projects/new')} className="bg-accent text-primary-foreground hover:bg-accent/90">
           <Plus className="w-4 h-4 mr-2" />
           Add Project
         </Button>
@@ -419,7 +353,7 @@ function ProjectsView({
             <div key={project.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between shadow-sm">
               <div className="flex-1 min-w-0 mr-4">
                 <h3 className="font-medium text-foreground truncate">{project.title}</h3>
-                <p className="text-sm text-muted-foreground truncate">{project.description}</p>
+                <p className="text-sm text-muted-foreground truncate" dangerouslySetInnerHTML={{ __html: project.description }} />
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <span className={`px-2 py-1 rounded text-xs font-medium ${
@@ -427,7 +361,7 @@ function ProjectsView({
                 }`}>
                   {project.status}
                 </span>
-                <button onClick={() => openEditModal(project)} className="p-2 hover:bg-secondary rounded-lg transition-colors">
+                <button onClick={() => navigate(`/admin/projects/edit/${project.id}`)} className="p-2 hover:bg-secondary rounded-lg transition-colors">
                   <Edit className="w-4 h-4 text-muted-foreground" />
                 </button>
                 <button onClick={() => handleDelete(project.id)} className="p-2 hover:bg-[#FEE2E2] rounded-lg transition-colors">
@@ -438,56 +372,6 @@ function ProjectsView({
           ))}
         </div>
       )}
-
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-lg bg-card border-border">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">{editingProject ? 'Edit Project' : 'Add Project'}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div>
-              <Label htmlFor="title">Title *</Label>
-              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
-            </div>
-            <div>
-              <Label htmlFor="description">Description *</Label>
-              <Textarea id="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
-            </div>
-            <div>
-              <Label htmlFor="researchLink">Research Link</Label>
-              <Input id="researchLink" value={formData.researchLink} onChange={(e) => setFormData({ ...formData, researchLink: e.target.value })} placeholder="https://" />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="status">Status</Label>
-                <Select value={formData.status} onValueChange={(v) => setFormData({ ...formData, status: v as 'ongoing' | 'completed' })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ongoing">Ongoing</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="startDate">Start Date</Label>
-                <Input id="startDate" type="date" value={formData.startDate} onChange={(e) => setFormData({ ...formData, startDate: e.target.value })} />
-              </div>
-            </div>
-            {formData.status === 'completed' && (
-              <div>
-                <Label htmlFor="endDate">End Date</Label>
-                <Input id="endDate" type="date" value={formData.endDate} onChange={(e) => setFormData({ ...formData, endDate: e.target.value })} />
-              </div>
-            )}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave} disabled={saving}>
-              {saving ? 'Saving...' : 'Save'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
@@ -848,96 +732,7 @@ function NewsView({
   onRefresh: () => void;
   toast: ReturnType<typeof useToast>['toast'];
 }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingNews, setEditingNews] = useState<News | null>(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    summary: '',
-    content: '',
-    imageUrl: '',
-    author: '',
-  });
-  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [uploadingImage, setUploadingImage] = useState(false);
-
-  const openAddModal = () => {
-    setEditingNews(null);
-    setFormData({
-      title: '',
-      summary: '',
-      content: '',
-      imageUrl: '',
-      author: '',
-    });
-    setSelectedImageFile(null);
-    setIsModalOpen(true);
-  };
-
-  const openEditModal = (item: News) => {
-    setEditingNews(item);
-    setFormData({
-      title: item.title,
-      summary: item.summary || '',
-      content: item.content,
-      imageUrl: item.imageUrl || '',
-      author: item.author || '',
-    });
-    setSelectedImageFile(null);
-    setIsModalOpen(true);
-  };
-
-  const handleSave = async () => {
-    if (!formData.title || !formData.content) {
-      toast({ title: 'Error', description: 'Title and content are required', variant: 'destructive' });
-      return;
-    }
-
-    setSaving(true);
-    try {
-      let imageUrl = formData.imageUrl;
-
-      if (selectedImageFile) {
-        setUploadingImage(true);
-        const uploadRes = await newsService.uploadNewsImage(selectedImageFile);
-        if (!uploadRes.success || !uploadRes.data?.imageUrl) {
-          toast({ title: 'Error', description: uploadRes.error || 'Image upload failed', variant: 'destructive' });
-          setUploadingImage(false);
-          setSaving(false);
-          return;
-        }
-        imageUrl = uploadRes.data.imageUrl;
-      }
-
-      const payload = {
-        ...formData,
-        imageUrl,
-      };
-
-      if (editingNews) {
-        const res = await newsService.updateNews(editingNews.id, payload);
-        if (res.success) {
-          toast({ title: 'Success', description: 'News updated successfully' });
-        } else {
-          toast({ title: 'Error', description: res.error || 'Failed to update news', variant: 'destructive' });
-        }
-      } else {
-        const res = await newsService.createNews(payload);
-        if (res.success) {
-          toast({ title: 'Success', description: 'News published successfully' });
-        } else {
-          toast({ title: 'Error', description: res.error || 'Failed to publish news', variant: 'destructive' });
-        }
-      }
-      setIsModalOpen(false);
-      onRefresh();
-    } catch (error) {
-      toast({ title: 'Error', description: 'An error occurred', variant: 'destructive' });
-    } finally {
-      setUploadingImage(false);
-      setSaving(false);
-    }
-  };
+  const navigate = useNavigate();
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this news?')) return;
@@ -954,7 +749,7 @@ function NewsView({
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="font-heading text-2xl text-foreground">News</h2>
-        <Button onClick={openAddModal} className="bg-accent text-primary-foreground hover:bg-accent/90">
+        <Button onClick={() => navigate('/admin/news/new')} className="bg-accent text-primary-foreground hover:bg-accent/90">
           <Plus className="w-4 h-4 mr-2" />
           Add News
         </Button>
@@ -979,16 +774,14 @@ function NewsView({
             <div key={item.id} className="bg-card border border-border rounded-xl p-4 flex items-start justify-between shadow-sm">
               <div className="flex-1 min-w-0 mr-4">
                 <h3 className="font-medium text-foreground">{item.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                  {item.summary || item.content.substring(0, 150)}
-                </p>
+                <p className="text-sm text-muted-foreground line-clamp-2 mt-1" dangerouslySetInnerHTML={{ __html: item.summary || item.content }} />
                 <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                   <span>{new Date(item.date).toLocaleDateString()}</span>
                   {item.author && <span>by {item.author}</span>}
                 </div>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <button onClick={() => openEditModal(item)} className="p-2 hover:bg-secondary rounded-lg transition-colors">
+                <button onClick={() => navigate(`/admin/news/edit/${item.id}`)} className="p-2 hover:bg-secondary rounded-lg transition-colors">
                   <Edit className="w-4 h-4 text-muted-foreground" />
                 </button>
                 <button onClick={() => handleDelete(item.id)} className="p-2 hover:bg-[#FEE2E2] rounded-lg transition-colors">
@@ -999,55 +792,6 @@ function NewsView({
           ))}
         </div>
       )}
-
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto bg-card border-border">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">{editingNews ? 'Edit News' : 'Add News'}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div>
-              <Label htmlFor="title" className="text-muted-foreground">Title *</Label>
-              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-card border-border text-foreground focus:border-primary" />
-            </div>
-            <div>
-              <Label htmlFor="summary" className="text-muted-foreground">Summary</Label>
-              <Input id="summary" value={formData.summary} onChange={(e) => setFormData({ ...formData, summary: e.target.value })} placeholder="Brief summary for preview" className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary" />
-            </div>
-            <div>
-              <Label htmlFor="content" className="text-muted-foreground">Content *</Label>
-              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={6} className="bg-card border-border text-foreground focus:border-primary" />
-            </div>
-            <div>
-              <Label htmlFor="newsImage" className="text-muted-foreground">News Image</Label>
-              <Input
-                id="newsImage"
-                type="file"
-                accept="image/*"
-                onChange={(e) => setSelectedImageFile(e.target.files?.[0] || null)}
-                className="bg-card border-border text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-primary-foreground hover:file:bg-accent/90"
-              />
-              <p className="text-xs text-muted-foreground mt-1">Upload a JPG, PNG, or WEBP image. Maximum size: 5MB.</p>
-              {selectedImageFile && (
-                <p className="text-sm text-accent mt-2">Selected file: {selectedImageFile.name}</p>
-              )}
-              {!selectedImageFile && formData.imageUrl && (
-                <p className="text-sm text-muted-foreground mt-2">Current image will be kept if you do not choose a new file.</p>
-              )}
-            </div>
-            <div>
-              <Label htmlFor="author">Author</Label>
-              <Input id="author" value={formData.author} onChange={(e) => setFormData({ ...formData, author: e.target.value })} placeholder="Author name" />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave} disabled={saving || uploadingImage}>
-              {saving || uploadingImage ? 'Saving...' : editingNews ? 'Update' : 'Publish'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

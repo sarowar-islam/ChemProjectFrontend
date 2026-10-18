@@ -20,9 +20,9 @@ export default function HomePage() {
 
   // Featured hero images changing every 3 seconds from public folder
   const heroImages = [
-    '/photos/frontpage-image.jpg',
-    '/Images/hero-image/profle.png',
-    '/Images/hero-image/sarowar professional.png'
+    '/Images/hero-image/1.jpg',
+    '/Images/hero-image/2.jpg',
+    '/Images/hero-image/3.jpg'
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
