@@ -128,7 +128,7 @@ export default function NewsDetailPage() {
         {/* Featured Image Slideshow */}
         {images.length > 0 && (
           <div className="relative rounded-2xl overflow-hidden shadow-elevated border border-border mb-8 bg-card group">
-            <div className="relative h-[300px] sm:h-[450px] w-full">
+            <div className="relative aspect-video w-full">
               <img
                 key={currentDisplayImage}
                 src={currentDisplayImage}
