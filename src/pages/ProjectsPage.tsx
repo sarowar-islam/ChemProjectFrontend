@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ExternalLink, FolderKanban, Beaker, Clock, CheckCircle2, Calendar, ArrowRight } from 'lucide-react';
 import { projectService } from '@/services/project.service';
@@ -32,6 +32,18 @@ export default function ProjectsPage() {
     if (filter === 'all') return true;
     return project.status === filter;
   });
+
+  const ongoingProjects = useMemo(() => {
+    return projects
+      .filter((p) => p.status === 'ongoing')
+      .sort((a, b) => new Date(b.startDate || 0).getTime() - new Date(a.startDate || 0).getTime());
+  }, [projects]);
+
+  const completedProjects = useMemo(() => {
+    return projects
+      .filter((p) => p.status === 'completed')
+      .sort((a, b) => new Date(b.endDate || b.startDate || 0).getTime() - new Date(a.endDate || a.startDate || 0).getTime());
+  }, [projects]);
 
   const ongoingCount = projects.filter(p => p.status === 'ongoing').length;
   const completedCount = projects.filter(p => p.status === 'completed').length;
@@ -107,11 +119,11 @@ export default function ProjectsPage() {
         </div>
       </section>
 
-      {/* Projects Grid */}
-      <section className="container-wide pb-8 sm:pb-10 md:pb-16 bg-secondary py-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
-          {loading ? (
-            Array.from({ length: 4 }).map((_, i) => (
+      {/* Projects Sections */}
+      <section className="container-wide pb-12 md:pb-20 bg-secondary py-8 space-y-16">
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+            {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="bg-card border border-border rounded-2xl p-8 animate-pulse">
                 <div className="h-6 w-24 bg-accent/15 rounded-full mb-4" />
                 <div className="h-7 w-3/4 bg-accent/15 rounded mb-4" />
@@ -119,29 +131,87 @@ export default function ProjectsPage() {
                 <div className="h-4 w-full bg-accent/15 rounded mb-2" />
                 <div className="h-4 w-1/2 bg-accent/15 rounded" />
               </div>
-            ))
-          ) : filteredProjects.length === 0 ? (
-            <div className="col-span-2 text-center py-10 bg-card border border-border rounded-3xl">
-              <FolderKanban className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-              <h3 className="font-heading text-xl text-foreground mb-2">No projects found</h3>
-              <p className="text-muted-foreground">
-                {filter !== 'all' ? `No ${filter} projects at the moment.` : 'Projects will appear here once added.'}
-              </p>
-            </div>
-          ) : (
-            filteredProjects.map((project, index) => {
-              const slug = createSlug(project.title) || project.id;
-              return (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  delay={`${index * 0.1}s`}
-                  onClick={() => navigate(`/projects/${slug}`)}
-                />
-              );
-            })
-          )}
-        </div>
+            ))}
+          </div>
+        ) : projects.length === 0 ? (
+          <div className="text-center py-16 bg-card border border-border rounded-3xl">
+            <FolderKanban className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+            <h3 className="font-heading text-xl text-foreground mb-2">No projects found</h3>
+            <p className="text-muted-foreground">Projects will appear here once added.</p>
+          </div>
+        ) : (
+          <>
+            {/* Ongoing Projects Section */}
+            {(filter === 'all' || filter === 'ongoing') && (
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2.5 rounded-xl bg-accent/15 text-accent">
+                    <Clock className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h2 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">Ongoing Projects</h2>
+                    <p className="text-sm text-muted-foreground">Active research initiatives currently in progress (sorted by recent start time)</p>
+                  </div>
+                </div>
+
+                {ongoingProjects.length === 0 ? (
+                  <div className="text-center py-10 bg-card border border-border rounded-2xl text-muted-foreground text-sm">
+                    No ongoing projects at the moment.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+                    {ongoingProjects.map((project, index) => {
+                      const slug = createSlug(project.title) || project.id;
+                      return (
+                        <ProjectCard
+                          key={project.id}
+                          project={project}
+                          delay={`${index * 0.05}s`}
+                          onClick={() => navigate(`/projects/${slug}`)}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Completed Projects Section */}
+            {(filter === 'all' || filter === 'completed') && (
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2.5 rounded-xl bg-card border border-border text-accent">
+                    <CheckCircle2 className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h2 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">Completed Projects</h2>
+                    <p className="text-sm text-muted-foreground">Successfully concluded research work and findings (sorted by recent completion time)</p>
+                  </div>
+                </div>
+
+                {completedProjects.length === 0 ? (
+                  <div className="text-center py-10 bg-card border border-border rounded-2xl text-muted-foreground text-sm">
+                    No completed projects at the moment.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+                    {completedProjects.map((project, index) => {
+                      const slug = createSlug(project.title) || project.id;
+                      return (
+                        <ProjectCard
+                          key={project.id}
+                          project={project}
+                          delay={`${index * 0.05}s`}
+                          onClick={() => navigate(`/projects/${slug}`)}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
       </section>
     </div>
   );

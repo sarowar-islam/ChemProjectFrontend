@@ -261,6 +261,24 @@ function MemberCard({ member, delay, featured }: { member: TeamMember; delay: st
           {member.name}
         </h3>
         <p className="text-xs sm:text-sm text-secondary-foreground mt-1">{normalizeMemberTitle(member.title)}</p>
+
+        {/* Top 2% Scientist Badge for Prof. Dr. Yunus Ahmed */}
+        {(member.name.toLowerCase().includes('yunus ahmed') || member.username?.toLowerCase().includes('yunus')) && (
+          <div
+            className="mt-2.5 flex justify-center"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              window.open('https://topscinet.com/scientist_profile/Ahmed,%20Yunus/2010/?stype=single_year', '_blank');
+            }}
+          >
+            <img
+              src="https://topscinet.com/badge/U50012.png?style=horizontal-light&type=single&name=1"
+              alt="Top 2% Scientist badge, TOPSCINET, 2026"
+              className="w-full max-w-[260px] h-auto rounded-lg shadow-sm hover:opacity-95 transition-opacity cursor-pointer"
+            />
+          </div>
+        )}
         
         {member.researchArea && (
           <div className="mt-2 sm:mt-3 inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-secondary text-secondary-foreground text-[10px] sm:text-xs font-medium">
@@ -286,7 +304,7 @@ function MemberCard({ member, delay, featured }: { member: TeamMember; delay: st
             )}
           </div>
         )}
-        
+
         <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border">
           <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground group-hover:text-accent transition-colors">
             <ExternalLink className="w-3 h-3" />

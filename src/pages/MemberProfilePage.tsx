@@ -163,7 +163,7 @@ export default function MemberProfilePage() {
                       <img
                         src="https://topscinet.com/badge/U50012.png?style=horizontal-light&type=single&name=1"
                         alt="Top 2% Scientist badge, TOPSCINET, 2026"
-                        className="w-full max-w-[280px] h-auto rounded-lg shadow-sm"
+                        className="w-full max-w-[320px] h-auto rounded-lg shadow-sm"
                       />
                     </a>
                   </div>
