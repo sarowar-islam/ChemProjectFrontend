@@ -151,6 +151,24 @@ export default function MemberProfilePage() {
                   </span>
                 )}
 
+                {/* Top 2% Scientist Badge for Prof. Dr. Yunus Ahmed */}
+                {(member.name.toLowerCase().includes('yunus ahmed') || member.username?.toLowerCase().includes('yunus')) && (
+                  <div className="mb-4 flex justify-center">
+                    <a
+                      href="https://topscinet.com/scientist_profile/Ahmed,%20Yunus/2010/?stype=single_year"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block hover:opacity-95 transition-opacity"
+                    >
+                      <img
+                        src="https://topscinet.com/badge/U50012.png?style=horizontal-light&type=single&name=1"
+                        alt="Top 2% Scientist badge, TOPSCINET, 2026"
+                        className="w-full max-w-[280px] h-auto rounded-lg shadow-sm"
+                      />
+                    </a>
+                  </div>
+                )}
+
                 {/* Contact Buttons */}
                 <div className="space-y-2 mb-6">
                   {member.email && (
