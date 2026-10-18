@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FlaskConical, BookOpen, Users, FolderKanban, ArrowRight, Bell, Info, Beaker, Atom, Microscope, TestTube, GraduationCap, Award, Target, Sparkles } from 'lucide-react';
+import { FlaskConical, BookOpen, Users, FolderKanban, ArrowRight, Bell, Info, Beaker, Atom, Microscope, TestTube, GraduationCap, Award, Target, Sparkles, Calendar, Newspaper } from 'lucide-react';
 import { adminService } from '@/services/admin.service';
 import { noticeService } from '@/services/notice.service';
+import { newsService } from '@/services/news.service';
 import { settingsService } from '@/services/settings.service';
-import { Notice } from '@/services/types';
+import { Notice, News } from '@/services/types';
 import HeroTitle from '@/components/HeroTitle';
 
 export default function HomePage() {
@@ -14,6 +15,7 @@ export default function HomePage() {
     totalMembers: 0,
     ongoingProjects: 0,
   });
+  const [recentNews, setRecentNews] = useState<News[]>([]);
   const [recentNotices, setRecentNotices] = useState<Notice[]>([]);
   const [aboutUs, setAboutUs] = useState<string>('');
   const [loading, setLoading] = useState(true);
@@ -36,13 +38,20 @@ export default function HomePage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [statsRes, noticesRes, settingsRes] = await Promise.all([
+      const [statsRes, newsRes, noticesRes, settingsRes] = await Promise.all([
         adminService.getDashboardStats(),
+        newsService.getNews(),
         noticeService.getRecentNotices(3),
         settingsService.getSettings(),
       ]);
 
       if (statsRes.success && statsRes.data) setStats(statsRes.data);
+      if (newsRes.success && newsRes.data) {
+        const sorted = [...newsRes.data].sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+        setRecentNews(sorted.slice(0, 4));
+      }
       if (noticesRes.success && noticesRes.data) setRecentNotices(noticesRes.data);
       if (settingsRes.success && settingsRes.data) setAboutUs(settingsRes.data.aboutUs || '');
       setLoading(false);
@@ -267,6 +276,52 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Recent News Section (4 in a row) */}
+      <section className="container-wide py-12 md:py-16 bg-background">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/15 text-accent text-sm font-medium mb-4">
+              <Newspaper className="w-4 h-4" />
+              <span>Latest Updates</span>
+            </div>
+            <h2 className="font-heading text-3xl md:text-4xl text-[#166534] dark:text-foreground" style={{ letterSpacing: '-0.02em' }}>Recent News</h2>
+          </div>
+          <Link to="/news" className="hidden sm:inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-card text-foreground font-medium hover:bg-secondary transition-colors border border-border">
+            View All News <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {loading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="bg-card border border-border rounded-xl overflow-hidden animate-pulse">
+                <div className="h-44 bg-secondary" />
+                <div className="p-5">
+                  <div className="h-4 w-1/3 bg-secondary rounded mb-3" />
+                  <div className="h-5 w-full bg-secondary rounded mb-2" />
+                  <div className="h-4 w-2/3 bg-secondary rounded" />
+                </div>
+              </div>
+            ))
+          ) : recentNews.length === 0 ? (
+            <div className="col-span-4 text-center py-10 bg-secondary/50 rounded-xl border border-border">
+              <Newspaper className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">No news articles published yet.</p>
+            </div>
+          ) : (
+            recentNews.map((item, index) => (
+              <NewsCard key={item.id} newsItem={item} index={index} delay={`${index * 0.05}s`} />
+            ))
+          )}
+        </div>
+
+        <div className="mt-6 text-center sm:hidden">
+          <Link to="/news" className="inline-flex items-center gap-2 text-accent font-medium hover:text-accent/80 transition-all">
+            View All News <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* Recent Notices - Enhanced */}
       <section className="container-wide py-12 md:py-16 bg-background">
         <div className="flex items-center justify-between mb-6">
@@ -282,7 +337,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+        <div className="space-y-4">
           {loading ? (
             Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="bg-card border border-border rounded-xl p-6 animate-pulse">
@@ -292,7 +347,7 @@ export default function HomePage() {
               </div>
             ))
           ) : recentNotices.length === 0 ? (
-            <div className="col-span-3 text-center py-6 bg-secondary rounded-xl border border-border">
+            <div className="text-center py-6 bg-secondary rounded-xl border border-border">
               <Bell className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-muted-foreground">No notices yet. Check back soon!</p>
             </div>
@@ -354,9 +409,51 @@ function StatCard({ icon, number, label, delay, color, to }: { icon: React.React
   );
 }
 
-function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
+function NewsCard({ newsItem, index, delay }: { newsItem: News; index: number; delay: string }) {
+  const newsImages = [
+    '/photos/frontpage-image.jpg',
+    '/Images/hero-image/profle.png',
+    '/Images/hero-image/sarowar professional.png'
+  ];
+  const firstImageUrl = newsItem.imageUrl ? newsItem.imageUrl.split(',')[0].trim() : '';
+  const displayImageUrl = firstImageUrl || newsImages[index % newsImages.length];
+  const createSlug = (title: string) => {
+    if (!title) return '';
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  };
+  const slug = createSlug(newsItem.title) || newsItem.id;
+
   return (
-    <Link to="/notices" className="bg-card border border-border rounded-xl p-6 hover:border-accent/30 transition-all duration-300 animate-fade-in-up group shadow-sm block" style={{ animationDelay: delay }}>
+    <Link to={`/news/${slug}`} className="bg-card border border-border rounded-xl overflow-hidden hover:border-accent/30 transition-all duration-300 animate-fade-in-up group shadow-sm flex flex-col" style={{ animationDelay: delay }}>
+      <div className="h-44 w-full overflow-hidden bg-secondary relative">
+        <img src={displayImageUrl} alt={newsItem.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      </div>
+      <div className="p-5 flex-1 flex flex-col justify-between">
+        <div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+            <Calendar className="w-3.5 h-3.5 text-accent" />
+            {new Date(newsItem.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+          </div>
+          <h3 className="font-heading font-semibold text-foreground text-base line-clamp-2 group-hover:text-accent transition-colors mb-2">{newsItem.title}</h3>
+          <p className="text-xs text-muted-foreground line-clamp-2" dangerouslySetInnerHTML={{ __html: newsItem.summary || newsItem.content }} />
+        </div>
+        <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-accent">
+          Read Article <ArrowRight className="w-3.5 h-3.5" />
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function NoticeCard({ notice, delay }: { notice: Notice; delay: string }) {
+  const createSlug = (title: string) => {
+    if (!title) return '';
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  };
+  const slug = createSlug(notice.title) || notice.id;
+
+  return (
+    <Link to={`/notices/${slug}`} className="bg-card border border-border rounded-xl p-6 hover:border-accent/30 transition-all duration-300 animate-fade-in-up group shadow-sm block" style={{ animationDelay: delay }}>
       <div className="flex items-start gap-4 mb-4">
         <div className={`p-3 rounded-xl ${notice.priority === 'important' ? 'bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-300' : 'bg-accent/15 text-accent'} group-hover:scale-110 transition-transform`}>
           <Bell className="w-5 h-5" />
