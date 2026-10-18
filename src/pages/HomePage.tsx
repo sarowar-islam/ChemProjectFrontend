@@ -18,6 +18,22 @@ export default function HomePage() {
   const [aboutUs, setAboutUs] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
+  // Featured hero images changing every 3 seconds from public folder
+  const heroImages = [
+    '/photos/frontpage-image.jpg',
+    '/Images/hero-image/profle.png',
+    '/Images/hero-image/sarowar professional.png'
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [heroImages.length]);
+
   useEffect(() => {
     const fetchData = async () => {
       const [statsRes, noticesRes, settingsRes] = await Promise.all([
@@ -37,7 +53,7 @@ export default function HomePage() {
 
   return (
     <div>
-      {/* Hero Section with Light Gradient Background */}
+      {/* Hero Section with Split Layout & Featured Images Slideshow */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
         {/* Floating Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -47,31 +63,59 @@ export default function HomePage() {
           <Beaker className="absolute bottom-32 left-20 w-12 h-12 text-secondary-foreground/45" />
         </div>
 
-        <div className="container-wide relative z-10 py-6 sm:py-8 md:py-12">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-secondary/80 text-secondary-foreground text-xs sm:text-sm font-medium mb-6 sm:mb-4 animate-fade-in border border-secondary-foreground/20">
-              <FlaskConical className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span>Pioneering Chemistry Research</span>
+        <div className="container-wide relative z-10 py-10 sm:py-12 md:py-16">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column: Research Name and Action Buttons */}
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-secondary/80 text-secondary-foreground text-xs sm:text-sm font-medium mb-6 sm:mb-4 animate-fade-in border border-secondary-foreground/20">
+                <FlaskConical className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span>Pioneering Chemistry Research</span>
+              </div>
+
+              <HeroTitle />
+
+              <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                <div className="w-10 sm:w-16 h-1 bg-accent rounded-full" />
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground font-medium">Department of Chemistry, CUET</p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                <Link to="/projects" className="inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-medium rounded-lg shadow-lg shadow-accent/25 text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 transition-colors group">
+                  Explore Research <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+                <Link to="/team" className="inline-flex items-center justify-center gap-2 border-2 border-accent text-accent hover:bg-accent/10 font-medium rounded-lg text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 transition-colors">
+                  <Users className="w-4 h-4 sm:w-5 sm:h-5" /> Meet Our Team
+                </Link>
+              </div>
             </div>
-            
-            <HeroTitle />
-            
-            <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <div className="w-10 sm:w-16 h-1 bg-accent rounded-full" />
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground font-medium">Department of Chemistry, CUET</p>
-            </div>
-            
-            <p className="text-base sm:text-lg lg:text-xl text-muted-foreground mb-6 sm:mb-4 md:mb-5 max-w-2xl animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.3s' }}>
-              Chittagong University of Engineering & Technology — Advancing the frontiers of sustainable chemistry through innovative research and collaboration.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-              <Link to="/projects" className="inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-medium rounded-lg shadow-lg shadow-accent/25 text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 transition-colors group">
-                Explore Research <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link to="/team" className="inline-flex items-center justify-center gap-2 border-2 border-accent text-accent hover:bg-accent/10 font-medium rounded-lg text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 transition-colors">
-                <Users className="w-4 h-4 sm:w-5 sm:h-5" /> Meet Our Team
-              </Link>
+
+            {/* Right Column: Featured Images Slideshow (Changing every 3 seconds) */}
+            <div className="relative animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <div className="relative z-10 rounded-2xl overflow-hidden shadow-elevated border-2 border-border bg-card h-[320px] sm:h-[400px] lg:h-[450px]">
+                {heroImages.map((img, idx) => (
+                  <img
+                    key={img}
+                    src={img}
+                    alt={`Hero Featured ${idx + 1}`}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${idx === currentImageIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+                  />
+                ))}
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent pointer-events-none" />
+
+                {/* Slideshow Indicators */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+                  {heroImages.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentImageIndex(idx)}
+                      className={`h-2.5 rounded-full transition-all ${idx === currentImageIndex ? 'w-8 bg-accent' : 'w-2.5 bg-background/60 hover:bg-background'}`}
+                      aria-label={`Slide ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="absolute -bottom-4 -right-4 w-40 h-40 bg-accent/20 rounded-2xl -z-10 blur-xl" />
+              <div className="absolute -top-4 -left-4 w-40 h-40 bg-primary/10 rounded-2xl -z-10 blur-xl" />
             </div>
           </div>
         </div>
@@ -103,14 +147,14 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-background/50 via-background to-background/30" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-secondary/65 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/50 rounded-full blur-3xl" />
-        
+
         <div className="container-wide relative">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Image Side */}
             <div className="relative animate-fade-in-up">
               <div className="relative z-10 rounded-xl sm:rounded-2xl overflow-hidden shadow-elevated">
-                <img 
-                  src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=80" 
+                <img
+                  src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=80"
                   alt="Research Laboratory"
                   className="w-full h-[300px] sm:h-[400px] lg:h-[500px] object-cover"
                 />
@@ -130,18 +174,18 @@ export default function HomePage() {
               <div className="absolute -bottom-4 sm:-bottom-6 -right-4 sm:-right-6 w-32 sm:w-48 h-32 sm:h-48 bg-accent/20 rounded-xl sm:rounded-2xl -z-10" />
               <div className="absolute -top-4 sm:-top-6 -left-4 sm:-left-6 w-20 sm:w-32 h-20 sm:h-32 bg-primary/10 rounded-xl sm:rounded-2xl -z-10" />
             </div>
-            
+
             {/* Content Side */}
             <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-secondary/80 text-secondary-foreground text-xs sm:text-sm font-medium mb-4 sm:mb-6 border border-secondary-foreground/20">
                 <Info className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span>About Our Research Group</span>
               </div>
-              
+
               <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#166534] dark:text-foreground mb-4 sm:mb-6 leading-tight" style={{ letterSpacing: '-0.02em' }}>
                 Pushing the Boundaries of <span className="text-accent">Chemical Science</span>
               </h2>
-              
+
               {aboutUs ? (
                 <p className="text-muted-foreground text-lg leading-relaxed mb-4">{aboutUs}</p>
               ) : (
@@ -149,7 +193,7 @@ export default function HomePage() {
                   Welcome to Yunus Ahmed Lab at CUET. Our research group is dedicated to advancing the frontiers of chemistry through innovative approaches in environmental remediation, resource recovery, nanomaterials, and cutting-edge wastewater treatment technologies for sustainable development.
                 </p>
               )}
-              
+
               <div className="grid sm:grid-cols-2 gap-4 mb-4">
                 <Link to="/projects" className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border hover:border-accent/30 hover:shadow-sm transition-all duration-300">
                   <div className="p-2 rounded-lg bg-secondary text-secondary-foreground">
@@ -170,7 +214,7 @@ export default function HomePage() {
                   </div>
                 </Link>
               </div>
-              
+
               <Link to="/publications" className="inline-flex items-center gap-2 text-accent font-semibold hover:text-accent/80 transition-all group">
                 View Our Publications <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
@@ -184,7 +228,7 @@ export default function HomePage() {
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%230891B2" fill-opacity="0.35"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
         </div>
-        
+
         <div className="container-wide relative">
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/85 text-secondary-foreground text-sm font-medium mb-6 border border-secondary-foreground/20">
@@ -196,7 +240,7 @@ export default function HomePage() {
               Exploring innovative solutions across multiple domains of chemistry to address global challenges.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
               { icon: <FlaskConical className="w-8 h-8" />, title: 'Environmental Remediation', desc: 'Developing solutions for pollution control and environmental cleanup', to: '/projects' },
@@ -208,7 +252,7 @@ export default function HomePage() {
             ].map((area, index) => (
               <Link
                 to={area.to}
-                key={area.title} 
+                key={area.title}
                 className="group p-8 rounded-xl bg-card border border-border hover:border-accent/30 transition-all duration-300 animate-fade-in-up shadow-sm"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
@@ -237,7 +281,7 @@ export default function HomePage() {
             View All <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
           {loading ? (
             Array.from({ length: 3 }).map((_, i) => (
@@ -258,7 +302,7 @@ export default function HomePage() {
             ))
           )}
         </div>
-        
+
         <div className="mt-4 text-center sm:hidden">
           <Link to="/notices" className="inline-flex items-center gap-2 text-accent font-medium hover:text-accent/80 transition-all">
             View All Notices <ArrowRight className="w-4 h-4" />
