@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FolderKanban, Calendar, Clock, CheckCircle2, ExternalLink, ArrowLeft, Share2 } from 'lucide-react';
 import { projectService } from '@/services/project.service';
 import { Project } from '@/services/types';
+import { linkifyHtml } from '@/lib/htmlUtils';
 
 export default function ProjectDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -97,8 +98,8 @@ export default function ProjectDetailPage() {
           </div>
 
           <div
-            className="prose prose-lg max-w-none text-foreground leading-relaxed mb-8"
-            dangerouslySetInnerHTML={{ __html: project.description }}
+            className="prose prose-lg max-w-none text-foreground leading-relaxed mb-8 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80"
+            dangerouslySetInnerHTML={{ __html: linkifyHtml(project.description) }}
           />
 
           {project.researchLink && (

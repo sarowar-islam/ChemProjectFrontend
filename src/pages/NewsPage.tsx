@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Newspaper, Calendar, User, ArrowRight } from 'lucide-react';
 import { newsService } from '@/services/news.service';
 import { News } from '@/services/types';
+import { stripHtml } from '@/lib/htmlUtils';
 
 export default function NewsPage() {
   const navigate = useNavigate();
@@ -162,7 +163,7 @@ function NewsCard({
 
         {/* Summary */}
         <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
-          {news.summary || news.content.substring(0, 150) + '...'}
+          {stripHtml(news.summary || news.content)}
         </p>
 
         {/* Read More */}

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Bold, Italic, Underline, List, ListOrdered, Highlighter } from 'lucide-react';
+import { Bold, Italic, Underline, List, ListOrdered, Highlighter, Link as LinkIcon } from 'lucide-react';
 
 interface RichTextEditorProps {
   value: string;
@@ -117,6 +117,13 @@ export default function RichTextEditor({ value, onChange, label }: RichTextEdito
       onChange(editorRef.current.innerHTML);
     }
     setFontSize(newSizePx);
+  };
+
+  const handleLink = () => {
+    const url = prompt('Enter URL (e.g. https://...):');
+    if (url) {
+      executeCommand('createLink', url);
+    }
   };
 
   const decreaseSize = () => {
@@ -254,6 +261,14 @@ export default function RichTextEditor({ value, onChange, label }: RichTextEdito
           >
             <Highlighter className="w-4 h-4" />
           </button>
+          <button
+            type="button"
+            onClick={handleLink}
+            className="p-2 rounded hover:bg-secondary text-foreground transition-colors"
+            title="Insert Link"
+          >
+            <LinkIcon className="w-4 h-4" />
+          </button>
         </div>
 
         {/* Editable Area */}
@@ -267,7 +282,7 @@ export default function RichTextEditor({ value, onChange, label }: RichTextEdito
           }}
           onClick={updateCurrentFontSize}
           onKeyUp={updateCurrentFontSize}
-          className="min-h-[250px] p-4 focus:outline-none prose prose-sm max-w-none text-foreground bg-card [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1"
+          className="min-h-[250px] p-4 focus:outline-none prose prose-sm max-w-none text-foreground bg-card [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80"
           style={{ minHeight: '250px' }}
         />
       </div>

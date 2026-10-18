@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ExternalLink, FolderKanban, Beaker, Clock, CheckCircle2, Calendar, ArrowRight } from 'lucide-react';
 import { projectService } from '@/services/project.service';
 import { Project } from '@/services/types';
+import { stripHtml } from '@/lib/htmlUtils';
 
 export default function ProjectsPage() {
   const navigate = useNavigate();
@@ -192,7 +193,7 @@ function ProjectCard({ project, delay, onClick }: { project: Project; delay: str
         </h3>
 
         <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 line-clamp-3">
-          {project.description}
+          {stripHtml(project.description)}
         </p>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 pt-3 sm:pt-4 border-t border-border">

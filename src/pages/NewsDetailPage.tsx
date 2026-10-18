@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Newspaper, Calendar, User, ArrowLeft, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { newsService } from '@/services/news.service';
 import { News } from '@/services/types';
+import { linkifyHtml } from '@/lib/htmlUtils';
 
 export default function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -167,8 +168,8 @@ export default function NewsDetailPage() {
 
         {/* Article Content */}
         <div
-          className="prose prose-lg max-w-none text-foreground leading-relaxed space-y-6 bg-card p-6 sm:p-10 rounded-2xl border border-border shadow-sm"
-          dangerouslySetInnerHTML={{ __html: newsItem.content }}
+          className="prose prose-lg max-w-none text-foreground leading-relaxed space-y-6 bg-card p-6 sm:p-10 rounded-2xl border border-border shadow-sm [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80"
+          dangerouslySetInnerHTML={{ __html: linkifyHtml(newsItem.content) }}
         />
 
         {/* Share / Footer actions */}
