@@ -327,7 +327,10 @@ function ProjectsView({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-heading text-2xl text-foreground">Projects</h2>
+        <div>
+          <h2 className="font-heading text-2xl text-foreground font-bold">Research Projects</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">Manage research projects, statuses, and descriptions.</p>
+        </div>
         <Button onClick={() => navigate('/admin/projects/new')} className="bg-accent text-primary-foreground hover:bg-accent/90">
           <Plus className="w-4 h-4 mr-2" />
           Add Project
@@ -337,35 +340,53 @@ function ProjectsView({
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="bg-card border border-border rounded-xl p-4 animate-pulse shadow-sm">
-              <div className="h-5 w-2/3 bg-secondary rounded mb-2" />
-              <div className="h-4 w-full bg-secondary rounded" />
+            <div key={i} className="bg-card border border-border rounded-xl p-5 animate-pulse shadow-sm">
+              <div className="h-5 w-2/3 bg-secondary rounded mb-3" />
+              <div className="h-4 w-full bg-secondary rounded mb-2" />
+              <div className="h-4 w-1/3 bg-secondary rounded" />
             </div>
           ))}
         </div>
       ) : projects.length === 0 ? (
-        <div className="text-center py-6 text-muted-foreground">
-          No projects yet. Click "Add Project" to create one.
+        <div className="text-center py-12 bg-card border border-border rounded-xl">
+          <FolderKanban className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
+          <h3 className="font-heading text-lg font-semibold text-foreground mb-1">No projects found</h3>
+          <p className="text-sm text-muted-foreground mb-4">Get started by creating your first research project.</p>
+          <Button onClick={() => navigate('/admin/projects/new')} className="bg-accent text-primary-foreground hover:bg-accent/90">
+            <Plus className="w-4 h-4 mr-2" /> Add Project
+          </Button>
         </div>
       ) : (
         <div className="space-y-4">
           {projects.map((project) => (
-            <div key={project.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between shadow-sm">
-              <div className="flex-1 min-w-0 mr-4">
-                <h3 className="font-medium text-foreground truncate">{project.title}</h3>
-                <p className="text-sm text-muted-foreground truncate" dangerouslySetInnerHTML={{ __html: project.description }} />
+            <div key={project.id} className="bg-card border border-border rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-3 mb-1.5 flex-wrap">
+                  <h3 className="font-heading font-semibold text-foreground text-lg">{project.title}</h3>
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${
+                    project.status === 'ongoing' ? 'bg-[#DCFCE7] text-[#166534] dark:bg-emerald-950/60 dark:text-emerald-400' : 'bg-secondary text-secondary-foreground'
+                  }`}>
+                    {project.status}
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground line-clamp-2 mb-2" dangerouslySetInnerHTML={{ __html: project.description }} />
+                <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                  {project.startDate && <span>Started: {project.startDate}</span>}
+                  {project.endDate && <span>Ended: {project.endDate}</span>}
+                </div>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className={`px-2 py-1 rounded text-xs font-medium ${
-                  project.status === 'ongoing' ? 'bg-[#DCFCE7] text-[#22C55E]' : 'bg-secondary text-muted-foreground'
-                }`}>
-                  {project.status}
-                </span>
-                <button onClick={() => navigate(`/admin/projects/edit/${project.id}`)} className="p-2 hover:bg-secondary rounded-lg transition-colors">
-                  <Edit className="w-4 h-4 text-muted-foreground" />
+              <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                <button
+                  onClick={() => navigate(`/admin/projects/edit/${project.id}`)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-secondary/50 text-foreground hover:bg-secondary text-xs font-medium transition-colors"
+                >
+                  <Edit className="w-3.5 h-3.5 text-muted-foreground" /> Edit
                 </button>
-                <button onClick={() => handleDelete(project.id)} className="p-2 hover:bg-[#FEE2E2] rounded-lg transition-colors">
-                  <Trash2 className="w-4 h-4 text-[#EF4444]" />
+                <button
+                  onClick={() => handleDelete(project.id)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-400 text-xs font-medium transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" /> Delete
                 </button>
               </div>
             </div>
