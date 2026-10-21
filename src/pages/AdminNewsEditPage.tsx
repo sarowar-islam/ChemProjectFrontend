@@ -74,6 +74,14 @@ export default function AdminNewsEditPage() {
         const uploadRes = await newsService.uploadNewsImage(file);
         if (uploadRes.success && uploadRes.data?.imageUrl) {
           uploadedUrls.push(uploadRes.data.imageUrl);
+        } else {
+          toast({
+            title: 'Image Upload Failed',
+            description: uploadRes.error || `Failed to upload "${file.name}". News was not published.`,
+            variant: 'destructive',
+          });
+          setSaving(false);
+          return;
         }
       }
 

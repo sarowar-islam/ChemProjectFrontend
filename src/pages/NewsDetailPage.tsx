@@ -33,15 +33,12 @@ export default function NewsDetailPage() {
     fetchNewsItem();
   }, [slug]);
 
-  const defaultImages = [
-    '/photos/frontpage-image.jpg',
-    '/Images/hero-image/profle.png',
-    '/Images/hero-image/sarowar professional.png'
-  ];
-
   const images = newsItem?.imageUrl
-    ? newsItem.imageUrl.split(',').filter(Boolean)
-    : defaultImages;
+    ? newsItem.imageUrl
+        .split(',')
+        .map((url) => url.trim())
+        .filter(Boolean)
+    : [];
 
   // Auto slideshow every 3 seconds if multiple images exist
   useEffect(() => {

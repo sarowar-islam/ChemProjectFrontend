@@ -53,7 +53,11 @@ export async function apiRequest<T>(
     return { success: true, data: response.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const message = error.response?.data?.message || error.message || 'An error occurred';
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        'An error occurred';
       console.error('API Error:', message);
       return { success: false, error: message };
     }

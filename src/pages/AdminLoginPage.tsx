@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { authService } from '@/services/auth.service';
@@ -14,8 +14,13 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
 
   // Redirect if already logged in as admin
+  useEffect(() => {
+    if (isAdmin) {
+      navigate('/admin/dashboard', { replace: true });
+    }
+  }, [isAdmin, navigate]);
+
   if (isAdmin) {
-    navigate('/admin/dashboard');
     return null;
   }
 

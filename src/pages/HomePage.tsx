@@ -310,7 +310,7 @@ export default function HomePage() {
             </div>
           ) : (
             recentNews.map((item, index) => (
-              <NewsCard key={item.id} newsItem={item} index={index} delay={`${index * 0.05}s`} />
+              <NewsCard key={item.id} newsItem={item} delay={`${index * 0.05}s`} />
             ))
           )}
         </div>
@@ -409,14 +409,8 @@ function StatCard({ icon, number, label, delay, color, to }: { icon: React.React
   );
 }
 
-function NewsCard({ newsItem, index, delay }: { newsItem: News; index: number; delay: string }) {
-  const newsImages = [
-    '/photos/frontpage-image.jpg',
-    '/Images/hero-image/profle.png',
-    '/Images/hero-image/sarowar professional.png'
-  ];
+function NewsCard({ newsItem, delay }: { newsItem: News; delay: string }) {
   const firstImageUrl = newsItem.imageUrl ? newsItem.imageUrl.split(',')[0].trim() : '';
-  const displayImageUrl = firstImageUrl || newsImages[index % newsImages.length];
   const createSlug = (title: string) => {
     if (!title) return '';
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -426,7 +420,13 @@ function NewsCard({ newsItem, index, delay }: { newsItem: News; index: number; d
   return (
     <Link to={`/news/${slug}`} className="bg-card border border-border rounded-xl overflow-hidden hover:border-accent/30 transition-all duration-300 animate-fade-in-up group shadow-sm flex flex-col" style={{ animationDelay: delay }}>
       <div className="h-44 w-full overflow-hidden bg-secondary relative">
-        <img src={displayImageUrl} alt={newsItem.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+        {firstImageUrl ? (
+          <img src={firstImageUrl} alt={newsItem.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <Newspaper className="w-10 h-10 text-muted-foreground/40" />
+          </div>
+        )}
       </div>
       <div className="p-5 flex-1 flex flex-col justify-between">
         <div>

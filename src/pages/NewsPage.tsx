@@ -10,13 +10,6 @@ export default function NewsPage() {
   const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Local images for fallback
-  const newsImages = [
-    '/photos/frontpage-image.jpg',
-    '/Images/hero-image/profle.png',
-    '/Images/hero-image/sarowar professional.png'
-  ];
-
   useEffect(() => {
     const fetchNews = async () => {
       const res = await newsService.getNews();
@@ -87,12 +80,11 @@ export default function NewsPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {news.map((item, index) => {
               const firstImageUrl = item.imageUrl ? item.imageUrl.split(',')[0].trim() : '';
-              const displayImageUrl = firstImageUrl || newsImages[index % newsImages.length];
               const slug = createSlug(item.title) || item.id;
               return (
                 <NewsCard
                   key={item.id}
-                  news={{ ...item, imageUrl: displayImageUrl }}
+                  news={{ ...item, imageUrl: firstImageUrl }}
                   delay={`${index * 0.05}s`}
                   onClick={() => navigate(`/news/${slug}`)}
                 />
