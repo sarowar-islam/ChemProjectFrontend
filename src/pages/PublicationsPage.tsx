@@ -12,6 +12,7 @@ export default function PublicationsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<'recent' | 'citations'>('recent');
 
   const createSlug = (title: string) => {
     if (!title) return '';
@@ -59,7 +60,21 @@ export default function PublicationsPage() {
     ? publications.filter((p) => p.year === selectedYear)
     : publications;
 
-  const groupedByYear = filteredPublications.reduce((acc, pub) => {
+  const sortedPublications = [...filteredPublications].sort((a, b) => {
+    if (sortBy === 'citations') {
+      const citeA = parseInt(a.citedBy) || 0;
+      const citeB = parseInt(b.citedBy) || 0;
+      if (citeB !== citeA) return citeB - citeA;
+      return (parseInt(b.year) || 0) - (parseInt(a.year) || 0);
+    } else {
+      const yearA = parseInt(a.year) || 0;
+      const yearB = parseInt(b.year) || 0;
+      if (yearB !== yearA) return yearB - yearA;
+      return (parseInt(b.citedBy) || 0) - (parseInt(a.citedBy) || 0);
+    }
+  });
+
+  const groupedByYear = sortedPublications.reduce((acc, pub) => {
     const year = pub.year || 'Unknown';
     if (!acc[year]) acc[year] = [];
     acc[year].push(pub);
@@ -150,31 +165,87 @@ export default function PublicationsPage() {
               </button>
             </div>
 
-            {/* Year Filter */}
-            <div className="flex flex-wrap justify-center sm:justify-end gap-1.5 sm:gap-2">
-              <button
-                onClick={() => setSelectedYear(null)}
-                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm font-medium transition-all ${
-                  selectedYear === null
-                    ? 'bg-accent text-primary-foreground shadow-md'
-                    : 'bg-card text-muted-foreground border border-border hover:bg-secondary'
-                }`}
-              >
-                All
-              </button>
-              {years.slice(0, 5).map((year) => (
+            {/* Controls Section: Sort by on Left, Year Filter on Right */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pt-3 border-t border-border">
+              {/* Left Side: Sort By */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+                  Sort by:
+                </span>
+                <div className="inline-flex p-0.5 bg-secondary/80 rounded-md border border-border">
+                  <button
+                    type="button"
+                    onClick={() => setSortBy('recent')}
+                    className={`px-2.5 py-1 rounded text-xs font-medium transition-all ${
+                      sortBy === 'recent'
+                        ? 'bg-accent text-primary-foreground shadow-2xs'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    Recent
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSortBy('citations')}
+                    className={`px-2.5 py-1 rounded text-xs font-medium transition-all ${
+                      sortBy === 'citations'
+                        ? 'bg-accent text-primary-foreground shadow-2xs'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    Citations
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Side: Year Filter - 3 Recent Years + Dropdown */}
+              <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
                 <button
-                  key={year}
-                  onClick={() => setSelectedYear(year)}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm font-medium transition-all ${
-                    selectedYear === year
-                      ? 'bg-accent text-primary-foreground shadow-md'
+                  type="button"
+                  onClick={() => setSelectedYear(null)}
+                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                    selectedYear === null
+                      ? 'bg-accent text-primary-foreground shadow-xs'
                       : 'bg-card text-muted-foreground border border-border hover:bg-secondary'
                   }`}
                 >
-                  {year}
+                  All
                 </button>
-              ))}
+                {years.slice(0, 3).map((year) => (
+                  <button
+                    key={year}
+                    type="button"
+                    onClick={() => setSelectedYear(year)}
+                    className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                      selectedYear === year
+                        ? 'bg-accent text-primary-foreground shadow-xs'
+                        : 'bg-card text-muted-foreground border border-border hover:bg-secondary'
+                    }`}
+                  >
+                    {year}
+                  </button>
+                ))}
+                {years.length > 3 && (
+                  <select
+                    value={years.slice(3).includes(selectedYear || '') ? (selectedYear || '') : ''}
+                    onChange={(e) => setSelectedYear(e.target.value || null)}
+                    className={`px-2 py-1 rounded-md text-xs font-medium transition-all border cursor-pointer focus:outline-none ${
+                      years.slice(3).includes(selectedYear || '')
+                        ? 'bg-accent text-primary-foreground border-accent'
+                        : 'bg-card text-muted-foreground border-border hover:bg-secondary'
+                    }`}
+                  >
+                    <option value="" className="bg-card text-foreground">
+                      {years.slice(3).includes(selectedYear || '') ? selectedYear : 'More Years...'}
+                    </option>
+                    {years.slice(3).map((year) => (
+                      <option key={year} value={year} className="bg-card text-foreground">
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -213,6 +284,35 @@ export default function PublicationsPage() {
             <BookOpen className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
             <h3 className="font-heading text-xl text-foreground mb-2">No publications found</h3>
             <p className="text-muted-foreground">Publications will appear here once the Google Scholar profile is configured.</p>
+          </div>
+        ) : sortBy === 'citations' ? (
+          <div className="space-y-6">
+            <div className="flex items-center gap-4 mb-2">
+              <div className="p-2 rounded-lg bg-secondary text-secondary-foreground">
+                <Quote className="w-5 h-5" />
+              </div>
+              <h2 className="font-heading text-2xl text-[#166534] dark:text-foreground">
+                {selectedYear ? `${selectedYear} Publications` : 'Publications Sorted by Citations'}
+              </h2>
+              <span className="px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-sm">
+                {sortedPublications.length} {sortedPublications.length === 1 ? 'paper' : 'papers'}
+              </span>
+              <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
+            </div>
+            <div className="space-y-4">
+              {sortedPublications.map((publication, index) => {
+                const slug = createSlug(publication.title) || publication.scholarId || String(index);
+                return (
+                  <PublicationCard
+                    key={publication.scholarId || index}
+                    publication={publication}
+                    rank={index + 1}
+                    delay={`${Math.min(index * 0.03, 1)}s`}
+                    onClick={() => navigate(`/publications/${slug}`)}
+                  />
+                );
+              })}
+            </div>
           </div>
         ) : (
           <div className="space-y-12">
@@ -286,10 +386,12 @@ export default function PublicationsPage() {
 function PublicationCard({
   publication,
   delay,
+  rank,
   onClick,
 }: {
   publication: ScholarPublication;
   delay: string;
+  rank?: number;
   onClick: () => void;
 }) {
   const citations = parseInt(publication.citedBy) || 0;
@@ -301,9 +403,15 @@ function PublicationCard({
       style={{ animationDelay: delay }}
     >
       <div className="flex items-start gap-3 sm:gap-4">
-        <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground shrink-0 group-hover:bg-accent group-hover:text-primary-foreground transition-colors">
-          <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
-        </div>
+        {rank !== undefined ? (
+          <div className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-accent/15 text-accent font-bold text-xs sm:text-sm shrink-0 group-hover:bg-accent group-hover:text-primary-foreground transition-colors">
+            {rank}
+          </div>
+        ) : (
+          <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground shrink-0 group-hover:bg-accent group-hover:text-primary-foreground transition-colors">
+            <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+          </div>
+        )}
         <div className="flex-1 min-w-0">
           <h3 className="font-heading text-sm sm:text-lg font-medium text-foreground mb-1.5 sm:mb-2 leading-snug group-hover:text-accent transition-colors">
             {publication.title}
@@ -313,7 +421,7 @@ function PublicationCard({
           </p>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
             <span className="text-xs sm:text-sm text-muted-foreground italic line-clamp-1">
-              {publication.journal || 'Journal not specified'}
+              {publication.journal || 'Journal not specified'} {publication.year && `• ${publication.year}`}
             </span>
             <div className="flex items-center gap-3 sm:gap-4">
               {citations > 0 && (

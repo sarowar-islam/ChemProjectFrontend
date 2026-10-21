@@ -67,7 +67,7 @@ export const adminService = {
     title: string;
     password: string;
   }): Promise<ApiResponse<TeamMember>> {
-    const response = await apiRequest<TeamMember>({
+    return apiRequest<TeamMember>({
       method: 'POST',
       url: '/admin/members',
       data: {
@@ -84,25 +84,13 @@ export const adminService = {
         joinedDate: new Date().toISOString(),
       },
     });
-
-    if (!response.success) {
-      return { success: false, error: response.error };
-    }
-
-    return { success: true, data: response.data };
   },
 
   async generateMemberSecurityCode(memberId: string): Promise<ApiResponse<{ securityCode: string }>> {
-    const response = await apiRequest<{ securityCode: string }>( {
+    return apiRequest<{ securityCode: string }>({
       method: 'POST',
       url: `/admin/members/${memberId}/generate-security-code`,
     });
-
-    if (!response.success) {
-      return { success: false, error: response.error };
-    }
-
-    return { success: true, data: response.data };
   },
 
   // Notice management
