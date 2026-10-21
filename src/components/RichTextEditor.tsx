@@ -1,5 +1,19 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Bold, Italic, Underline, List, ListOrdered, Highlighter, Link as LinkIcon } from 'lucide-react';
+import { useRef, useEffect, useState } from 'react';
+import {
+  Bold,
+  Italic,
+  Underline,
+  List,
+  ListOrdered,
+  Highlighter,
+  Link as LinkIcon,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  Minus,
+  Plus,
+} from 'lucide-react';
 
 interface RichTextEditorProps {
   value: string;
@@ -81,7 +95,6 @@ export default function RichTextEditor({ value, onChange, label, placeholder, mi
     const selectedText = range.toString();
 
     if (!selectedText) {
-      // No text selected: insert a span with zero-width space at cursor so subsequent typing uses this size
       const span = document.createElement('span');
       span.style.fontSize = `${newSizePx}px`;
       span.innerHTML = '&#8203;';
@@ -108,7 +121,6 @@ export default function RichTextEditor({ value, onChange, label, placeholder, mi
     range.deleteContents();
     range.insertNode(span);
 
-    // Keep text selected
     const newRange = document.createRange();
     newRange.selectNodeContents(span);
     selection.removeAllRanges();
@@ -140,136 +152,194 @@ export default function RichTextEditor({ value, onChange, label, placeholder, mi
   return (
     <div className="space-y-2">
       {label && <label className="block text-sm font-medium text-foreground">{label}</label>}
-      <div className="border border-border rounded-xl overflow-hidden bg-card shadow-sm">
+      <div className="border border-border rounded-xl overflow-hidden bg-card shadow-xs focus-within:border-accent/60 transition-colors">
         {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-1.5 p-2 bg-secondary/50 border-b border-border">
-          {/* Font Size Number Input with +/- buttons (Left-most) */}
-          <div className="flex items-center gap-1 bg-secondary/30 px-2 py-1 rounded border border-border">
+        <div className="flex flex-wrap items-center gap-1 p-2 bg-secondary/40 border-b border-border select-none">
+          {/* Minimized & Modern Font Size Stepper */}
+          <div className="inline-flex items-center h-8 bg-card border border-border rounded-lg shadow-2xs px-1 gap-0.5">
             <button
               type="button"
               onClick={decreaseSize}
-              className="px-1.5 py-0.5 rounded hover:bg-secondary text-foreground text-xs font-bold transition-colors"
+              className="w-6 h-6 flex items-center justify-center rounded hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
               title="Decrease Font Size (-1px)"
             >
-              -
+              <Minus className="w-3 h-3" />
             </button>
-            <input
-              type="number"
-              value={fontSize}
-              onChange={(e) => {
-                const val = parseInt(e.target.value, 10);
-                if (!isNaN(val)) {
-                  setFontSize(val);
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  applyFontSize(fontSize);
-                }
-              }}
-              onBlur={() => applyFontSize(fontSize)}
-              className="w-12 bg-card border border-border rounded px-1.5 py-0.5 text-xs text-center text-foreground focus:outline-none"
-              title="Font Size (px)"
-              min={8}
-              max={96}
-            />
-            <span className="text-[10px] text-muted-foreground">px</span>
+            <div className="flex items-center justify-center">
+              <input
+                type="number"
+                value={fontSize}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value, 10);
+                  if (!isNaN(val)) {
+                    setFontSize(val);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    applyFontSize(fontSize);
+                  }
+                }}
+                onBlur={() => applyFontSize(fontSize)}
+                className="w-7 bg-transparent text-center text-xs font-semibold text-foreground focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                title="Font Size (px)"
+                min={8}
+                max={96}
+              />
+              <span className="text-[10px] font-medium text-muted-foreground/70 pr-0.5">px</span>
+            </div>
             <button
               type="button"
               onClick={increaseSize}
-              className="px-1.5 py-0.5 rounded hover:bg-secondary text-foreground text-xs font-bold transition-colors"
+              className="w-6 h-6 flex items-center justify-center rounded hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
               title="Increase Font Size (+1px)"
             >
-              +
+              <Plus className="w-3 h-3" />
             </button>
           </div>
 
           <div className="w-px h-5 bg-border mx-1" />
 
-          <button
-            type="button"
-            onClick={() => executeCommand('bold')}
-            className="p-2 rounded hover:bg-secondary text-foreground transition-colors"
-            title="Bold"
-          >
-            <Bold className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => executeCommand('italic')}
-            className="p-2 rounded hover:bg-secondary text-foreground transition-colors"
-            title="Italic"
-          >
-            <Italic className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => executeCommand('underline')}
-            className="p-2 rounded hover:bg-secondary text-foreground transition-colors"
-            title="Underline"
-          >
-            <Underline className="w-4 h-4" />
-          </button>
+          {/* Inline Text Formatting */}
+          <div className="flex items-center gap-0.5">
+            <button
+              type="button"
+              onClick={() => executeCommand('bold')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Bold"
+            >
+              <Bold className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('italic')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Italic"
+            >
+              <Italic className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('underline')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Underline"
+            >
+              <Underline className="w-4 h-4" />
+            </button>
+          </div>
+
           <div className="w-px h-5 bg-border mx-1" />
-          <button
-            type="button"
-            onClick={() => executeCommand('insertUnorderedList')}
-            className="p-2 rounded hover:bg-secondary text-foreground transition-colors"
-            title="Bullet List"
-          >
-            <List className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => executeCommand('insertOrderedList')}
-            className="p-2 rounded hover:bg-secondary text-foreground transition-colors"
-            title="Ordered List"
-          >
-            <ListOrdered className="w-4 h-4" />
-          </button>
+
+          {/* Text Alignment */}
+          <div className="flex items-center gap-0.5">
+            <button
+              type="button"
+              onClick={() => executeCommand('justifyLeft')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Align Left"
+            >
+              <AlignLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('justifyCenter')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Align Center"
+            >
+              <AlignCenter className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('justifyRight')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Align Right"
+            >
+              <AlignRight className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('justifyFull')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Justify"
+            >
+              <AlignJustify className="w-4 h-4" />
+            </button>
+          </div>
+
           <div className="w-px h-5 bg-border mx-1" />
-          <button
-            type="button"
-            onClick={() => handleHeading('h1')}
-            className="px-2 py-1 rounded hover:bg-secondary text-foreground transition-colors font-bold text-xs"
-            title="Heading 1"
-          >
-            H1
-          </button>
-          <button
-            type="button"
-            onClick={() => handleHeading('h2')}
-            className="px-2 py-1 rounded hover:bg-secondary text-foreground transition-colors font-bold text-xs"
-            title="Heading 2"
-          >
-            H2
-          </button>
-          <button
-            type="button"
-            onClick={() => handleHeading('h3')}
-            className="px-2 py-1 rounded hover:bg-secondary text-foreground transition-colors font-bold text-xs"
-            title="Heading 3"
-          >
-            H3
-          </button>
+
+          {/* Lists */}
+          <div className="flex items-center gap-0.5">
+            <button
+              type="button"
+              onClick={() => executeCommand('insertUnorderedList')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Bullet List"
+            >
+              <List className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('insertOrderedList')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Ordered List"
+            >
+              <ListOrdered className="w-4 h-4" />
+            </button>
+          </div>
+
           <div className="w-px h-5 bg-border mx-1" />
-          <button
-            type="button"
-            onClick={() => executeCommand('hiliteColor', '#fef08a')}
-            className="p-2 rounded hover:bg-secondary text-foreground transition-colors"
-            title="Highlight"
-          >
-            <Highlighter className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={handleLink}
-            className="p-2 rounded hover:bg-secondary text-foreground transition-colors"
-            title="Insert Link"
-          >
-            <LinkIcon className="w-4 h-4" />
-          </button>
+
+          {/* Headings */}
+          <div className="flex items-center gap-0.5">
+            <button
+              type="button"
+              onClick={() => handleHeading('h1')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors font-bold text-xs"
+              title="Heading 1"
+            >
+              H1
+            </button>
+            <button
+              type="button"
+              onClick={() => handleHeading('h2')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors font-bold text-xs"
+              title="Heading 2"
+            >
+              H2
+            </button>
+            <button
+              type="button"
+              onClick={() => handleHeading('h3')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors font-bold text-xs"
+              title="Heading 3"
+            >
+              H3
+            </button>
+          </div>
+
+          <div className="w-px h-5 bg-border mx-1" />
+
+          {/* Extras */}
+          <div className="flex items-center gap-0.5">
+            <button
+              type="button"
+              onClick={() => executeCommand('hiliteColor', '#fef08a')}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Highlight"
+            >
+              <Highlighter className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={handleLink}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Insert Link"
+            >
+              <LinkIcon className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* Editable Area */}
@@ -288,7 +358,7 @@ export default function RichTextEditor({ value, onChange, label, placeholder, mi
           style={{ minHeight: minHeight || '250px' }}
         />
       </div>
-      <p className="text-xs text-muted-foreground">Use the toolbar above to format text with bold, italic, underlines, lists, headings (H1, H2, H3), precise font sizing with +/- (1px increments), and highlights. Press Ctrl+Z to undo.</p>
+      <p className="text-xs text-muted-foreground">Format text with bold, italic, underline, alignments (left, center, right, justify), lists, headings, and font sizing.</p>
     </div>
   );
 }

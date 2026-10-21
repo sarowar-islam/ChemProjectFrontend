@@ -28,7 +28,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { newsService } from '@/services/news.service';
 import { normalizeMemberTitle, sortMembersForAdmin } from '@/lib/memberSorting';
@@ -1301,6 +1301,9 @@ function ResearchFocusView({
             <DialogTitle className="text-foreground font-heading text-xl">
               {editingFocus ? 'Edit Research Focus' : 'Add Research Focus'}
             </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
+              Configure the research focus title, short summary, and detailed content.
+            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-5 py-4">
