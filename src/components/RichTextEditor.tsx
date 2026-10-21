@@ -6,9 +6,10 @@ interface RichTextEditorProps {
   onChange: (value: string) => void;
   label?: string;
   placeholder?: string;
+  minHeight?: string;
 }
 
-export default function RichTextEditor({ value, onChange, label }: RichTextEditorProps) {
+export default function RichTextEditor({ value, onChange, label, placeholder, minHeight }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState<number>(16);
 
@@ -276,14 +277,15 @@ export default function RichTextEditor({ value, onChange, label }: RichTextEdito
           ref={editorRef}
           contentEditable
           suppressContentEditableWarning
+          data-placeholder={placeholder}
           onInput={(e) => {
             onChange(e.currentTarget.innerHTML);
             updateCurrentFontSize();
           }}
           onClick={updateCurrentFontSize}
           onKeyUp={updateCurrentFontSize}
-          className="min-h-[250px] p-4 focus:outline-none prose prose-sm max-w-none text-foreground bg-card [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80"
-          style={{ minHeight: '250px' }}
+          className="p-4 focus:outline-none prose prose-sm max-w-none text-foreground bg-card [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80 empty:before:content-[attr(data-placeholder)] empty:before:text-muted-foreground/60 empty:before:pointer-events-none"
+          style={{ minHeight: minHeight || '250px' }}
         />
       </div>
       <p className="text-xs text-muted-foreground">Use the toolbar above to format text with bold, italic, underlines, lists, headings (H1, H2, H3), precise font sizing with +/- (1px increments), and highlights. Press Ctrl+Z to undo.</p>

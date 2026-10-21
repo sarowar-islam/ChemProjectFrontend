@@ -30,6 +30,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { useToast } from '@/hooks/use-toast';
 import { newsService } from '@/services/news.service';
 import { normalizeMemberTitle, sortMembersForAdmin } from '@/lib/memberSorting';
+import RichTextEditor from '@/components/RichTextEditor';
 
 type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'settings';
 
@@ -421,6 +422,7 @@ function MembersView({
     confirmPassword: '',
     position: '' as TeamMember['position'] | '',
     title: '',
+    bio: '',
   });
   const [saving, setSaving] = useState(false);
 
@@ -434,6 +436,7 @@ function MembersView({
       confirmPassword: '',
       position: '',
       title: '',
+      bio: '',
     });
     setShowPassword(false);
     setShowConfirmPassword(false);
@@ -450,6 +453,7 @@ function MembersView({
       confirmPassword: '',
       position: member.position,
       title: normalizeMemberTitle(member.title),
+      bio: member.bio || '',
     });
     setShowPassword(false);
     setShowConfirmPassword(false);
@@ -487,6 +491,7 @@ function MembersView({
           email: formData.email,
           position: formData.position as TeamMember['position'],
           title: normalizeMemberTitle(formData.title),
+          bio: formData.bio,
         });
         if (res.success) {
           toast({ title: 'Success', description: 'Member updated successfully' });
@@ -610,27 +615,27 @@ function MembersView({
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-md bg-card border-border">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-card border-border">
           <DialogHeader>
             <DialogTitle className="text-foreground">{editingMember ? 'Edit Member' : 'Add Member'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
               <Label htmlFor="name" className="text-muted-foreground">Name *</Label>
-              <Input 
-                id="name" 
-                value={formData.name} 
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Enter full name"
                 className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
               />
             </div>
             <div>
               <Label htmlFor="username" className="text-muted-foreground">Username *</Label>
-              <Input 
-                id="username" 
-                value={formData.username} 
-                onChange={(e) => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/\s/g, '') })} 
+              <Input
+                id="username"
+                value={formData.username}
+                onChange={(e) => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/\s/g, '') })}
                 placeholder="Enter username (for login)"
                 disabled={!!editingMember}
                 className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
@@ -647,11 +652,11 @@ function MembersView({
                 <div>
                   <Label htmlFor="password">Password *</Label>
                   <div className="relative">
-                    <Input 
-                      id="password" 
+                    <Input
+                      id="password"
                       type={showPassword ? 'text' : 'password'}
-                      value={formData.password} 
-                      onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       placeholder="Enter password"
                     />
                     <button
@@ -666,11 +671,11 @@ function MembersView({
                 <div>
                   <Label htmlFor="confirmPassword">Confirm Password *</Label>
                   <div className="relative">
-                    <Input 
-                      id="confirmPassword" 
+                    <Input
+                      id="confirmPassword"
                       type={showConfirmPassword ? 'text' : 'password'}
-                      value={formData.confirmPassword} 
-                      onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} 
+                      value={formData.confirmPassword}
+                      onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                       placeholder="Confirm password"
                     />
                     <button
@@ -721,14 +726,26 @@ function MembersView({
 
             <div>
               <Label htmlFor="email">Email (Optional)</Label>
-              <Input 
-                id="email" 
+              <Input
+                id="email"
                 type="email"
-                value={formData.email} 
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })} 
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder={`${formData.username || 'username'}@cuet.ac.bd`}
               />
             </div>
+
+            {editingMember && (
+              <div>
+                <Label className="text-muted-foreground mb-1 block">About / Biography</Label>
+                <RichTextEditor
+                  value={formData.bio}
+                  onChange={(val) => setFormData({ ...formData, bio: val })}
+                  placeholder="Enter member's biography, achievements, research interests..."
+                  minHeight="180px"
+                />
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
@@ -1048,7 +1065,7 @@ function SettingsView({
   return (
     <div>
       <h2 className="font-heading text-2xl text-foreground mb-6">Site Settings</h2>
-      <div className="bg-card border border-border rounded-xl p-6 max-w-2xl shadow-sm">
+      <div className="bg-card border border-border rounded-xl p-6 max-w-4xl shadow-sm">
         <div className="space-y-6">
           <div>
             <Label htmlFor="googleScholarUrl" className="text-base font-medium text-foreground">Google Scholar Profile URL</Label>
@@ -1064,16 +1081,15 @@ function SettingsView({
             />
           </div>
           <div>
-            <Label htmlFor="aboutUs" className="text-base font-medium text-foreground">About Us</Label>
+            <Label className="text-base font-medium text-foreground mb-1 block">About Us</Label>
             <p className="text-sm text-muted-foreground mb-2">
-              This text appears on the homepage About Us section.
+              This text appears on the homepage About Us section. Use the rich text editor to format paragraphs, bold text, lists, and links.
             </p>
-            <Textarea
-              id="aboutUs"
+            <RichTextEditor
               value={formData.aboutUs}
-              onChange={(e) => setFormData({ ...formData, aboutUs: e.target.value })}
-              rows={6}
-              className="bg-card border-border text-foreground focus:border-primary"
+              onChange={(value) => setFormData({ ...formData, aboutUs: value })}
+              placeholder="Write about the research group, vision, mission, and achievements..."
+              minHeight="280px"
             />
           </div>
           <Button onClick={handleSave} disabled={saving} className="bg-accent text-primary-foreground hover:bg-accent/90">

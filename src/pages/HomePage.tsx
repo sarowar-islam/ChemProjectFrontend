@@ -7,6 +7,7 @@ import { newsService } from '@/services/news.service';
 import { settingsService } from '@/services/settings.service';
 import { Notice, News } from '@/services/types';
 import HeroTitle from '@/components/HeroTitle';
+import { linkifyHtml } from '@/lib/htmlUtils';
 
 export default function HomePage() {
   const [stats, setStats] = useState({
@@ -196,7 +197,10 @@ export default function HomePage() {
               </h2>
 
               {aboutUs ? (
-                <p className="text-muted-foreground text-lg leading-relaxed mb-4">{aboutUs}</p>
+                <div
+                  className="prose dark:prose-invert max-w-none text-muted-foreground text-base sm:text-lg leading-relaxed mb-6 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80 [&_strong]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground"
+                  dangerouslySetInnerHTML={{ __html: linkifyHtml(aboutUs) }}
+                />
               ) : (
                 <p className="text-muted-foreground text-lg leading-relaxed mb-4">
                   Welcome to Yunus Ahmed Lab at CUET. Our research group is dedicated to advancing the frontiers of chemistry through innovative approaches in environmental remediation, resource recovery, nanomaterials, and cutting-edge wastewater treatment technologies for sustainable development.

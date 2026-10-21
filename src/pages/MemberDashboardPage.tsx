@@ -30,6 +30,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { teamService } from '@/services/team.service';
 import { scholarService, ScholarPublication, ScholarProfile } from '@/services';
 import { TeamMember } from '@/services/types';
+import RichTextEditor from '@/components/RichTextEditor';
+import { stripHtml } from '@/lib/htmlUtils';
 
 type ActiveSection = 'dashboard' | 'publications' | 'skills' | 'info' | 'settings';
 
@@ -793,26 +795,20 @@ export default function MemberDashboardPage() {
                 <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
                   <h2 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
                     <FileText className="w-5 h-5 text-accent" />
-                    Biography
+                    Biography / About Info
                   </h2>
-                  <textarea
+                  <RichTextEditor
                     value={bio}
-                    onChange={(e) => {
-                      const words = e.target.value.trim().split(/\s+/).filter(w => w.length > 0);
-                      if (words.length <= 150 || e.target.value.length < bio.length) {
-                        setBio(e.target.value);
-                      }
-                    }}
-                    rows={6}
-                    className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary resize-none"
+                    onChange={setBio}
                     placeholder="Write a short biography about yourself, your research interests, achievements, and academic journey..."
+                    minHeight="220px"
                   />
-                  <div className="flex justify-between items-center mt-2">
+                  <div className="flex justify-between items-center mt-3">
                     <p className="text-xs text-muted-foreground">
-                      This will be displayed on your public profile page.
+                      This will be displayed on your public profile page under the About section.
                     </p>
-                    <p className={`text-xs ${bio.trim().split(/\s+/).filter(w => w.length > 0).length > 140 ? 'text-amber-500' : 'text-muted-foreground'}`}>
-                      {bio.trim() ? bio.trim().split(/\s+/).filter(w => w.length > 0).length : 0}/150 words
+                    <p className="text-xs text-muted-foreground">
+                      {bio ? stripHtml(bio).trim().split(/\s+/).filter(Boolean).length : 0} words
                     </p>
                   </div>
                 </div>

@@ -4,6 +4,7 @@ import { ArrowLeft, ExternalLink, Mail, Phone, BookOpen, GraduationCap, Calendar
 import { teamService } from '@/services/team.service';
 import { scholarService, ScholarPublication, ScholarProfile } from '@/services';
 import { TeamMember } from '@/services/types';
+import { linkifyHtml } from '@/lib/htmlUtils';
 
 export default function MemberProfilePage() {
   const { username } = useParams<{ username: string }>();
@@ -265,9 +266,10 @@ export default function MemberProfilePage() {
                       About
                     </h2>
                     {member.bio ? (
-                      <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                        {member.bio}
-                      </p>
+                      <div
+                        className="prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80 [&_strong]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground"
+                        dangerouslySetInnerHTML={{ __html: linkifyHtml(member.bio) }}
+                      />
                     ) : (
                       <p className="text-muted-foreground italic">
                         No biography available yet.
