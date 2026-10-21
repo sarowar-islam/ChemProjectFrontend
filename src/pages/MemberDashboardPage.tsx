@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   LogOut,
   Save,
@@ -34,10 +34,12 @@ import RichTextEditor from '@/components/RichTextEditor';
 import { stripHtml } from '@/lib/htmlUtils';
 
 type ActiveSection = 'dashboard' | 'publications' | 'skills' | 'info' | 'settings';
+const VALID_SECTIONS: ActiveSection[] = ['dashboard', 'publications', 'skills', 'info', 'settings'];
 
 export default function MemberDashboardPage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [member, setMember] = useState<TeamMember | null>(null);
   const [publications, setPublications] = useState<ScholarPublication[]>([]);
@@ -46,7 +48,39 @@ export default function MemberDashboardPage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const [activeSection, setActiveSection] = useState<ActiveSection>('dashboard');
+
+  const getInitialSection = (): ActiveSection => {
+    const sectionParam = searchParams.get('section') as ActiveSection | null;
+    if (sectionParam && VALID_SECTIONS.includes(sectionParam)) {
+      return sectionParam;
+    }
+    const saved = localStorage.getItem('member_active_section') as ActiveSection | null;
+    if (saved && VALID_SECTIONS.includes(saved)) {
+      return saved;
+    }
+    return 'dashboard';
+  };
+
+  const [activeSection, setActiveSectionState] = useState<ActiveSection>(getInitialSection);
+
+  const setActiveSection = (section: ActiveSection) => {
+    setActiveSectionState(section);
+    localStorage.setItem('member_active_section', section);
+    setSearchParams(section === 'dashboard' ? {} : { section }, { replace: true });
+  };
+
+  useEffect(() => {
+    const sectionParam = searchParams.get('section') as ActiveSection | null;
+    if (sectionParam && VALID_SECTIONS.includes(sectionParam)) {
+      if (sectionParam !== activeSection) {
+        setActiveSectionState(sectionParam);
+        localStorage.setItem('member_active_section', sectionParam);
+      }
+    } else if (!sectionParam && activeSection !== 'dashboard') {
+      setSearchParams({ section: activeSection }, { replace: true });
+    }
+  }, [searchParams, activeSection, setSearchParams]);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pubsLoading, setPubsLoading] = useState(false);
 

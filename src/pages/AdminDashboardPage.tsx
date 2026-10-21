@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   LayoutDashboard,
   FolderKanban,
@@ -35,6 +35,7 @@ import { normalizeMemberTitle, sortMembersForAdmin } from '@/lib/memberSorting';
 import RichTextEditor from '@/components/RichTextEditor';
 
 type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'focus' | 'settings';
+const VALID_TABS: Tab[] = ['dashboard', 'projects', 'members', 'news', 'notices', 'focus', 'settings'];
 
 // Position options - determines the category/section on team page
 const POSITION_OPTIONS = [
@@ -75,8 +76,41 @@ const TITLE_OPTIONS = [
 export default function AdminDashboardPage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+
+  const getInitialTab = (): Tab => {
+    const tabParam = searchParams.get('tab') as Tab | null;
+    if (tabParam && VALID_TABS.includes(tabParam)) {
+      return tabParam;
+    }
+    const saved = localStorage.getItem('admin_active_tab') as Tab | null;
+    if (saved && VALID_TABS.includes(saved)) {
+      return saved;
+    }
+    return 'dashboard';
+  };
+
+  const [activeTab, setActiveTabState] = useState<Tab>(getInitialTab);
+
+  const setActiveTab = (tab: Tab) => {
+    setActiveTabState(tab);
+    localStorage.setItem('admin_active_tab', tab);
+    setSearchParams(tab === 'dashboard' ? {} : { tab }, { replace: true });
+  };
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab') as Tab | null;
+    if (tabParam && VALID_TABS.includes(tabParam)) {
+      if (tabParam !== activeTab) {
+        setActiveTabState(tabParam);
+        localStorage.setItem('admin_active_tab', tabParam);
+      }
+    } else if (!tabParam && activeTab !== 'dashboard') {
+      setSearchParams({ tab: activeTab }, { replace: true });
+    }
+  }, [searchParams, activeTab, setSearchParams]);
+
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [stats, setStats] = useState({
