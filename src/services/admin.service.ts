@@ -5,6 +5,7 @@ import { noticeService } from './notice.service';
 import { publicationService } from './publication.service';
 import { settingsService } from './settings.service';
 import { newsService } from './news.service';
+import { scholarService } from './scholar.service';
 import { TeamMember, ApiResponse } from './types';
 
 // Admin service aggregates all management functions
@@ -16,21 +17,29 @@ export const adminService = {
     totalMembers: number;
     ongoingProjects: number;
   }>> {
-    const [projectsRes, publicationsRes, membersRes] = await Promise.all([
+    const [projectsRes, scholarRes, publicationsRes, membersRes] = await Promise.all([
       projectService.getProjects(),
+      scholarService.getMainPublications(),
       publicationService.getPublications(),
       teamService.getMembers()
     ]);
 
     const projects = projectsRes.data || [];
-    const publications = publicationsRes.data || [];
     const members = membersRes.data || [];
+
+    // Use live count of real publications from Google Scholar profile
+    let totalPublications = 0;
+    if (scholarRes.success && scholarRes.data?.publications && scholarRes.data.publications.length > 0) {
+      totalPublications = scholarRes.data.publications.length;
+    } else if (publicationsRes.data && publicationsRes.data.length > 0) {
+      totalPublications = publicationsRes.data.length;
+    }
 
     return {
       success: true,
       data: {
         totalProjects: projects.length,
-        totalPublications: publications.length,
+        totalPublications,
         totalMembers: members.length,
         ongoingProjects: projects.filter(p => p.status === 'ongoing').length
       }
