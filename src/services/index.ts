@@ -8,6 +8,7 @@ export { newsService } from './news.service';
 export { adminService } from './admin.service';
 export { settingsService } from './settings.service';
 export { scholarService } from './scholar.service';
+export { researchFocusService } from './researchFocus.service';
 
 // Re-export types
 export type {
@@ -17,6 +18,7 @@ export type {
   Publication,
   Notice,
   News,
+  ResearchFocus,
   AuthResponse,
   ApiResponse
 } from './types';

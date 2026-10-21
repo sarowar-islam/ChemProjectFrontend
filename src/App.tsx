@@ -32,6 +32,7 @@ import NewsDetailPage from "./pages/NewsDetailPage";
 import NoticeDetailPage from "./pages/NoticeDetailPage";
 import ProjectDetailPage from "./pages/ProjectDetailPage";
 import PublicationDetailPage from "./pages/PublicationDetailPage";
+import ResearchFocusDetailPage from "./pages/ResearchFocusDetailPage";
 
 // Auth Pages
 import AdminLoginPage from "./pages/AdminLoginPage";
@@ -66,6 +67,7 @@ const App = () => (
                 <Route path="/team/:username" element={<MemberProfilePage />} />
                 <Route path="/news" element={<NewsPage />} />
                 <Route path="/news/:slug" element={<NewsDetailPage />} />
+                <Route path="/research-focus/:id" element={<ResearchFocusDetailPage />} />
                 <Route path="/notices" element={<NoticesPage />} />
                 <Route path="/notices/:slug" element={<NoticeDetailPage />} />
               </Route>

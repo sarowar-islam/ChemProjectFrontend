@@ -63,6 +63,16 @@ export interface News {
   author?: string;
 }
 
+export interface ResearchFocus {
+  id: string;
+  title: string;
+  shortDescription?: string;
+  details?: string;
+  displayOrder?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface AuthResponse {
   success: boolean;
   user?: User;

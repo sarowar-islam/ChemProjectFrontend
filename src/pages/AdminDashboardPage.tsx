@@ -16,11 +16,13 @@ import {
   EyeOff,
   ChevronLeft,
   Menu,
+  Compass,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { adminService } from '@/services/admin.service';
-import { Project, TeamMember, Notice, News } from '@/services/types';
+import { Project, TeamMember, Notice, News, ResearchFocus } from '@/services/types';
 import { SiteSettings } from '@/services/settings.service';
+import { researchFocusService } from '@/services/researchFocus.service';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -32,7 +34,7 @@ import { newsService } from '@/services/news.service';
 import { normalizeMemberTitle, sortMembersForAdmin } from '@/lib/memberSorting';
 import RichTextEditor from '@/components/RichTextEditor';
 
-type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'settings';
+type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'focus' | 'settings';
 
 // Position options - determines the category/section on team page
 const POSITION_OPTIONS = [
@@ -87,18 +89,20 @@ export default function AdminDashboardPage() {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [notices, setNotices] = useState<Notice[]>([]);
   const [news, setNews] = useState<News[]>([]);
+  const [researchFocusList, setResearchFocusList] = useState<ResearchFocus[]>([]);
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
     setLoading(true);
-    const [statsRes, projectsRes, membersRes, noticesRes, settingsRes, newsRes] = await Promise.all([
+    const [statsRes, projectsRes, membersRes, noticesRes, settingsRes, newsRes, focusRes] = await Promise.all([
       adminService.getDashboardStats(),
       adminService.getProjects(),
       adminService.getMembers(),
       adminService.getNotices(),
       adminService.getSettings(),
       newsService.getNews(),
+      researchFocusService.getAll(),
     ]);
 
     if (statsRes.success && statsRes.data) setStats(statsRes.data);
@@ -107,6 +111,7 @@ export default function AdminDashboardPage() {
     if (noticesRes.success && noticesRes.data) setNotices(noticesRes.data);
     if (settingsRes.success && settingsRes.data) setSettings(settingsRes.data);
     if (newsRes.success && newsRes.data) setNews(newsRes.data);
+    if (focusRes.success && focusRes.data) setResearchFocusList(focusRes.data);
 
     setLoading(false);
   };
@@ -124,6 +129,7 @@ export default function AdminDashboardPage() {
     { id: 'dashboard' as Tab, label: 'Dashboard', icon: LayoutDashboard },
     { id: 'projects' as Tab, label: 'Projects', icon: FolderKanban },
     { id: 'members' as Tab, label: 'Members', icon: Users },
+    { id: 'focus' as Tab, label: 'Research Focus', icon: Compass },
     { id: 'news' as Tab, label: 'News', icon: Newspaper },
     { id: 'notices' as Tab, label: 'Notices', icon: Bell },
     { id: 'settings' as Tab, label: 'Settings', icon: Settings },
@@ -237,6 +243,9 @@ export default function AdminDashboardPage() {
           )}
           {activeTab === 'members' && (
             <MembersView members={members} loading={loading} onRefresh={fetchData} toast={toast} />
+          )}
+          {activeTab === 'focus' && (
+            <ResearchFocusView focusList={researchFocusList} loading={loading} onRefresh={fetchData} toast={toast} />
           )}
           {activeTab === 'news' && (
             <NewsView news={news} loading={loading} onRefresh={fetchData} toast={toast} />
@@ -1098,6 +1107,280 @@ function SettingsView({
           </Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ResearchFocusView({
+  focusList,
+  loading,
+  onRefresh,
+  toast,
+}: {
+  focusList: ResearchFocus[];
+  loading: boolean;
+  onRefresh: () => void;
+  toast: ReturnType<typeof useToast>['toast'];
+}) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingFocus, setEditingFocus] = useState<ResearchFocus | null>(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    shortDescription: '',
+    details: '',
+    displayOrder: 0,
+  });
+  const [saving, setSaving] = useState(false);
+
+  const openAddModal = () => {
+    setEditingFocus(null);
+    setFormData({
+      title: '',
+      shortDescription: '',
+      details: '',
+      displayOrder: focusList.length,
+    });
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (focus: ResearchFocus) => {
+    setEditingFocus(focus);
+    setFormData({
+      title: focus.title || '',
+      shortDescription: focus.shortDescription || '',
+      details: focus.details || '',
+      displayOrder: focus.displayOrder ?? 0,
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleSave = async () => {
+    if (!formData.title.trim()) {
+      toast({ title: 'Validation Error', description: 'Title is required', variant: 'destructive' });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      let res;
+      if (editingFocus) {
+        res = await researchFocusService.update(editingFocus.id, formData);
+      } else {
+        res = await researchFocusService.create(formData);
+      }
+
+      if (res.success) {
+        toast({
+          title: 'Success',
+          description: editingFocus ? 'Research focus updated successfully' : 'Research focus created successfully',
+        });
+        setIsModalOpen(false);
+        onRefresh();
+      } else {
+        toast({
+          title: 'Error',
+          description: res.error || 'Failed to save research focus',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({ title: 'Error', description: 'An error occurred', variant: 'destructive' });
+    }
+    setSaving(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this research focus item?')) return;
+    const res = await researchFocusService.delete(id);
+    if (res.success) {
+      toast({ title: 'Success', description: 'Research focus deleted successfully' });
+      onRefresh();
+    } else {
+      toast({
+        title: 'Error',
+        description: res.error || 'Failed to delete research focus',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="font-heading text-2xl text-foreground">Our Research Focus</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Manage the dynamic research focus areas shown on the homepage and their full detail pages.
+          </p>
+        </div>
+        <Button onClick={openAddModal} className="bg-accent text-primary-foreground hover:bg-accent/90">
+          <Plus className="w-4 h-4 mr-2" />
+          Add Research Focus
+        </Button>
+      </div>
+
+      {loading ? (
+        <div className="space-y-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="bg-card border border-border rounded-xl p-5 animate-pulse shadow-sm">
+              <div className="h-5 w-1/3 bg-secondary rounded mb-2" />
+              <div className="h-4 w-3/4 bg-secondary rounded" />
+            </div>
+          ))}
+        </div>
+      ) : focusList.length === 0 ? (
+        <div className="bg-card border border-border rounded-xl p-10 text-center text-muted-foreground shadow-sm">
+          <Compass className="w-12 h-12 mx-auto text-muted-foreground/50 mb-3" />
+          <p className="text-base font-medium mb-1">No research focus areas found</p>
+          <p className="text-sm text-muted-foreground mb-4">Click "Add Research Focus" to add your first domain.</p>
+          <Button onClick={openAddModal} className="bg-accent text-primary-foreground hover:bg-accent/90">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Research Focus
+          </Button>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {focusList.map((focus, index) => (
+            <div
+              key={focus.id}
+              className="bg-card border border-border rounded-xl p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-4 shadow-sm hover:border-accent/40 transition-colors"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="w-6 h-6 rounded-full bg-accent/15 text-accent text-xs font-bold flex items-center justify-center shrink-0">
+                    {index + 1}
+                  </span>
+                  <h3 className="font-heading text-lg font-bold text-foreground">
+                    {focus.title}
+                  </h3>
+                </div>
+                {focus.shortDescription && (
+                  <p className="text-sm text-muted-foreground line-clamp-2 pl-8">
+                    {focus.shortDescription}
+                  </p>
+                )}
+                {focus.details && (
+                  <p className="text-xs text-accent/80 font-medium mt-2 pl-8 flex items-center gap-1">
+                    ✓ Rich text details included
+                  </p>
+                )}
+              </div>
+              <div className="flex items-center gap-1 sm:self-center shrink-0 pl-8 sm:pl-0">
+                <Link
+                  to={`/research-focus/${focus.id}`}
+                  target="_blank"
+                  className="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-foreground"
+                  title="Preview detail page"
+                >
+                  <Eye className="w-4 h-4" />
+                </Link>
+                <button
+                  onClick={() => openEditModal(focus)}
+                  className="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-foreground"
+                  title="Edit"
+                >
+                  <Edit className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => handleDelete(focus.id)}
+                  className="p-2 hover:bg-[#FEE2E2] dark:hover:bg-red-950/40 rounded-lg transition-colors text-[#EF4444]"
+                  title="Delete"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Focus Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="text-foreground font-heading text-xl">
+              {editingFocus ? 'Edit Research Focus' : 'Add Research Focus'}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-5 py-4">
+            <div>
+              <Label htmlFor="focus-title" className="text-foreground font-medium mb-1.5 block">
+                Title *
+              </Label>
+              <Input
+                id="focus-title"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                placeholder="e.g., Environmental Remediation"
+                className="bg-card border-border text-foreground focus:border-primary"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="focus-short-desc" className="text-foreground font-medium mb-1.5 block">
+                Short Description / Bio *
+              </Label>
+              <Textarea
+                id="focus-short-desc"
+                value={formData.shortDescription}
+                onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
+                rows={2}
+                placeholder="Brief 1-2 sentence overview shown on homepage card..."
+                className="bg-card border-border text-foreground focus:border-primary"
+              />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <Label className="text-foreground font-medium block">
+                  Detailed Information (Full Page) *
+                </Label>
+                <span className="text-xs text-muted-foreground">Rich text supported</span>
+              </div>
+              <p className="text-xs text-muted-foreground mb-2">
+                This comprehensive content is shown on the dedicated detail page when users click on this research focus.
+              </p>
+              <RichTextEditor
+                value={formData.details}
+                onChange={(value) => setFormData({ ...formData, details: value })}
+                placeholder="Write in-depth research methodologies, key achievements, objectives, bullet points..."
+                minHeight="260px"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="focus-order" className="text-foreground font-medium mb-1.5 block">
+                Display Order
+              </Label>
+              <Input
+                id="focus-order"
+                type="number"
+                value={formData.displayOrder}
+                onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) || 0 })}
+                className="bg-card border-border text-foreground focus:border-primary w-32"
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsModalOpen(false)}
+              className="border-border text-muted-foreground hover:bg-secondary"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={saving}
+              className="bg-accent text-primary-foreground hover:bg-accent/90"
+            >
+              {saving ? 'Saving...' : 'Save Research Focus'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

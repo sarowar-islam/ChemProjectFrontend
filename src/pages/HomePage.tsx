@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FlaskConical, BookOpen, Users, FolderKanban, ArrowRight, Bell, Info, Beaker, Atom, Microscope, TestTube, GraduationCap, Award, Target, Sparkles, Calendar, Newspaper } from 'lucide-react';
+import { FlaskConical, BookOpen, Users, FolderKanban, ArrowRight, Bell, Info, Beaker, Atom, Microscope, Award, Target, Sparkles, Calendar, Newspaper } from 'lucide-react';
 import { adminService } from '@/services/admin.service';
 import { noticeService } from '@/services/notice.service';
 import { newsService } from '@/services/news.service';
 import { settingsService } from '@/services/settings.service';
-import { Notice, News } from '@/services/types';
+import { researchFocusService } from '@/services/researchFocus.service';
+import { Notice, News, ResearchFocus } from '@/services/types';
 import HeroTitle from '@/components/HeroTitle';
 import { linkifyHtml } from '@/lib/htmlUtils';
 
@@ -18,6 +19,7 @@ export default function HomePage() {
   });
   const [recentNews, setRecentNews] = useState<News[]>([]);
   const [recentNotices, setRecentNotices] = useState<Notice[]>([]);
+  const [researchFocusList, setResearchFocusList] = useState<ResearchFocus[]>([]);
   const [aboutUs, setAboutUs] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
@@ -39,11 +41,12 @@ export default function HomePage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [statsRes, newsRes, noticesRes, settingsRes] = await Promise.all([
+      const [statsRes, newsRes, noticesRes, settingsRes, focusRes] = await Promise.all([
         adminService.getDashboardStats(),
         newsService.getNews(),
         noticeService.getRecentNotices(3),
         settingsService.getSettings(),
+        researchFocusService.getAll(),
       ]);
 
       if (statsRes.success && statsRes.data) setStats(statsRes.data);
@@ -55,6 +58,9 @@ export default function HomePage() {
       }
       if (noticesRes.success && noticesRes.data) setRecentNotices(noticesRes.data);
       if (settingsRes.success && settingsRes.data) setAboutUs(settingsRes.data.aboutUs || '');
+      if (focusRes.success && focusRes.data) {
+        setResearchFocusList(focusRes.data);
+      }
       setLoading(false);
     };
 
@@ -239,7 +245,7 @@ export default function HomePage() {
       {/* Research Focus - Enhanced */}
       <section className="py-12 md:py-16 bg-secondary relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%230891B2" fill-opacity="0.35"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+          <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%230891B2\" fill-opacity=\"0.35\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
         </div>
 
         <div className="container-wide relative">
@@ -254,29 +260,46 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {[
-              { icon: <FlaskConical className="w-8 h-8" />, title: 'Environmental Remediation', desc: 'Developing solutions for pollution control and environmental cleanup', to: '/projects' },
-              { icon: <Atom className="w-8 h-8" />, title: 'Nanomaterials', desc: 'Engineering nanoscale materials for water treatment and sensing', to: '/projects' },
-              { icon: <TestTube className="w-8 h-8" />, title: 'Wastewater Treatment', desc: 'Cutting-edge technologies for industrial effluent treatment', to: '/projects' },
-              { icon: <Beaker className="w-8 h-8" />, title: 'Resource Recovery', desc: 'Extracting valuable materials from waste streams and e-waste', to: '/projects' },
-              { icon: <Microscope className="w-8 h-8" />, title: 'Adsorption Studies', desc: 'Novel adsorbents for heavy metal and pollutant removal', to: '/projects' },
-              { icon: <GraduationCap className="w-8 h-8" />, title: 'Green Chemistry', desc: 'Eco-friendly synthesis and sustainable chemical processes', to: '/projects' },
-            ].map((area, index) => (
-              <Link
-                to={area.to}
-                key={area.title}
-                className="group p-8 rounded-xl bg-card border border-border hover:border-accent/30 transition-all duration-300 animate-fade-in-up shadow-sm"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="p-3 rounded-xl bg-accent/15 text-accent w-fit mb-4 group-hover:scale-110 transition-transform">
-                  {area.icon}
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="p-8 rounded-xl bg-card border border-border animate-pulse shadow-sm">
+                  <div className="h-6 w-3/4 bg-secondary rounded mb-3" />
+                  <div className="h-4 w-full bg-secondary rounded mb-2" />
+                  <div className="h-4 w-2/3 bg-secondary rounded" />
                 </div>
-                <h3 className="font-heading text-xl text-foreground mb-2" style={{ letterSpacing: '-0.02em' }}>{area.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{area.desc}</p>
-              </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : researchFocusList.length === 0 ? (
+            <div className="text-center py-12 bg-card rounded-xl border border-border">
+              <Microscope className="w-12 h-12 mx-auto text-muted-foreground mb-3 opacity-60" />
+              <p className="text-muted-foreground">No research focus areas available at the moment.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {researchFocusList.map((area, index) => (
+                <Link
+                  to={`/research-focus/${area.id}`}
+                  key={area.id}
+                  className="group p-8 rounded-xl bg-card border border-border hover:border-accent hover:shadow-md transition-all duration-300 animate-fade-in-up shadow-sm flex flex-col justify-between"
+                  style={{ animationDelay: `${index * 0.08}s` }}
+                >
+                  <div>
+                    <h3 className="font-heading text-xl text-foreground mb-3 font-bold group-hover:text-accent transition-colors" style={{ letterSpacing: '-0.02em' }}>
+                      {area.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      {area.shortDescription}
+                    </p>
+                  </div>
+                  <div className="mt-5 pt-4 border-t border-border/60 flex items-center gap-1.5 text-xs font-semibold text-accent group-hover:gap-2 transition-all">
+                    <span>Read Details</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
