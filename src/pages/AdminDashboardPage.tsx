@@ -31,7 +31,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { newsService } from '@/services/news.service';
-import { normalizeMemberTitle, sortMembersForAdmin } from '@/lib/memberSorting';
+import { normalizeMemberTitle, sortMembersForAdmin, sortMembersWithinSection } from '@/lib/memberSorting';
 import RichTextEditor from '@/components/RichTextEditor';
 
 type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'focus' | 'settings';
@@ -368,6 +368,48 @@ function ProjectsView({
     }
   };
 
+  const ongoingProjects = [...projects]
+    .filter((p) => p.status === 'ongoing')
+    .sort((a, b) => new Date(b.startDate || 0).getTime() - new Date(a.startDate || 0).getTime());
+
+  const completedProjects = [...projects]
+    .filter((p) => p.status === 'completed')
+    .sort((a, b) => new Date(b.endDate || b.startDate || 0).getTime() - new Date(a.endDate || a.startDate || 0).getTime());
+
+  const renderProjectCard = (project: Project) => (
+    <div key={project.id} className="bg-card border border-border rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-3 mb-1.5 flex-wrap">
+          <h3 className="font-heading font-semibold text-foreground text-lg">{project.title}</h3>
+          <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${
+            project.status === 'ongoing' ? 'bg-[#DCFCE7] text-[#166534] dark:bg-emerald-950/60 dark:text-emerald-400' : 'bg-secondary text-secondary-foreground'
+          }`}>
+            {project.status}
+          </span>
+        </div>
+        <p className="text-sm text-muted-foreground line-clamp-2 mb-2" dangerouslySetInnerHTML={{ __html: project.description }} />
+        <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+          {project.startDate && <span>Started: {project.startDate}</span>}
+          {project.endDate && <span>Ended: {project.endDate}</span>}
+        </div>
+      </div>
+      <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+        <button
+          onClick={() => navigate(`/admin/projects/edit/${project.id}`)}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-secondary/50 text-foreground hover:bg-secondary text-xs font-medium transition-colors"
+        >
+          <Edit className="w-3.5 h-3.5 text-muted-foreground" /> Edit
+        </button>
+        <button
+          onClick={() => handleDelete(project.id)}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-400 text-xs font-medium transition-colors"
+        >
+          <Trash2 className="w-3.5 h-3.5" /> Delete
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -401,40 +443,40 @@ function ProjectsView({
           </Button>
         </div>
       ) : (
-        <div className="space-y-4">
-          {projects.map((project) => (
-            <div key={project.id} className="bg-card border border-border rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3 mb-1.5 flex-wrap">
-                  <h3 className="font-heading font-semibold text-foreground text-lg">{project.title}</h3>
-                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${
-                    project.status === 'ongoing' ? 'bg-[#DCFCE7] text-[#166534] dark:bg-emerald-950/60 dark:text-emerald-400' : 'bg-secondary text-secondary-foreground'
-                  }`}>
-                    {project.status}
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground line-clamp-2 mb-2" dangerouslySetInnerHTML={{ __html: project.description }} />
-                <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-                  {project.startDate && <span>Started: {project.startDate}</span>}
-                  {project.endDate && <span>Ended: {project.endDate}</span>}
-                </div>
+        <div className="space-y-8">
+          {/* Ongoing Projects Section */}
+          <div>
+            <h3 className="font-heading text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              Ongoing Projects ({ongoingProjects.length})
+            </h3>
+            {ongoingProjects.length === 0 ? (
+              <div className="text-center py-8 bg-card border border-border rounded-xl text-muted-foreground text-sm">
+                No ongoing projects.
               </div>
-              <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                <button
-                  onClick={() => navigate(`/admin/projects/edit/${project.id}`)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-secondary/50 text-foreground hover:bg-secondary text-xs font-medium transition-colors"
-                >
-                  <Edit className="w-3.5 h-3.5 text-muted-foreground" /> Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(project.id)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-400 text-xs font-medium transition-colors"
-                >
-                  <Trash2 className="w-3.5 h-3.5" /> Delete
-                </button>
+            ) : (
+              <div className="space-y-4">
+                {ongoingProjects.map(renderProjectCard)}
               </div>
-            </div>
-          ))}
+            )}
+          </div>
+
+          {/* Completed Projects Section */}
+          <div>
+            <h3 className="font-heading text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+              Completed Projects ({completedProjects.length})
+            </h3>
+            {completedProjects.length === 0 ? (
+              <div className="text-center py-8 bg-card border border-border rounded-xl text-muted-foreground text-sm">
+                No completed projects.
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {completedProjects.map(renderProjectCard)}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -614,8 +656,14 @@ function MembersView({
           No members yet. Click "Add Member" to add one.
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {members.map((member) => (
+        (() => {
+          const teamLeaders = sortMembersWithinSection(members.filter((m) => m.position === 'team_leader'));
+          const faculty = sortMembersWithinSection(members.filter((m) => m.position === 'faculty'));
+          const researchers = sortMembersWithinSection(members.filter((m) => m.position === 'researcher'));
+          const students = sortMembersWithinSection(members.filter((m) => m.position === 'student'));
+          const administrative = sortMembersWithinSection(members.filter((m) => m.position === 'Administrative'));
+
+          const renderMemberCard = (member: TeamMember) => (
             <div key={member.id} className="bg-card border border-border rounded-xl p-4 shadow-sm">
               <div className="flex items-center gap-3">
                 <img
@@ -629,10 +677,10 @@ function MembersView({
                   <p className="text-xs text-accent/70 truncate capitalize">{member.position?.replace('_', ' ') || 'No position'}</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <button onClick={() => openEditModal(member)} className="p-2 hover:bg-secondary rounded-lg transition-colors">
+                  <button onClick={() => openEditModal(member)} className="p-2 hover:bg-secondary rounded-lg transition-colors" title="Edit">
                     <Edit className="w-4 h-4 text-muted-foreground" />
                   </button>
-                  <button onClick={() => handleDelete(member.id)} className="p-2 hover:bg-[#FEE2E2] rounded-lg transition-colors">
+                  <button onClick={() => handleDelete(member.id)} className="p-2 hover:bg-[#FEE2E2] rounded-lg transition-colors" title="Delete">
                     <Trash2 className="w-4 h-4 text-[#EF4444]" />
                   </button>
                 </div>
@@ -640,7 +688,7 @@ function MembersView({
               <div className="mt-4 flex flex-col gap-2">
                 <button
                   onClick={() => handleGenerateSecurityCode(member.id)}
-                  className="w-full py-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                  className="w-full py-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium"
                 >
                   Generate Security Code
                 </button>
@@ -653,8 +701,67 @@ function MembersView({
                 )}
               </div>
             </div>
-          ))}
-        </div>
+          );
+
+          return (
+            <div className="space-y-10">
+              {teamLeaders.length > 0 && (
+                <div>
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                    Team Leader ({teamLeaders.length})
+                  </h3>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {teamLeaders.map(renderMemberCard)}
+                  </div>
+                </div>
+              )}
+
+              {faculty.length > 0 && (
+                <div>
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                    Faculty ({faculty.length})
+                  </h3>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {faculty.map(renderMemberCard)}
+                  </div>
+                </div>
+              )}
+
+              {researchers.length > 0 && (
+                <div>
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                    Researchers ({researchers.length})
+                  </h3>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {researchers.map(renderMemberCard)}
+                  </div>
+                </div>
+              )}
+
+              {students.length > 0 && (
+                <div>
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                    Students ({students.length})
+                  </h3>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {students.map(renderMemberCard)}
+                  </div>
+                </div>
+              )}
+
+              {administrative.length > 0 && (
+                <div>
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                    Administrative ({administrative.length})
+                  </h3>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {administrative.map(renderMemberCard)}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

@@ -64,7 +64,7 @@ export default function ProjectDetailPage() {
 
   return (
     <div className="bg-background min-h-screen py-10 sm:py-16">
-      <div className="container-wide max-w-3xl">
+      <div className="container-wide">
         {/* Back Link */}
         <button
           onClick={() => navigate('/projects')}
@@ -73,66 +73,63 @@ export default function ProjectDetailPage() {
           <ArrowLeft className="w-4 h-4" /> Back to Research Projects
         </button>
 
-        {/* Project Container */}
-        <div className="bg-card border border-border rounded-2xl p-6 sm:p-10 shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-            <div className="p-3 rounded-2xl bg-secondary text-accent border border-secondary-foreground/20">
-              <FolderKanban className="w-8 h-8" />
-            </div>
-            <span className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold ${isOngoing ? 'bg-accent/15 text-accent' : 'bg-secondary text-secondary-foreground'}`}>
-              {isOngoing ? <Clock className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
-              {isOngoing ? 'Ongoing Project' : 'Completed Project'}
-            </span>
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+          <div className="p-3 rounded-2xl bg-secondary text-accent border border-secondary-foreground/20">
+            <FolderKanban className="w-8 h-8" />
           </div>
+          <span className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold ${isOngoing ? 'bg-accent/15 text-accent' : 'bg-secondary text-secondary-foreground'}`}>
+            {isOngoing ? <Clock className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
+            {isOngoing ? 'Ongoing Project' : 'Completed Project'}
+          </span>
+        </div>
 
-          <h1 className="font-heading text-2xl sm:text-4xl font-bold text-foreground mb-4">
-            {project.title}
-          </h1>
+        <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
+          {project.title}
+        </h1>
 
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6 pb-6 border-b border-border">
-            <Calendar className="w-4 h-4 text-accent" />
-            <span>
-              {new Date(project.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-              {project.endDate && ` — ${new Date(project.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}`}
-            </span>
-          </div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-8 pb-6 border-b border-border">
+          <Calendar className="w-4 h-4 text-accent" />
+          <span>
+            {new Date(project.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+            {project.endDate && ` — ${new Date(project.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}`}
+          </span>
+        </div>
 
-          <div
-            className="prose prose-lg max-w-none text-foreground leading-relaxed mb-8 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80"
-            dangerouslySetInnerHTML={{ __html: linkifyHtml(project.description) }}
-          />
+        <div
+          className="prose prose-lg max-w-none text-foreground leading-relaxed mb-8 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80"
+          dangerouslySetInnerHTML={{ __html: linkifyHtml(project.description) }}
+        />
 
-          {project.researchLink && (
-            <div className="mb-8 p-4 rounded-xl bg-secondary/50 border border-border">
-              <a
-                href={project.researchLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-accent font-medium hover:underline text-base"
-              >
-                <span>Visit External Project / Research Link</span>
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            </div>
-          )}
-
-          <div className="flex items-center justify-between border-t border-border pt-6">
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(window.location.href);
-                alert('Link copied to clipboard!');
-              }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium text-sm transition-colors"
+        {project.researchLink && (
+          <div className="mb-8 p-4 rounded-xl bg-secondary/50 border border-border">
+            <a
+              href={project.researchLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-accent font-medium hover:underline text-base"
             >
-              <Share2 className="w-4 h-4" /> Share Project
-            </button>
-            <Link
-              to="/projects"
-              className="inline-flex items-center gap-2 text-accent font-semibold hover:underline text-sm"
-            >
-              All Projects <ArrowLeft className="w-4 h-4 rotate-180" />
-            </Link>
+              <span>Visit External Project / Research Link</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
           </div>
+        )}
+
+        <div className="flex items-center justify-between border-t border-border pt-6">
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(window.location.href);
+              alert('Link copied to clipboard!');
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium text-sm transition-colors"
+          >
+            <Share2 className="w-4 h-4" /> Share Project
+          </button>
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-2 text-accent font-semibold hover:underline text-sm"
+          >
+            All Projects <ArrowLeft className="w-4 h-4 rotate-180" />
+          </Link>
         </div>
       </div>
     </div>

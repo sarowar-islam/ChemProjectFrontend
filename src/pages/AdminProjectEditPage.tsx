@@ -98,7 +98,7 @@ export default function AdminProjectEditPage() {
 
   return (
     <div className="min-h-screen bg-background py-10">
-      <div className="container-wide max-w-3xl">
+      <div className="container-wide">
         {/* Back Button */}
         <button
           onClick={() => navigate('/admin')}
@@ -107,22 +107,21 @@ export default function AdminProjectEditPage() {
           <ArrowLeft className="w-4 h-4" /> Back to Admin Dashboard
         </button>
 
-        <div className="bg-card border border-border rounded-2xl p-6 sm:p-10 shadow-sm">
-          <div className="flex items-center gap-3 mb-6 pb-6 border-b border-border">
-            <div className="p-3 rounded-xl bg-accent/15 text-accent">
-              <FolderKanban className="w-6 h-6" />
-            </div>
-            <div>
-              <h1 className="font-heading text-2xl font-bold text-foreground">
-                {isEditing ? 'Edit Research Project' : 'Add New Research Project'}
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Enter project information and format descriptions with rich text formatting.
-              </p>
-            </div>
+        <div className="flex items-center gap-3 mb-8 pb-6 border-b border-border">
+          <div className="p-3 rounded-xl bg-accent/15 text-accent">
+            <FolderKanban className="w-6 h-6" />
           </div>
+          <div>
+            <h1 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">
+              {isEditing ? 'Edit Research Project' : 'Add New Research Project'}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Enter project information and format descriptions with rich text formatting.
+            </p>
+          </div>
+        </div>
 
-          <form onSubmit={handleSave} className="space-y-6">
+        <form onSubmit={handleSave} className="space-y-6">
             <div>
               <Label htmlFor="title">Project Title *</Label>
               <Input
@@ -212,7 +211,6 @@ export default function AdminProjectEditPage() {
               </Button>
             </div>
           </form>
-        </div>
       </div>
     </div>
   );

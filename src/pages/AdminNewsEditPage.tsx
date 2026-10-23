@@ -139,7 +139,7 @@ export default function AdminNewsEditPage() {
 
   return (
     <div className="min-h-screen bg-background py-10">
-      <div className="container-wide max-w-3xl">
+      <div className="container-wide">
         {/* Back Button */}
         <button
           onClick={() => navigate('/admin')}
@@ -148,22 +148,21 @@ export default function AdminNewsEditPage() {
           <ArrowLeft className="w-4 h-4" /> Back to Admin Dashboard
         </button>
 
-        <div className="bg-card border border-border rounded-2xl p-6 sm:p-10 shadow-sm">
-          <div className="flex items-center gap-3 mb-6 pb-6 border-b border-border">
-            <div className="p-3 rounded-xl bg-accent/15 text-accent">
-              <Newspaper className="w-6 h-6" />
-            </div>
-            <div>
-              <h1 className="font-heading text-2xl font-bold text-foreground">
-                {isEditing ? 'Edit News Article' : 'Publish News Article'}
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Enter article title, attach multiple images, and use the rich text editor below.
-              </p>
-            </div>
+        <div className="flex items-center gap-3 mb-8 pb-6 border-b border-border">
+          <div className="p-3 rounded-xl bg-accent/15 text-accent">
+            <Newspaper className="w-6 h-6" />
           </div>
+          <div>
+            <h1 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">
+              {isEditing ? 'Edit News Article' : 'Publish News Article'}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Enter article title, attach multiple images, and use the rich text editor below.
+            </p>
+          </div>
+        </div>
 
-          <form onSubmit={handleSave} className="space-y-6">
+        <form onSubmit={handleSave} className="space-y-6">
             <div>
               <Label htmlFor="title">Article Title *</Label>
               <Input
@@ -259,7 +258,6 @@ export default function AdminNewsEditPage() {
               </Button>
             </div>
           </form>
-        </div>
       </div>
     </div>
   );
