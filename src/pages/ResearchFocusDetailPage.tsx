@@ -98,7 +98,7 @@ export default function ResearchFocusDetailPage() {
           </h1>
 
           {focusItem.shortDescription && (
-            <p className="text-lg sm:text-xl text-muted-foreground font-normal leading-relaxed border-l-4 border-accent pl-4 py-1">
+            <p className="text-lg sm:text-xl text-muted-foreground font-normal leading-relaxed border-l-4 border-accent pl-4 py-1 text-justify">
               {focusItem.shortDescription}
             </p>
           )}

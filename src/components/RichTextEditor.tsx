@@ -13,6 +13,7 @@ import {
   AlignJustify,
   Minus,
   Plus,
+  Palette,
 } from 'lucide-react';
 
 interface RichTextEditorProps {
@@ -23,9 +24,104 @@ interface RichTextEditorProps {
   minHeight?: string;
 }
 
+function hsvToHex(h: number, s: number, v: number): string {
+  s /= 100;
+  v /= 100;
+  let c = v * s;
+  let x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  let m = v - c;
+  let r = 0, g = 0, b = 0;
+
+  if (0 <= h && h < 60) { r = c; g = x; b = 0; }
+  else if (60 <= h && h < 120) { r = x; g = c; b = 0; }
+  else if (120 <= h && h < 180) { r = 0; g = c; b = x; }
+  else if (180 <= h && h < 240) { r = 0; g = x; b = c; }
+  else if (240 <= h && h < 300) { r = x; g = 0; b = c; }
+  else if (300 <= h && h < 360) { r = c; g = 0; b = x; }
+
+  let rHex = Math.round((r + m) * 255).toString(16).padStart(2, '0');
+  let gHex = Math.round((g + m) * 255).toString(16).padStart(2, '0');
+  let bHex = Math.round((b + m) * 255).toString(16).padStart(2, '0');
+
+  return `#${rHex}${gHex}${bHex}`;
+}
+
 export default function RichTextEditor({ value, onChange, label, placeholder, minHeight }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
+  const colorPickerRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState<number>(16);
+  const [hue, setHue] = useState<number>(145);
+  const [sat, setSat] = useState<number>(74);
+  const [val, setVal] = useState<number>(33);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [selectedColor, setSelectedColor] = useState('#166534');
+
+  const showColorPickerRef = useRef(showColorPicker);
+  showColorPickerRef.current = showColorPicker;
+
+  useEffect(() => {
+    const handleMouseDown = (event: MouseEvent) => {
+      if (showColorPickerRef.current && colorPickerRef.current && !colorPickerRef.current.contains(event.target as Node)) {
+        setShowColorPicker(false);
+      }
+    };
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, []);
+
+  const updateColorFromHsv = (h: number, s: number, v: number) => {
+    setHue(h);
+    setSat(s);
+    setVal(v);
+    const hex = hsvToHex(h, s, v);
+    setSelectedColor(hex);
+    executeCommand('foreColor', hex);
+  };
+
+  const applyColor = (color: string) => {
+    setSelectedColor(color);
+    executeCommand('foreColor', color);
+  };
+
+  const handleSvMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const update = (clientX: number, clientY: number) => {
+      let x = Math.max(0, Math.min(rect.width, clientX - rect.left));
+      let y = Math.max(0, Math.min(rect.height, clientY - rect.top));
+      let s = Math.round((x / rect.width) * 100);
+      let v = Math.round((1 - y / rect.height) * 100);
+      updateColorFromHsv(hue, s, v);
+    };
+    update(e.clientX, e.clientY);
+
+    const onMouseMove = (moveEvent: MouseEvent) => update(moveEvent.clientX, moveEvent.clientY);
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  };
+
+  const handleHueMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const update = (clientX: number) => {
+      let x = Math.max(0, Math.min(rect.width, clientX - rect.left));
+      let h = Math.round((x / rect.width) * 360);
+      updateColorFromHsv(h, sat, val);
+    };
+    update(e.clientX);
+
+    const onMouseMove = (moveEvent: MouseEvent) => update(moveEvent.clientX);
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  };
 
   useEffect(() => {
     if (editorRef.current && editorRef.current.innerHTML !== value) {
@@ -339,6 +435,101 @@ export default function RichTextEditor({ value, onChange, label, placeholder, mi
             >
               <LinkIcon className="w-4 h-4" />
             </button>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowColorPicker(!showColorPicker)}
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                title="Text Color"
+              >
+                <Palette className="w-4 h-4" />
+              </button>
+
+              {showColorPicker && (
+                <div className="absolute left-0 mt-2 z-50 w-64 p-3.5 bg-card border border-border rounded-xl shadow-elevated space-y-3 select-none">
+                  <div className="flex items-center justify-between text-xs font-semibold text-foreground">
+                    <span>Text Color</span>
+                    <span className="text-[10px] text-muted-foreground font-mono bg-secondary px-1.5 py-0.5 rounded">{selectedColor}</span>
+                  </div>
+
+                  {/* 2D Saturation/Value Color Box */}
+                  <div
+                    onMouseDown={handleSvMouseDown}
+                    className="relative w-full h-32 rounded-lg overflow-hidden cursor-crosshair border border-border shadow-inner"
+                    style={{ backgroundColor: hsvToHex(hue, 100, 100) }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-white to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
+                    <div
+                      className="absolute w-3.5 h-3.5 rounded-full border-2 border-white shadow-md -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                      style={{
+                        left: `${sat}%`,
+                        top: `${100 - val}%`,
+                        backgroundColor: selectedColor,
+                      }}
+                    />
+                  </div>
+
+                  {/* Bottom Controls: Preview Circle, Hex, Hue Slider */}
+                  <div className="flex items-center gap-2 pt-1">
+                    <div
+                      className="w-7 h-7 rounded-full border-2 border-border shadow-2xs shrink-0"
+                      style={{ backgroundColor: selectedColor }}
+                      title={selectedColor}
+                    />
+                    <input
+                      type="text"
+                      value={selectedColor}
+                      onChange={(e) => {
+                        const valText = e.target.value;
+                        setSelectedColor(valText);
+                        if (/^#[0-9A-F]{6}$/i.test(valText)) {
+                          applyColor(valText);
+                        }
+                      }}
+                      className="w-20 h-7 px-2 text-xs bg-secondary/50 border border-border rounded text-foreground font-mono focus:outline-none focus:border-accent"
+                    />
+                    <div
+                      onMouseDown={handleHueMouseDown}
+                      className="relative flex-1 h-4 rounded-full overflow-hidden cursor-pointer shadow-inner border border-border"
+                      style={{
+                        background: 'linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)',
+                      }}
+                    >
+                      <div
+                        className="absolute top-1/2 w-3 h-3 rounded-full bg-white border-2 border-neutral-800 shadow-md -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                        style={{ left: `${(hue / 360) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Suggested Colors in One Row (Strict Circles) */}
+                  <div className="pt-2 border-t border-border">
+                    <div className="text-[10px] text-muted-foreground mb-1.5 font-medium">Suggested Colors</div>
+                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+                      {[
+                        '#000000', '#1e293b', '#166534', '#10b981', '#2563eb',
+                        '#4f46e5', '#7c3aed', '#db2777', '#dc2626', '#ea580c',
+                        '#d97706', '#ca8a04', '#64748b', '#ffffff'
+                      ].map((color) => (
+                        <button
+                          key={color}
+                          type="button"
+                          onClick={() => applyColor(color)}
+                          className={`w-5 h-5 min-w-[20px] min-h-[20px] aspect-square rounded-full border transition-all hover:scale-125 shrink-0 ${
+                            selectedColor.toLowerCase() === color.toLowerCase()
+                              ? 'ring-2 ring-accent ring-offset-1 border-white'
+                              : 'border-border shadow-2xs'
+                          }`}
+                          style={{ backgroundColor: color }}
+                          title={color}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

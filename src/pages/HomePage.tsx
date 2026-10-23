@@ -288,7 +288,7 @@ export default function HomePage() {
                     <h3 className="font-heading text-xl text-foreground mb-3 font-bold group-hover:text-accent transition-colors" style={{ letterSpacing: '-0.02em' }}>
                       {area.title}
                     </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
+                    <p className="text-muted-foreground text-sm leading-relaxed text-justify">
                       {area.shortDescription}
                     </p>
                   </div>
