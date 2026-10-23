@@ -152,9 +152,9 @@ export default function RichTextEditor({ value, onChange, label, placeholder, mi
   return (
     <div className="space-y-2">
       {label && <label className="block text-sm font-medium text-foreground">{label}</label>}
-      <div className="border border-border rounded-xl overflow-hidden bg-card shadow-xs focus-within:border-accent/60 transition-colors">
+      <div className="border border-border rounded-xl bg-card shadow-xs focus-within:border-accent/60 transition-colors">
         {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-1 p-2 bg-secondary/40 border-b border-border select-none">
+        <div className="sticky top-0 z-40 flex flex-wrap items-center gap-1 p-2 bg-card/95 backdrop-blur-sm rounded-t-xl border-b border-border select-none shadow-sm">
           {/* Minimized & Modern Font Size Stepper */}
           <div className="inline-flex items-center h-8 bg-card border border-border rounded-lg shadow-2xs px-1 gap-0.5">
             <button
