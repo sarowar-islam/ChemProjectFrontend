@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FlaskConical, BookOpen, Users, FolderKanban, ArrowRight, Bell, Info, Beaker, Atom, Microscope, Award, Target, Sparkles, Calendar, Newspaper } from 'lucide-react';
+import { FlaskConical, BookOpen, Users, FolderKanban, ArrowRight, Bell, Info, Beaker, Atom, Microscope, Award, Target, Sparkles, Calendar, Newspaper, Image as ImageIcon } from 'lucide-react';
 import { adminService } from '@/services/admin.service';
 import { noticeService } from '@/services/notice.service';
 import { newsService } from '@/services/news.service';
@@ -21,14 +21,8 @@ export default function HomePage() {
   const [recentNotices, setRecentNotices] = useState<Notice[]>([]);
   const [researchFocusList, setResearchFocusList] = useState<ResearchFocus[]>([]);
   const [aboutUs, setAboutUs] = useState<string>('');
+  const [heroImages, setHeroImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // Featured hero images changing every 3 seconds from public folder
-  const heroImages = [
-    '/Images/hero-image/1.jpg',
-    '/Images/hero-image/2.jpg',
-    '/Images/hero-image/3.jpg'
-  ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -40,6 +34,7 @@ export default function HomePage() {
   };
 
   useEffect(() => {
+    if (heroImages.length === 0) return;
     const timer = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
     }, 3000);
@@ -64,7 +59,12 @@ export default function HomePage() {
         setRecentNews(sorted.slice(0, 4));
       }
       if (noticesRes.success && noticesRes.data) setRecentNotices(noticesRes.data);
-      if (settingsRes.success && settingsRes.data) setAboutUs(settingsRes.data.aboutUs || '');
+      if (settingsRes.success && settingsRes.data) {
+        setAboutUs(settingsRes.data.aboutUs || '');
+        if (settingsRes.data.heroImages && settingsRes.data.heroImages.length > 0) {
+          setHeroImages(settingsRes.data.heroImages);
+        }
+      }
       if (focusRes.success && focusRes.data) {
         setResearchFocusList(focusRes.data);
       }
@@ -116,30 +116,40 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right Column: Featured Images Slideshow (Changing every 3 seconds) */}
+            {/* Right Column: Featured Images Slideshow */}
             <div className="relative animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
               <div className="relative z-10 rounded-2xl overflow-hidden shadow-elevated border-2 border-border bg-card h-[320px] sm:h-[400px] lg:h-[450px]">
-                {heroImages.map((img, idx) => (
-                  <img
-                    key={img}
-                    src={img}
-                    alt={`Hero Featured ${idx + 1}`}
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${idx === currentImageIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
-                  />
-                ))}
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent pointer-events-none" />
+                {heroImages.length === 0 ? (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-secondary/40 text-muted-foreground p-6 text-center">
+                    <ImageIcon className="w-16 h-16 mb-2 opacity-50" />
+                    <p className="font-heading text-lg font-medium">No images available</p>
+                    <p className="text-xs text-muted-foreground mt-1">Homepage hero slideshow images will appear here once added by the admin.</p>
+                  </div>
+                ) : (
+                  <>
+                    {heroImages.map((img, idx) => (
+                      <img
+                        key={img}
+                        src={img}
+                        alt={`Hero Featured ${idx + 1}`}
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${idx === currentImageIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+                      />
+                    ))}
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent pointer-events-none" />
 
-                {/* Slideshow Indicators */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
-                  {heroImages.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentImageIndex(idx)}
-                      className={`h-2.5 rounded-full transition-all ${idx === currentImageIndex ? 'w-8 bg-accent' : 'w-2.5 bg-background/60 hover:bg-background'}`}
-                      aria-label={`Slide ${idx + 1}`}
-                    />
-                  ))}
-                </div>
+                    {/* Slideshow Indicators */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+                      {heroImages.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCurrentImageIndex(idx)}
+                          className={`h-2.5 rounded-full transition-all ${idx === currentImageIndex ? 'w-8 bg-accent' : 'w-2.5 bg-background/60 hover:bg-background'}`}
+                          aria-label={`Slide ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
               <div className="absolute -bottom-4 -right-4 w-40 h-40 bg-accent/20 rounded-2xl -z-10 blur-xl" />
               <div className="absolute -top-4 -left-4 w-40 h-40 bg-primary/10 rounded-2xl -z-10 blur-xl" />

@@ -17,11 +17,12 @@ import {
   ChevronLeft,
   Menu,
   Compass,
+  FileImage,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { adminService } from '@/services/admin.service';
 import { Project, TeamMember, Notice, News, ResearchFocus } from '@/services/types';
-import { SiteSettings } from '@/services/settings.service';
+import { SiteSettings, settingsService } from '@/services/settings.service';
 import { researchFocusService } from '@/services/researchFocus.service';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,9 +34,10 @@ import { useToast } from '@/hooks/use-toast';
 import { newsService } from '@/services/news.service';
 import { normalizeMemberTitle, sortMembersForAdmin, sortMembersWithinSection } from '@/lib/memberSorting';
 import RichTextEditor from '@/components/RichTextEditor';
+import { optimizeImage } from '@/lib/imageUtils';
 
-type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'focus' | 'settings';
-const VALID_TABS: Tab[] = ['dashboard', 'projects', 'members', 'news', 'notices', 'focus', 'settings'];
+type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'focus' | 'settings' | 'homepage-images';
+const VALID_TABS: Tab[] = ['dashboard', 'projects', 'members', 'news', 'notices', 'focus', 'settings', 'homepage-images'];
 
 // Position options - determines the category/section on team page
 const POSITION_OPTIONS = [
@@ -167,6 +169,7 @@ export default function AdminDashboardPage() {
     { id: 'focus' as Tab, label: 'Research Focus', icon: Compass },
     { id: 'news' as Tab, label: 'News', icon: Newspaper },
     { id: 'notices' as Tab, label: 'Notices', icon: Bell },
+    { id: 'homepage-images' as Tab, label: 'Homepage Images', icon: FileImage },
     { id: 'settings' as Tab, label: 'Settings', icon: Settings },
   ];
 
@@ -290,6 +293,9 @@ export default function AdminDashboardPage() {
           )}
           {activeTab === 'settings' && (
             <SettingsView settings={settings} loading={loading} onRefresh={fetchData} toast={toast} />
+          )}
+          {activeTab === 'homepage-images' && (
+            <HomepageImagesView settings={settings} loading={loading} onRefresh={fetchData} toast={toast} />
           )}
         </main>
       </div>
@@ -1547,6 +1553,199 @@ function ResearchFocusView({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function HomepageImagesView({
+  settings,
+  loading,
+  onRefresh,
+  toast,
+}: {
+  settings: SiteSettings | null;
+  loading: boolean;
+  onRefresh: () => void;
+  toast: ReturnType<typeof useToast>['toast'];
+}) {
+  const [heroImages, setHeroImages] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (settings && settings.heroImages) {
+      setHeroImages(settings.heroImages);
+    }
+  }, [settings]);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    try {
+      const newUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.size > 2 * 1024 * 1024) {
+          toast({ title: 'Error', description: `File "${file.name}" exceeds 2MB limit.`, variant: 'destructive' });
+          continue;
+        }
+
+        // Optimize image
+        let uploadFile = file;
+        try {
+          uploadFile = await optimizeImage(file, 2, 1200, 0.85);
+        } catch (err: any) {
+          toast({ title: 'Error', description: err.message || 'Failed to optimize image', variant: 'destructive' });
+          continue;
+        }
+
+        const res = await settingsService.uploadHeroImage(uploadFile);
+        if (res.success && res.data?.imageUrl) {
+          newUrls.push(res.data.imageUrl);
+          toast({ title: 'Success', description: `Uploaded "${file.name}" successfully` });
+        } else {
+          toast({ title: 'Error', description: res.error || `Failed to upload "${file.name}"`, variant: 'destructive' });
+        }
+      }
+
+      if (newUrls.length > 0) {
+        const updated = [...heroImages, ...newUrls];
+        setHeroImages(updated);
+        // Automatically save to backend settings
+        await settingsService.updateSettings({ heroImages: updated });
+        onRefresh();
+      }
+    } catch (error) {
+      toast({ title: 'Error', description: 'Failed to upload images', variant: 'destructive' });
+    }
+    setUploading(false);
+    e.target.value = '';
+  };
+
+  const handleRemoveImage = async (indexToRemove: number) => {
+    const updated = heroImages.filter((_, idx) => idx !== indexToRemove);
+    setHeroImages(updated);
+    try {
+      const res = await settingsService.updateSettings({ heroImages: updated });
+      if (res.success) {
+        toast({ title: 'Success', description: 'Image removed successfully' });
+        onRefresh();
+      } else {
+        toast({ title: 'Error', description: res.error || 'Failed to remove image', variant: 'destructive' });
+      }
+    } catch (error) {
+      toast({ title: 'Error', description: 'An error occurred', variant: 'destructive' });
+    }
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const res = await settingsService.updateSettings({ heroImages });
+      if (res.success) {
+        toast({ title: 'Success', description: 'Homepage hero images saved successfully' });
+        onRefresh();
+      } else {
+        toast({ title: 'Error', description: res.error || 'Failed to save hero images', variant: 'destructive' });
+      }
+    } catch (error) {
+      toast({ title: 'Error', description: 'An error occurred while saving', variant: 'destructive' });
+    }
+    setSaving(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-4 animate-pulse">
+        <div className="h-8 w-48 bg-card rounded" />
+        <div className="bg-card border border-border rounded-xl p-6 h-64" />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h2 className="font-heading text-2xl text-foreground mb-2">Homepage Hero Images</h2>
+      <p className="text-sm text-muted-foreground mb-6">
+        Manage slideshow images displayed in the homepage hero section.
+      </p>
+
+      <div className="bg-card border border-border rounded-xl p-6 max-w-4xl shadow-sm space-y-6">
+        {/* Instructions */}
+        <div className="bg-secondary/50 border border-secondary p-4 rounded-xl text-sm text-secondary-foreground space-y-1">
+          <p className="font-semibold">💡 Image Upload Instructions & Guidelines:</p>
+          <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+            <li><strong>Aspect Ratio:</strong> Landscape (16:9 recommended, e.g., 1200x800px).</li>
+            <li><strong>File Size Limit:</strong> Maximum 2MB per image.</li>
+            <li><strong>Optimization:</strong> Images are automatically optimized and compressed before uploading.</li>
+          </ul>
+        </div>
+
+        {/* Upload Action */}
+        <div>
+          <Label className="block text-sm font-medium text-foreground mb-2">Upload New Hero Image(s)</Label>
+          <div className="flex items-center gap-4">
+            <label className={`cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 bg-accent text-primary-foreground font-medium rounded-lg hover:bg-accent/95 transition-colors shadow-sm ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+              <Plus className="w-4 h-4" />
+              {uploading ? 'Optimizing & Uploading...' : 'Select & Upload Image'}
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileUpload}
+                disabled={uploading}
+                className="hidden"
+              />
+            </label>
+            <span className="text-xs text-muted-foreground">Max 2MB per file (JPG, PNG, WebP)</span>
+          </div>
+        </div>
+
+        {/* Image Grid */}
+        <div>
+          <h3 className="text-sm font-medium text-foreground mb-3">Current Hero Images ({heroImages.length})</h3>
+          {heroImages.length === 0 ? (
+            <div className="text-center py-12 bg-secondary/30 rounded-xl border border-dashed border-border">
+              <p className="text-muted-foreground font-medium">No images available</p>
+              <p className="text-xs text-muted-foreground mt-1">Upload images above to display them in the homepage hero slideshow.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {heroImages.map((url, idx) => (
+                <div key={idx} className="relative group bg-secondary/25 border border-border rounded-xl overflow-hidden shadow-sm aspect-video">
+                  <img
+                    src={url}
+                    alt={`Hero Slide ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(idx)}
+                      className="p-2 bg-[#EF4444] text-white rounded-lg hover:bg-[#DC2626] transition-colors shadow-md"
+                      title="Delete Image"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 bg-black/60 text-white text-[10px] rounded">
+                    Slide {idx + 1}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="pt-4 border-t border-border flex justify-end">
+          <Button onClick={handleSave} disabled={saving} className="bg-accent text-primary-foreground hover:bg-accent/95">
+            <Save className="w-4 h-4 mr-2" />
+            {saving ? 'Saving Changes...' : 'Save Changes'}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
