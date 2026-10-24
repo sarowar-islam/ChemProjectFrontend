@@ -44,6 +44,7 @@ const POSITION_OPTIONS = [
   { value: 'researcher', label: 'Researcher' },
   { value: 'student', label: 'Student' },
   { value: 'Administrative', label: 'Administrative' },
+  { value: 'alumni', label: 'Alumni' },
 ] as const;
 
 // Title options - ordered by seniority used across team/admin views
@@ -575,7 +576,7 @@ function MembersView({
           username: formData.username,
           email: formData.email,
           position: formData.position as TeamMember['position'],
-          title: normalizeMemberTitle(formData.title),
+          title: formData.position === 'alumni' ? '' : normalizeMemberTitle(formData.title),
           bio: formData.bio,
         });
         if (res.success) {
@@ -589,7 +590,7 @@ function MembersView({
           username: formData.username,
           email: formData.email || `${formData.username}@cuet.ac.bd`,
           position: formData.position as TeamMember['position'],
-          title: normalizeMemberTitle(formData.title),
+          title: formData.position === 'alumni' ? '' : normalizeMemberTitle(formData.title),
           password: formData.password,
         });
         if (res.success) {
@@ -662,6 +663,7 @@ function MembersView({
           const researchers = sortMembersWithinSection(members.filter((m) => m.position === 'researcher'));
           const students = sortMembersWithinSection(members.filter((m) => m.position === 'student'));
           const administrative = sortMembersWithinSection(members.filter((m) => m.position === 'Administrative'));
+          const alumni = sortMembersWithinSection(members.filter((m) => m.position === 'alumni' || m.position?.toLowerCase() === 'alumni'));
 
           const renderMemberCard = (member: TeamMember) => (
             <div key={member.id} className="bg-card border border-border rounded-xl p-4 shadow-sm">
@@ -759,6 +761,17 @@ function MembersView({
                   </div>
                 </div>
               )}
+
+              {alumni.length > 0 && (
+                <div>
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+                    Alumni ({alumni.length})
+                  </h3>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {alumni.map(renderMemberCard)}
+                  </div>
+                </div>
+              )}
             </div>
           );
         })()
@@ -842,7 +855,14 @@ function MembersView({
 
             <div>
               <Label htmlFor="position">Position *</Label>
-              <Select value={formData.position} onValueChange={(v) => setFormData({ ...formData, position: v as TeamMember['position'] })}>
+              <Select value={formData.position} onValueChange={(v) => {
+                const newPos = v as TeamMember['position'];
+                setFormData({
+                  ...formData,
+                  position: newPos,
+                  title: newPos === 'alumni' ? '' : formData.title
+                });
+              }}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select position (category)" />
                 </SelectTrigger>
@@ -857,22 +877,24 @@ function MembersView({
               <p className="text-xs text-muted-foreground mt-1">Determines the section on the team page</p>
             </div>
 
-            <div>
-              <Label htmlFor="title">Title *</Label>
-              <Select value={formData.title} onValueChange={(v) => setFormData({ ...formData, title: v })}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select title" />
-                </SelectTrigger>
-                <SelectContent>
-                  {TITLE_OPTIONS.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground mt-1">Academic/professional title</p>
-            </div>
+            {formData.position !== 'alumni' && (
+              <div>
+                <Label htmlFor="title">Title *</Label>
+                <Select value={formData.title} onValueChange={(v) => setFormData({ ...formData, title: v })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select title" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TITLE_OPTIONS.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground mt-1">Academic/professional title</p>
+              </div>
+            )}
 
             <div>
               <Label htmlFor="email">Email (Optional)</Label>

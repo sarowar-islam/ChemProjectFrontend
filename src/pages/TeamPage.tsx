@@ -37,8 +37,10 @@ export default function TeamPage() {
     sortMembersWithinSection(members.filter((m) => m.position === 'researcher')), [members]);
   const students = useMemo(() => 
     sortMembersWithinSection(members.filter((m) => m.position === 'student')), [members]);
-  const Administrative = useMemo(() => 
+  const Administrative = useMemo(() =>
     sortMembersWithinSection(members.filter((m) => m.position === 'Administrative')), [members]);
+  const alumni = useMemo(() =>
+    sortMembersWithinSection(members.filter((m) => m.position === 'alumni' || m.position?.toLowerCase() === 'alumni')), [members]);
 
   return (
     <div>
@@ -189,6 +191,17 @@ export default function TeamPage() {
                 icon={<Wrench className="w-5 h-5" />}
                 members={Administrative}
                 startIndex={teamLeaders.length + faculty.length + researchers.length + students.length}
+              />
+            )}
+
+            {/* Alumni */}
+            {alumni.length > 0 && (
+              <TeamSection
+                title="Alumni"
+                subtitle="Former members of our research group"
+                icon={<GraduationCap className="w-5 h-5" />}
+                members={alumni}
+                startIndex={teamLeaders.length + faculty.length + researchers.length + students.length + Administrative.length}
               />
             )}
           </div>

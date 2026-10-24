@@ -14,7 +14,7 @@ export interface TeamMember {
   email: string;
   securityCode?: string;
   phone?: string;
-  position: 'team_leader' | 'faculty' | 'researcher' | 'student' | 'Administrative';
+  position: 'team_leader' | 'faculty' | 'researcher' | 'student' | 'Administrative' | 'alumni';
   title: string;
   researchArea: string;
   bio: string;

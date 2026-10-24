@@ -32,6 +32,13 @@ export default function HomePage() {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
@@ -96,9 +103,13 @@ export default function HomePage() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                <Link to="/projects" className="inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-medium rounded-lg shadow-lg shadow-accent/25 text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 transition-colors group">
+                <button
+                  type="button"
+                  onClick={() => scrollToSection('research-focus-section')}
+                  className="inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-medium rounded-lg shadow-lg shadow-accent/25 text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 transition-colors group cursor-pointer"
+                >
                   Explore Research <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
-                </Link>
+                </button>
                 <Link to="/team" className="inline-flex items-center justify-center gap-2 border-2 border-accent text-accent hover:bg-accent/10 font-medium rounded-lg text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 transition-colors">
                   <Users className="w-4 h-4 sm:w-5 sm:h-5" /> Meet Our Team
                 </Link>
@@ -213,7 +224,7 @@ export default function HomePage() {
                 </p>
               )}
 
-              <div className="grid sm:grid-cols-2 gap-4 mb-4">
+              {/* <div className="grid sm:grid-cols-2 gap-4 mb-4">
                 <Link to="/projects" className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border hover:border-accent/30 hover:shadow-sm transition-all duration-300">
                   <div className="p-2 rounded-lg bg-secondary text-secondary-foreground">
                     <Target className="w-5 h-5" />
@@ -232,7 +243,7 @@ export default function HomePage() {
                     <p className="text-sm text-muted-foreground">Clean water and environment for all</p>
                   </div>
                 </Link>
-              </div>
+              </div> */}
 
               <Link to="/publications" className="inline-flex items-center gap-2 text-accent font-semibold hover:text-accent/80 transition-all group">
                 View Our Publications <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -243,7 +254,7 @@ export default function HomePage() {
       </section>
 
       {/* Research Focus - Enhanced */}
-      <section className="py-12 md:py-16 bg-secondary relative overflow-hidden">
+      <section id="research-focus-section" className="py-12 md:py-16 bg-secondary relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%230891B2\" fill-opacity=\"0.35\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
         </div>

@@ -6,6 +6,7 @@ const POSITION_ORDER: Record<TeamMember['position'], number> = {
   researcher: 3,
   student: 4,
   Administrative: 5,
+  alumni: 6,
 };
 
 const TITLE_RANK: Record<string, number> = {
