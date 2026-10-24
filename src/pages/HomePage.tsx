@@ -219,9 +219,23 @@ export default function HomePage() {
                   dangerouslySetInnerHTML={{ __html: linkifyHtml(aboutUs) }}
                 />
               ) : (
-                <p className="text-muted-foreground text-lg leading-relaxed mb-4">
-                  Welcome to Yunus Ahmed Lab at CUET. Our research group is dedicated to advancing the frontiers of chemistry through innovative approaches in environmental remediation, resource recovery, nanomaterials, and cutting-edge wastewater treatment technologies for sustainable development.
-                </p>
+                <div className="space-y-4 text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
+                  <p>
+                    Welcome to the Biochemical and Environmental Research Lab (BCERL)! Led by Professor Dr. Yunus Ahmed, our interdisciplinary research group is dedicated to pioneering sustainable, cutting-edge solutions for environmental remediation and public health protection. We bridge advanced oxidation processes (AOPs), functional nanomaterials, molecular diagnostics, and artificial intelligence to combat critical global challenges, including emerging water contaminants and antimicrobial resistance (AMR).
+                  </p>
+                  <div>
+                    <p className="font-semibold text-foreground mb-2">Through our website, you can explore:</p>
+                    <ul className="list-disc pl-5 space-y-1.5">
+                      <li><strong className="text-foreground">Research Projects:</strong> Discover our active, grant-funded initiatives focused on wastewater treatment, photocatalysis, and sensor development.</li>
+                      <li><strong className="text-foreground">Publications:</strong> Browse our latest high-impact peer-reviewed journal articles, book chapters, and research breakthroughs.</li>
+                      <li><strong className="text-foreground">Team Members:</strong> Meet our dynamic team of faculty, researchers, postgraduate scholars, and undergraduate students driving our laboratory discoveries.</li>
+                      <li><strong className="text-foreground">News & Notices:</strong> Stay updated on our latest lab achievements, thesis defenses, events, workshops, and official announcements.</li>
+                    </ul>
+                  </div>
+                  <p>
+                    We invite you to explore our work and connect with us for collaborative opportunities!
+                  </p>
+                </div>
               )}
 
               {/* <div className="grid sm:grid-cols-2 gap-4 mb-4">
