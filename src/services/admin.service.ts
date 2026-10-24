@@ -93,6 +93,7 @@ export const adminService = {
   createNotice: noticeService.createNotice.bind(noticeService),
   updateNotice: noticeService.updateNotice.bind(noticeService),
   deleteNotice: noticeService.deleteNotice.bind(noticeService),
+  uploadNoticeFile: noticeService.uploadNoticeFile.bind(noticeService),
 
   // News management
   getNews: newsService.getNews.bind(newsService),

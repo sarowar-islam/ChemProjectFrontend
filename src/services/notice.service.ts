@@ -1,6 +1,8 @@
 import { apiRequest } from '@/lib/api';
 import { Notice, ApiResponse } from './types';
 
+const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+
 export const noticeService = {
   async getNotices(): Promise<ApiResponse<Notice[]>> {
     const response = await apiRequest<Notice[]>({
@@ -81,5 +83,25 @@ export const noticeService = {
     }
 
     return { success: true };
+  },
+
+  async uploadNoticeFile(file: File): Promise<ApiResponse<{ fileUrl: string }>> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch(`${baseUrl}/upload/notice-file`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        return { success: false, error: data.error || 'Failed to upload notice file' };
+      }
+      return { success: true, data: { fileUrl: data.fileUrl } };
+    } catch (error) {
+      return { success: false, error: 'Network error uploading notice file' };
+    }
   },
 };

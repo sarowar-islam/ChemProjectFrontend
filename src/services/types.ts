@@ -48,9 +48,11 @@ export interface Publication {
 export interface Notice {
   id: string;
   title: string;
-  content: string;
+  publishedBy: string;
+  fileUrl?: string;
   date: string;
-  priority: 'normal' | 'important';
+  content?: string;
+  priority?: 'normal' | 'important';
 }
 
 export interface News {

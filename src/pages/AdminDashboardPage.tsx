@@ -1027,16 +1027,19 @@ function NoticesView({
   const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
   const [formData, setFormData] = useState({
     title: '',
-    content: '',
+    publishedBy: 'Department of Chemistry, CUET',
+    fileUrl: '',
     priority: 'normal' as 'normal' | 'important',
   });
+  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const openAddModal = () => {
     setEditingNotice(null);
     setFormData({
       title: '',
-      content: '',
+      publishedBy: 'Department of Chemistry, CUET',
+      fileUrl: '',
       priority: 'normal',
     });
     setIsModalOpen(true);
@@ -1046,28 +1049,56 @@ function NoticesView({
     setEditingNotice(notice);
     setFormData({
       title: notice.title,
-      content: notice.content,
-      priority: notice.priority,
+      publishedBy: notice.publishedBy || 'Department of Chemistry, CUET',
+      fileUrl: notice.fileUrl || '',
+      priority: notice.priority || 'normal',
     });
     setIsModalOpen(true);
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const res = await adminService.uploadNoticeFile(file);
+      if (res.success && res.data?.fileUrl) {
+        setFormData({ ...formData, fileUrl: res.data.fileUrl });
+        toast({ title: 'Success', description: 'File uploaded successfully' });
+      } else {
+        toast({ title: 'Error', description: res.error || 'Failed to upload file', variant: 'destructive' });
+      }
+    } catch (error) {
+      toast({ title: 'Error', description: 'Error uploading file', variant: 'destructive' });
+    }
+    setUploading(false);
+  };
+
   const handleSave = async () => {
-    if (!formData.title || !formData.content) {
-      toast({ title: 'Error', description: 'Title and content are required', variant: 'destructive' });
+    if (!formData.title || !formData.publishedBy) {
+      toast({ title: 'Error', description: 'Notice Title and Published By are required', variant: 'destructive' });
       return;
     }
     setSaving(true);
     try {
+      const payload = {
+        title: formData.title,
+        publishedBy: formData.publishedBy,
+        fileUrl: formData.fileUrl,
+        content: formData.title, // fallback content
+        priority: formData.priority,
+      };
+
       if (editingNotice) {
-        const res = await adminService.updateNotice(editingNotice.id, formData);
+        const res = await adminService.updateNotice(editingNotice.id, payload);
         if (res.success) {
           toast({ title: 'Success', description: 'Notice updated successfully' });
         } else {
           toast({ title: 'Error', description: res.error || 'Failed to update notice', variant: 'destructive' });
         }
       } else {
-        const res = await adminService.createNotice(formData);
+        const res = await adminService.createNotice(payload);
         if (res.success) {
           toast({ title: 'Success', description: 'Notice created successfully' });
         } else {
@@ -1117,24 +1148,36 @@ function NoticesView({
           No notices yet. Click "Add Notice" to create one.
         </div>
       ) : (
-        <div className="space-y-4">
-          {notices.map((notice) => (
-            <div key={notice.id} className="bg-card border border-border rounded-xl p-4 flex items-start justify-between shadow-sm">
-              <div className="flex-1 min-w-0 mr-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-medium text-foreground">{notice.title}</h3>
-                  {notice.priority === 'important' && (
-                    <span className="px-2 py-0.5 rounded text-xs font-medium bg-[#FEE2E2] text-[#EF4444]">
-                      Important
-                    </span>
-                  )}
+        <div className="space-y-3">
+          {notices.map((notice, index) => (
+            <div key={notice.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between shadow-sm">
+              <div className="flex items-center gap-4 min-w-0 mr-4">
+                <span className="font-medium text-muted-foreground w-8 text-center">{index + 1}</span>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-medium text-foreground">{notice.title}</h3>
+                    {notice.priority === 'important' && (
+                      <span className="px-2 py-0.5 rounded text-xs font-medium bg-[#FEE2E2] text-[#EF4444]">
+                        Important
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Published By: <span className="font-medium text-foreground">{notice.publishedBy || 'Department of Chemistry'}</span> | {new Date(notice.date).toLocaleDateString()}
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground line-clamp-1">{notice.content}</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {new Date(notice.date).toLocaleDateString()}
-                </p>
               </div>
-              <div className="flex items-center gap-1 shrink-0">
+              <div className="flex items-center gap-2 shrink-0">
+                {notice.fileUrl && (
+                  <a
+                    href={notice.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#166534] text-white hover:bg-[#166534]/90 transition-all flex items-center gap-1 shadow-sm"
+                  >
+                    Details
+                  </a>
+                )}
                 <button onClick={() => openEditModal(notice)} className="p-2 hover:bg-secondary rounded-lg transition-colors">
                   <Edit className="w-4 h-4 text-muted-foreground" />
                 </button>
@@ -1154,12 +1197,50 @@ function NoticesView({
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <Label htmlFor="title" className="text-muted-foreground">Title *</Label>
-              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-card border-border text-foreground focus:border-primary" />
+              <Label htmlFor="title" className="text-muted-foreground">Notice Title *</Label>
+              <Input
+                id="title"
+                placeholder="e.g. Thesis Defense Schedule Fall 2026"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                className="bg-card border-border text-foreground focus:border-primary"
+              />
             </div>
             <div>
-              <Label htmlFor="content" className="text-muted-foreground">Content *</Label>
-              <Textarea id="content" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={4} className="bg-card border-border text-foreground focus:border-primary" />
+              <Label htmlFor="publishedBy" className="text-muted-foreground">Published By *</Label>
+              <Input
+                id="publishedBy"
+                placeholder="e.g. Department of Chemistry, CUET"
+                value={formData.publishedBy}
+                onChange={(e) => setFormData({ ...formData, publishedBy: e.target.value })}
+                className="bg-card border-border text-foreground focus:border-primary"
+              />
+            </div>
+            <div>
+              <Label className="text-muted-foreground">Notice File / Attachment (Image, PDF, Document)</Label>
+              <div className="mt-1 flex items-center gap-3">
+                <label className={`cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-secondary text-foreground text-sm font-medium rounded-lg hover:bg-secondary/80 transition-colors border border-border shadow-sm ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  {uploading ? 'Uploading...' : 'Choose File'}
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={handleFileUpload}
+                    disabled={uploading}
+                  />
+                </label>
+                {formData.fileUrl ? (
+                  <a
+                    href={formData.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-primary underline truncate max-w-[200px]"
+                  >
+                    View uploaded file
+                  </a>
+                ) : (
+                  <span className="text-xs text-muted-foreground">No file attached</span>
+                )}
+              </div>
             </div>
             <div>
               <Label htmlFor="priority" className="text-muted-foreground">Priority</Label>
@@ -1174,7 +1255,7 @@ function NoticesView({
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsModalOpen(false)} className="border-border text-muted-foreground hover:bg-secondary">Cancel</Button>
-            <Button onClick={handleSave} disabled={saving} className="bg-accent text-primary-foreground hover:bg-accent/90">
+            <Button onClick={handleSave} disabled={saving || uploading} className="bg-accent text-primary-foreground hover:bg-accent/90">
               {saving ? 'Saving...' : 'Save'}
             </Button>
           </DialogFooter>
