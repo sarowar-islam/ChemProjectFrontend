@@ -7,6 +7,11 @@ export interface User {
   role: 'admin' | 'member';
 }
 
+export interface SocialLink {
+  platform: string;
+  url: string;
+}
+
 export interface TeamMember {
   id: string;
   username: string;
@@ -20,6 +25,7 @@ export interface TeamMember {
   bio: string;
   photoUrl: string;
   googleScholarLink: string;
+  socialLinks?: SocialLink[];
   expertise: string[];
   joinedDate: string;
 }

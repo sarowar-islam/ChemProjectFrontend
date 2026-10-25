@@ -72,7 +72,7 @@ export default function TeamPage() {
 
       {/* Team Stats */}
       <section className="container-wide -mt-4 sm:-mt-10 relative z-10 mb-6 sm:mb-8">
-        <div className="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 max-w-3xl mx-auto">
           <button
             type="button"
             onClick={() => scrollToSection('team-leader-section')}
@@ -107,6 +107,18 @@ export default function TeamPage() {
             </div>
             <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{students.length}</div>
             <div className="text-[10px] sm:text-xs text-muted-foreground">Students</div>
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection('alumni-section')}
+            className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
+            style={{ animationDelay: '0.3s' }}
+          >
+            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
+              <Users className="w-4 h-4 sm:w-6 sm:h-6" />
+            </div>
+            <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{alumni.length}</div>
+            <div className="text-[10px] sm:text-xs text-muted-foreground">Alumni</div>
           </button>
         </div>
       </section>
@@ -196,13 +208,15 @@ export default function TeamPage() {
 
             {/* Alumni */}
             {alumni.length > 0 && (
-              <TeamSection
-                title="Alumni"
-                subtitle="Former members of our research group"
-                icon={<GraduationCap className="w-5 h-5" />}
-                members={alumni}
-                startIndex={teamLeaders.length + faculty.length + researchers.length + students.length + Administrative.length}
-              />
+              <div id="alumni-section">
+                <TeamSection
+                  title="Alumni"
+                  subtitle="Former members of our research group"
+                  icon={<GraduationCap className="w-5 h-5" />}
+                  members={alumni}
+                  startIndex={teamLeaders.length + faculty.length + researchers.length + students.length + Administrative.length}
+                />
+              </div>
             )}
           </div>
         )}

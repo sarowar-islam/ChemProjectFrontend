@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ExternalLink, Mail, Phone, BookOpen, GraduationCap, Calendar, MapPin, Award, Briefcase, RefreshCw, Quote, FileText } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Mail, Phone, BookOpen, GraduationCap, Calendar, MapPin, Award, Briefcase, RefreshCw, Quote, FileText, Globe, Linkedin, Facebook, Instagram, Twitter, Github, Youtube } from 'lucide-react';
 import { teamService } from '@/services/team.service';
 import { scholarService, ScholarPublication, ScholarProfile } from '@/services';
 import { TeamMember } from '@/services/types';
@@ -233,6 +233,35 @@ export default function MemberProfilePage() {
                       <BookOpen className="w-4 h-4" />
                       Google Scholar
                     </a>
+                  )}
+
+                  {/* Social Media Icons Row */}
+                  {member.socialLinks && member.socialLinks.length > 0 && (
+                    <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                      {member.socialLinks.map((link, index) => {
+                        const platformLower = link.platform.toLowerCase();
+                        let IconComponent = Globe;
+                        if (platformLower.includes('linkedin')) IconComponent = Linkedin;
+                        else if (platformLower.includes('facebook')) IconComponent = Facebook;
+                        else if (platformLower.includes('instagram')) IconComponent = Instagram;
+                        else if (platformLower.includes('twitter') || platformLower.includes('x')) IconComponent = Twitter;
+                        else if (platformLower.includes('github')) IconComponent = Github;
+                        else if (platformLower.includes('youtube')) IconComponent = Youtube;
+
+                        return (
+                          <a
+                            key={index}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={link.platform}
+                            className="p-2.5 rounded-full bg-secondary text-foreground hover:bg-accent hover:text-primary-foreground transition-all duration-300 shadow-sm border border-border"
+                          >
+                            <IconComponent className="w-4 h-4" />
+                          </a>
+                        );
+                      })}
+                    </div>
                   )}
                 </div>
 

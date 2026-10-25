@@ -23,13 +23,15 @@ import {
   ChevronRight,
   Eye,
   EyeOff,
+  Share2,
+  Trash2,
   Menu,
   XIcon,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { teamService } from '@/services/team.service';
 import { scholarService, ScholarPublication, ScholarProfile } from '@/services';
-import { TeamMember } from '@/services/types';
+import { TeamMember, SocialLink } from '@/services/types';
 import RichTextEditor from '@/components/RichTextEditor';
 import { stripHtml } from '@/lib/htmlUtils';
 
@@ -90,8 +92,23 @@ export default function MemberDashboardPage() {
   const [bio, setBio] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
   const [googleScholarLink, setGoogleScholarLink] = useState('');
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [expertise, setExpertise] = useState<string[]>([]);
   const [newExpertise, setNewExpertise] = useState('');
+
+  const handleAddSocialLink = () => {
+    setSocialLinks([...socialLinks, { platform: 'LinkedIn', url: '' }]);
+  };
+
+  const handleUpdateSocialLink = (index: number, field: 'platform' | 'url', value: string) => {
+    const updated = [...socialLinks];
+    updated[index][field] = value;
+    setSocialLinks(updated);
+  };
+
+  const handleRemoveSocialLink = (index: number) => {
+    setSocialLinks(socialLinks.filter((_, i) => i !== index));
+  };
 
   // Settings form state
   const [settingsName, setSettingsName] = useState('');
@@ -129,6 +146,7 @@ export default function MemberDashboardPage() {
         setBio(memberRes.data.bio);
         setPhotoUrl(memberRes.data.photoUrl);
         setGoogleScholarLink(memberRes.data.googleScholarLink);
+        setSocialLinks(memberRes.data.socialLinks || []);
         setExpertise(memberRes.data.expertise || []);
         setSettingsName(memberRes.data.name);
         setSettingsUsername(memberRes.data.username);
@@ -205,6 +223,7 @@ export default function MemberDashboardPage() {
       photoUrl,
       googleScholarLink,
       expertise,
+      socialLinks,
     });
 
     if (res.success && res.data) {
@@ -863,6 +882,65 @@ export default function MemberDashboardPage() {
                   <p className="text-xs text-muted-foreground mt-2">
                     Link to your Google Scholar profile to display your publications automatically.
                   </p>
+                </div>
+
+                {/* Social Media Links */}
+                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="font-heading text-lg text-foreground flex items-center gap-2">
+                      <Share2 className="w-5 h-5 text-accent" />
+                      Social Media Links
+                    </h2>
+                    <button
+                      type="button"
+                      onClick={handleAddSocialLink}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      Add Link
+                    </button>
+                  </div>
+
+                  {socialLinks.length === 0 ? (
+                    <p className="text-xs text-muted-foreground italic">No social media links added yet. Click "Add Link" to add your LinkedIn, Facebook, Instagram, etc.</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {socialLinks.map((link, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <select
+                            value={link.platform}
+                            onChange={(e) => handleUpdateSocialLink(index, 'platform', e.target.value)}
+                            className="bg-card border border-border rounded-lg px-3 py-2 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary w-36"
+                          >
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Twitter">Twitter / X</option>
+                            <option value="GitHub">GitHub</option>
+                            <option value="YouTube">YouTube</option>
+                            <option value="ResearchGate">ResearchGate</option>
+                            <option value="Website">Website</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input
+                            type="url"
+                            value={link.url}
+                            onChange={(e) => handleUpdateSocialLink(index, 'url', e.target.value)}
+                            placeholder="https://..."
+                            className="flex-1 bg-card border border-border rounded-lg px-4 py-2 text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveSocialLink(index)}
+                            className="p-2 hover:bg-red-100 dark:hover:bg-red-950/30 text-red-500 rounded-lg transition-colors"
+                            title="Remove link"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Save Button */}
