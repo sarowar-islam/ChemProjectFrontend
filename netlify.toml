@@ -6,6 +6,19 @@
   NODE_VERSION = "20"
   VITE_API_BASE_URL = "https://chemprojectbackend.onrender.com/api"
 
+# Redirect old Netlify domain to new custom domain (bcerlab.com)
+[[redirects]]
+  from = "https://prof-dr-yunus-researchgroup.netlify.app/*"
+  to = "https://bcerlab.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://prof-dr-yunus-researchgroup.netlify.app/*"
+  to = "https://bcerlab.com/:splat"
+  status = 301
+  force = true
+
 # SPA redirect - Handle client-side routing
 # This ensures all routes work with React Router
 [[redirects]]
