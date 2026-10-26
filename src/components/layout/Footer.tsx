@@ -37,11 +37,13 @@ export function Footer() {
             <h4 className="font-heading text-lg mb-4 text-[#166534] dark:text-foreground">Quick Links</h4>
             <nav className="flex flex-col gap-2">
               {[
+                { label: 'Home', path: '/' },
                 { label: 'Research Projects', path: '/projects' },
                 { label: 'Publications', path: '/publications' },
-                { label: 'Our Team', path: '/team' },
                 { label: 'News', path: '/news' },
                 { label: 'Notices', path: '/notices' },
+                { label: 'Our Team', path: '/team' },
+                { label: 'Alumni', path: '/alumni' },
               ].map((link) => (
                 <Link
                   key={link.path}
