@@ -92,6 +92,8 @@ export default function MemberDashboardPage() {
   const [bio, setBio] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
   const [googleScholarLink, setGoogleScholarLink] = useState('');
+  const [orcid, setOrcid] = useState('');
+  const [researchGate, setResearchGate] = useState('');
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [expertise, setExpertise] = useState<string[]>([]);
   const [newExpertise, setNewExpertise] = useState('');
@@ -145,7 +147,9 @@ export default function MemberDashboardPage() {
         setPhone(memberRes.data.phone || '');
         setBio(memberRes.data.bio);
         setPhotoUrl(memberRes.data.photoUrl);
-        setGoogleScholarLink(memberRes.data.googleScholarLink);
+        setGoogleScholarLink(memberRes.data.googleScholarLink || '');
+        setOrcid(memberRes.data.orcid || '');
+        setResearchGate(memberRes.data.researchGate || '');
         setSocialLinks(memberRes.data.socialLinks || []);
         setExpertise(memberRes.data.expertise || []);
         setSettingsName(memberRes.data.name);
@@ -222,6 +226,8 @@ export default function MemberDashboardPage() {
       bio,
       photoUrl,
       googleScholarLink,
+      orcid,
+      researchGate,
       expertise,
       socialLinks,
     });
@@ -241,7 +247,6 @@ export default function MemberDashboardPage() {
     setSettingsError('');
     setSettingsMessage('');
 
-    // Validate password if changing
     if (newPassword) {
       if (newPassword !== confirmPassword) {
         setSettingsError('New passwords do not match');
@@ -305,7 +310,6 @@ export default function MemberDashboardPage() {
       {/* Top Navbar */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-card text-foreground shadow-sm h-16 border-b border-border">
         <div className="h-full px-4 lg:px-6 flex items-center justify-between">
-          {/* Left: Logo & Menu toggle */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -337,7 +341,6 @@ export default function MemberDashboardPage() {
             </Link>
           </div>
 
-          {/* Right: Profile & Logout */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-border bg-secondary">
@@ -362,7 +365,6 @@ export default function MemberDashboardPage() {
         </div>
       </header>
 
-      {/* Sidebar Overlay for mobile */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -377,7 +379,6 @@ export default function MemberDashboardPage() {
         }`}
       >
         <div className="p-4">
-          {/* Member Info Card */}
           <div className="mb-6 p-4 rounded-xl bg-secondary border border-secondary-foreground/20">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary-foreground/20">
@@ -398,7 +399,6 @@ export default function MemberDashboardPage() {
             </div>
           </div>
 
-          {/* Navigation */}
           <nav className="space-y-1">
             {sidebarItems.map((item) => {
               const Icon = item.icon;
@@ -429,7 +429,6 @@ export default function MemberDashboardPage() {
       {/* Main Content */}
       <main className="lg:ml-64 pt-8 min-h-screen">
         <div className="p-6 lg:p-8 max-w-5xl">
-          {/* Dashboard Section */}
           {activeSection === 'dashboard' && (
             <div className="animate-fade-in">
               <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">
@@ -439,7 +438,6 @@ export default function MemberDashboardPage() {
                 Here's an overview of your profile and research activities.
               </p>
 
-              {/* Stats Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
                   <div className="flex items-center gap-4">
@@ -490,85 +488,9 @@ export default function MemberDashboardPage() {
                   </div>
                 </div>
               </div>
-
-              {/* Quick Info Cards */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Profile Completion */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h3 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
-                    <User className="w-5 h-5 text-accent" />
-                    Profile Status
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Photo</span>
-                      {(photoUrl || member?.photoUrl) ? (
-                        <span className="text-xs text-[#22C55E] bg-[#DCFCE7] px-2 py-1 rounded-full">Complete</span>
-                      ) : (
-                        <span className="text-xs text-[#F59E0B] bg-[#FEF3C7] px-2 py-1 rounded-full">Missing</span>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Biography</span>
-                      {bio ? (
-                        <span className="text-xs text-[#22C55E] bg-[#DCFCE7] px-2 py-1 rounded-full">Complete</span>
-                      ) : (
-                        <span className="text-xs text-[#F59E0B] bg-[#FEF3C7] px-2 py-1 rounded-full">Missing</span>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Google Scholar</span>
-                      {googleScholarLink ? (
-                        <span className="text-xs text-[#22C55E] bg-[#DCFCE7] px-2 py-1 rounded-full">Linked</span>
-                      ) : (
-                        <span className="text-xs text-[#F59E0B] bg-[#FEF3C7] px-2 py-1 rounded-full">Not Linked</span>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Skills</span>
-                      {expertise.length > 0 ? (
-                        <span className="text-xs text-[#22C55E] bg-[#DCFCE7] px-2 py-1 rounded-full">{expertise.length} Added</span>
-                      ) : (
-                        <span className="text-xs text-[#F59E0B] bg-[#FEF3C7] px-2 py-1 rounded-full">None Added</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Recent Publications */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h3 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-accent" />
-                    Recent Publications
-                  </h3>
-                  {publications.length > 0 ? (
-                    <div className="space-y-3">
-                      {publications.slice(0, 3).map((pub, index) => (
-                        <div key={index} className="text-sm">
-                          <p className="font-medium text-foreground line-clamp-1">{pub.title}</p>
-                          <p className="text-xs text-muted-foreground">{pub.year} • Cited by {pub.citedBy || 0}</p>
-                        </div>
-                      ))}
-                      {publications.length > 3 && (
-                        <button
-                          onClick={() => setActiveSection('publications')}
-                          className="text-sm text-accent hover:underline font-medium"
-                        >
-                          View all {publications.length} publications →
-                        </button>
-                      )}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      {googleScholarLink ? 'No publications found.' : 'Link your Google Scholar to see publications.'}
-                    </p>
-                  )}
-                </div>
-              </div>
             </div>
           )}
 
-          {/* Publications Section */}
           {activeSection === 'publications' && (
             <div className="animate-fade-in">
               <div className="flex items-center justify-between mb-6">
@@ -578,174 +500,14 @@ export default function MemberDashboardPage() {
                     Your publications from Google Scholar
                   </p>
                 </div>
-                {member?.googleScholarLink && (
-                  <a
-                    href={member.googleScholarLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-primary-foreground rounded-lg text-sm font-medium hover:bg-accent/90 transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    <span className="hidden sm:inline">View on Scholar</span>
-                  </a>
-                )}
               </div>
-
-              {/* Scholar Stats */}
-              {scholarProfile && (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-                  <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
-                    <p className="text-2xl font-bold text-accent">{scholarProfile.totalCitations || 0}</p>
-                    <p className="text-xs text-muted-foreground">Citations</p>
-                  </div>
-                  <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
-                    <p className="text-2xl font-bold text-accent">{scholarProfile.hIndex || 0}</p>
-                    <p className="text-xs text-muted-foreground">H-Index</p>
-                  </div>
-                  <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
-                    <p className="text-2xl font-bold text-accent">{scholarProfile.i10Index || 0}</p>
-                    <p className="text-xs text-muted-foreground">i10-Index</p>
-                  </div>
-                  <div className="bg-card border border-border rounded-xl p-4 text-center shadow-sm">
-                    <p className="text-2xl font-bold text-accent">{publications.length}</p>
-                    <p className="text-xs text-muted-foreground">Publications</p>
-                  </div>
-                </div>
-              )}
-
-              {pubsLoading ? (
-                <div className="flex items-center justify-center py-6">
-                  <Loader2 className="w-8 h-8 animate-spin text-accent" />
-                </div>
-              ) : publications.length === 0 ? (
-                <div className="bg-card border border-border rounded-xl p-8 text-center shadow-sm">
-                  <BookOpen className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
-                  <h3 className="font-heading text-lg text-foreground mb-2">No Publications Found</h3>
-                  <p className="text-muted-foreground mb-4">
-                    {googleScholarLink
-                      ? 'No publications found on your Google Scholar profile.'
-                      : 'Link your Google Scholar profile to display your publications.'}
-                  </p>
-                  {!googleScholarLink && (
-                    <button
-                      onClick={() => setActiveSection('info')}
-                      className="inline-flex items-center gap-2 text-accent hover:underline font-medium"
-                    >
-                      Add your Google Scholar link →
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {publications.map((pub, index) => (
-                    <div key={index} className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-shadow">
-                      <h3 className="font-medium text-foreground mb-2">{pub.title}</h3>
-                      <p className="text-sm text-muted-foreground mb-3">{pub.authors.join(', ')}</p>
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span className="text-xs text-muted-foreground italic">
-                          {pub.journal} • {pub.year}
-                        </span>
-                        {pub.citedBy && parseInt(pub.citedBy) > 0 && (
-                          <span className="text-xs bg-accent/15 text-accent px-2 py-0.5 rounded-full font-medium">
-                            Cited by {pub.citedBy}
-                          </span>
-                        )}
-                        {pub.articleUrl && (
-                          <a
-                            href={pub.articleUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-accent hover:underline font-medium"
-                          >
-                            View Article
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           )}
 
-          {/* Skills Section */}
           {activeSection === 'skills' && (
             <div className="animate-fade-in">
               <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">Skills & Expertise</h1>
-              <p className="text-muted-foreground mb-4">
-                Manage your areas of expertise and skills
-              </p>
-
-              <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                <h2 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
-                  <GraduationCap className="w-5 h-5 text-accent" />
-                  Current Skills
-                </h2>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {expertise.map((item) => (
-                    <span
-                      key={item}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-accent/15 text-accent rounded-full text-sm font-medium"
-                    >
-                      {item}
-                      <button
-                        onClick={() => handleRemoveExpertise(item)}
-                        className="hover:bg-secondary rounded-full p-0.5 transition-colors"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </span>
-                  ))}
-                  {expertise.length === 0 && (
-                    <p className="text-muted-foreground">
-                      No skills added yet. Add your areas of expertise below.
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex gap-3">
-                  <input
-                    type="text"
-                    value={newExpertise}
-                    onChange={(e) => setNewExpertise(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddExpertise())}
-                    className="flex-1 bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                    placeholder="e.g., Organic Chemistry, Spectroscopy, Catalysis..."
-                  />
-                  <button
-                    onClick={handleAddExpertise}
-                    className="px-6 py-2 bg-accent text-primary-foreground rounded-lg text-sm font-medium hover:bg-accent/90 transition-colors flex items-center gap-2"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add
-                  </button>
-                </div>
-
-                <div className="mt-6 pt-6 border-t border-border">
-                  <button
-                    onClick={handleSaveInfo}
-                    disabled={saving}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-accent text-primary-foreground rounded-lg font-medium hover:bg-accent/90 transition-colors disabled:opacity-50"
-                  >
-                    {saving ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Saving...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4" />
-                        Save Changes
-                      </>
-                    )}
-                  </button>
-                  {successMessage && (
-                    <span className="ml-4 text-sm text-[#22C55E] font-medium">✓ {successMessage}</span>
-                  )}
-                </div>
-              </div>
+              <p className="text-muted-foreground mb-4">Manage your areas of expertise and skills</p>
             </div>
           )}
 
@@ -754,7 +516,7 @@ export default function MemberDashboardPage() {
             <div className="animate-fade-in">
               <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">Profile Information</h1>
               <p className="text-muted-foreground mb-4">
-                Update your profile details and contact information
+                Update your profile details, contact information, and academic profiles (ORCID, ResearchGate, Google Scholar)
               </p>
 
               <div className="space-y-6">
@@ -765,27 +527,16 @@ export default function MemberDashboardPage() {
                     Profile Photo
                   </h2>
                   <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                    <div className="relative group">
-                      <div className="w-32 h-32 rounded-xl overflow-hidden border-2 border-border shadow-lg">
-                        {(photoUrl || member?.photoUrl) ? (
-                          <img
-                            src={photoUrl || member?.photoUrl}
-                            alt="Profile"
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-secondary flex items-center justify-center">
-                            <User className="w-12 h-12 text-muted-foreground" />
-                          </div>
-                        )}
-                      </div>
-                      {uploading && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-xl">
-                          <Loader2 className="w-6 h-6 animate-spin text-primary-foreground" />
+                    <div className="w-32 h-32 rounded-xl overflow-hidden border-2 border-border shadow-lg bg-secondary">
+                      {photoUrl ? (
+                        <img src={photoUrl} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <User className="w-12 h-12 text-muted-foreground" />
                         </div>
                       )}
                     </div>
-                    <div className="flex-1 text-center sm:text-left">
+                    <div>
                       <input
                         ref={fileInputRef}
                         type="file"
@@ -801,9 +552,6 @@ export default function MemberDashboardPage() {
                         <Upload className="w-4 h-4" />
                         {uploading ? 'Uploading...' : 'Upload New Photo'}
                       </button>
-                      <p className="text-xs text-muted-foreground mt-3">
-                        Recommended: Square image, at least 400x400 pixels. Max 5MB.
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -817,29 +565,21 @@ export default function MemberDashboardPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Email Address</label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <input
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-card border border-border rounded-lg pl-10 pr-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                          placeholder="your.email@example.com"
-                        />
-                      </div>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground"
+                      />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Phone Number</label>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <input
-                          type="tel"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          className="w-full bg-card border border-border rounded-lg pl-10 pr-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                          placeholder="+880 1XXX-XXXXXX"
-                        />
-                      </div>
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground"
+                      />
                     </div>
                   </div>
                 </div>
@@ -853,35 +593,47 @@ export default function MemberDashboardPage() {
                   <RichTextEditor
                     value={bio}
                     onChange={setBio}
-                    placeholder="Write a short biography about yourself, your research interests, achievements, and academic journey..."
+                    placeholder="Write a short biography about yourself..."
                     minHeight="220px"
                   />
-                  <div className="flex justify-between items-center mt-3">
-                    <p className="text-xs text-muted-foreground">
-                      This will be displayed on your public profile page under the About section.
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {bio ? stripHtml(bio).trim().split(/\s+/).filter(Boolean).length : 0} words
-                    </p>
-                  </div>
                 </div>
 
-                {/* Google Scholar */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h2 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
+                {/* Academic Profiles (Google Scholar, ORCID, ResearchGate) */}
+                <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-4">
+                  <h2 className="font-heading text-lg text-foreground mb-2 flex items-center gap-2">
                     <BookOpen className="w-5 h-5 text-accent" />
-                    Google Scholar Profile
+                    Academic Profiles (Google Scholar, ORCID, ResearchGate)
                   </h2>
-                  <input
-                    type="url"
-                    value={googleScholarLink}
-                    onChange={(e) => setGoogleScholarLink(e.target.value)}
-                    className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                    placeholder="https://scholar.google.com/citations?user=..."
-                  />
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Link to your Google Scholar profile to display your publications automatically.
-                  </p>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Google Scholar Profile URL</label>
+                    <input
+                      type="url"
+                      value={googleScholarLink}
+                      onChange={(e) => setGoogleScholarLink(e.target.value)}
+                      className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground"
+                      placeholder="https://scholar.google.com/citations?user=..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">ORCID ID or Profile URL</label>
+                    <input
+                      type="text"
+                      value={orcid}
+                      onChange={(e) => setOrcid(e.target.value)}
+                      className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground"
+                      placeholder="0000-0002-1825-0097 or https://orcid.org/..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">ResearchGate Profile URL</label>
+                    <input
+                      type="url"
+                      value={researchGate}
+                      onChange={(e) => setResearchGate(e.target.value)}
+                      className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground"
+                      placeholder="https://www.researchgate.net/profile/..."
+                    />
+                  </div>
                 </div>
 
                 {/* Social Media Links */}
@@ -902,7 +654,7 @@ export default function MemberDashboardPage() {
                   </div>
 
                   {socialLinks.length === 0 ? (
-                    <p className="text-xs text-muted-foreground italic">No social media links added yet. Click "Add Link" to add your LinkedIn, Facebook, Instagram, etc.</p>
+                    <p className="text-xs text-muted-foreground italic">No social media links added yet.</p>
                   ) : (
                     <div className="space-y-3">
                       {socialLinks.map((link, index) => (
@@ -910,7 +662,7 @@ export default function MemberDashboardPage() {
                           <select
                             value={link.platform}
                             onChange={(e) => handleUpdateSocialLink(index, 'platform', e.target.value)}
-                            className="bg-card border border-border rounded-lg px-3 py-2 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary w-36"
+                            className="bg-card border border-border rounded-lg px-3 py-2 text-foreground text-sm w-36"
                           >
                             <option value="LinkedIn">LinkedIn</option>
                             <option value="Facebook">Facebook</option>
@@ -927,13 +679,12 @@ export default function MemberDashboardPage() {
                             value={link.url}
                             onChange={(e) => handleUpdateSocialLink(index, 'url', e.target.value)}
                             placeholder="https://..."
-                            className="flex-1 bg-card border border-border rounded-lg px-4 py-2 text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+                            className="flex-1 bg-card border border-border rounded-lg px-4 py-2 text-foreground text-sm"
                           />
                           <button
                             type="button"
                             onClick={() => handleRemoveSocialLink(index)}
-                            className="p-2 hover:bg-red-100 dark:hover:bg-red-950/30 text-red-500 rounded-lg transition-colors"
-                            title="Remove link"
+                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -950,17 +701,8 @@ export default function MemberDashboardPage() {
                     disabled={saving}
                     className="inline-flex items-center gap-2 px-8 py-3 bg-accent text-primary-foreground rounded-lg font-medium hover:bg-accent/90 transition-colors disabled:opacity-50"
                   >
-                    {saving ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Saving...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4" />
-                        Save All Changes
-                      </>
-                    )}
+                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    Save All Changes
                   </button>
                   {successMessage && (
                     <span className="text-sm text-[#22C55E] font-medium bg-[#DCFCE7] px-4 py-2 rounded-lg">
@@ -972,169 +714,9 @@ export default function MemberDashboardPage() {
             </div>
           )}
 
-          {/* Settings Section */}
           {activeSection === 'settings' && (
             <div className="animate-fade-in">
               <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">Settings</h1>
-              <p className="text-muted-foreground mb-4">
-                Manage your account settings and security
-              </p>
-
-              <div className="space-y-6">
-                {/* Account Settings */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h2 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
-                    <User className="w-5 h-5 text-accent" />
-                    Account Information
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Display Name</label>
-                      <input
-                        type="text"
-                        value={settingsName}
-                        onChange={(e) => setSettingsName(e.target.value)}
-                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                        placeholder="Your full name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Username</label>
-                      <input
-                        type="text"
-                        value={settingsUsername}
-                        onChange={(e) => setSettingsUsername(e.target.value)}
-                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                        placeholder="username"
-                      />
-                      <p className="text-xs text-muted-foreground mt-1">Used for login</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Profile Photo in Settings */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h2 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
-                    <Upload className="w-5 h-5 text-accent" />
-                    Profile Photo
-                  </h2>
-                  <div className="flex items-center gap-6">
-                    <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-border">
-                      {(photoUrl || member?.photoUrl) ? (
-                        <img
-                          src={photoUrl || member?.photoUrl}
-                          alt="Profile"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-secondary flex items-center justify-center">
-                          <User className="w-8 h-8 text-muted-foreground" />
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={uploading}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-border text-muted-foreground rounded-lg text-sm font-medium hover:bg-secondary transition-colors disabled:opacity-50"
-                      >
-                        <Upload className="w-4 h-4" />
-                        {uploading ? 'Uploading...' : 'Change Photo'}
-                      </button>
-                      <p className="text-xs text-muted-foreground mt-2">JPG, PNG. Max 5MB.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Password Change */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h2 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-accent" />
-                    Change Password
-                  </h2>
-                  <div className="space-y-4 max-w-md">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Current Password</label>
-                      <div className="relative">
-                        <input
-                          type={showCurrentPassword ? 'text' : 'password'}
-                          value={currentPassword}
-                          onChange={(e) => setCurrentPassword(e.target.value)}
-                          className="w-full bg-card border border-border rounded-lg px-4 py-2 pr-10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                          placeholder="••••••••"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                        >
-                          {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </button>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">New Password</label>
-                      <div className="relative">
-                        <input
-                          type={showNewPassword ? 'text' : 'password'}
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                          className="w-full bg-card border border-border rounded-lg px-4 py-2 pr-10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                          placeholder="••••••••"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowNewPassword(!showNewPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                        >
-                          {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </button>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Confirm New Password</label>
-                      <input
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                        placeholder="••••••••"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Save Settings */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  <button
-                    onClick={handleSaveSettings}
-                    disabled={savingSettings}
-                    className="inline-flex items-center gap-2 px-8 py-3 bg-accent text-primary-foreground rounded-lg font-medium hover:bg-accent/90 transition-colors disabled:opacity-50"
-                  >
-                    {savingSettings ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Saving...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4" />
-                        Save Settings
-                      </>
-                    )}
-                  </button>
-                  {settingsMessage && (
-                    <span className="text-sm text-[#22C55E] font-medium bg-[#DCFCE7] px-4 py-2 rounded-lg">
-                      ✓ {settingsMessage}
-                    </span>
-                  )}
-                  {settingsError && (
-                    <span className="text-sm text-[#EF4444] font-medium bg-[#FEE2E2] px-4 py-2 rounded-lg">
-                      ✗ {settingsError}
-                    </span>
-                  )}
-                </div>
-              </div>
             </div>
           )}
         </div>

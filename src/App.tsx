@@ -23,6 +23,8 @@ import ProjectsPage from "./pages/ProjectsPage";
 import PublicationsPage from "./pages/PublicationsPage";
 import TeamPage from "./pages/TeamPage";
 import MemberProfilePage from "./pages/MemberProfilePage";
+import AlumniPage from "./pages/AlumniPage";
+import AlumniDetailsPage from "./pages/AlumniDetailsPage";
 import NewsPage from "./pages/NewsPage";
 import NoticesPage from "./pages/NoticesPage";
 import NotFound from "./pages/NotFound";
@@ -43,6 +45,7 @@ import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AdminNewsEditPage from "./pages/AdminNewsEditPage";
 import AdminProjectEditPage from "./pages/AdminProjectEditPage";
 import MemberDashboardPage from "./pages/MemberDashboardPage";
+import AlumniDashboardPage from "./pages/AlumniDashboardPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -74,6 +77,8 @@ const App = () => (
                 <Route path="/publications/:slug" element={<PublicationDetailPage />} />
                 <Route path="/team" element={<TeamPage />} />
                 <Route path="/team/:username" element={<MemberProfilePage />} />
+                <Route path="/alumni" element={<AlumniPage />} />
+                <Route path="/alumni/:slug" element={<AlumniDetailsPage />} />
                 <Route path="/news" element={<NewsPage />} />
                 <Route path="/news/:slug" element={<NewsDetailPage />} />
                 <Route path="/research-focus/:id" element={<ResearchFocusDetailPage />} />
@@ -133,6 +138,16 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRole="member">
                     <MemberDashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Protected Alumni Routes */}
+              <Route
+                path="/alumni/dashboard"
+                element={
+                  <ProtectedRoute requiredRole="member">
+                    <AlumniDashboardPage />
                   </ProtectedRoute>
                 }
               />

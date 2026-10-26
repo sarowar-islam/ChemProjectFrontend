@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { authService } from '@/services/auth.service';
+import { teamService } from '@/services/team.service';
 import { useAuth } from '@/contexts/AuthContext';
 import { TeamMember } from '@/services/types';
 
@@ -32,7 +33,14 @@ export default function TeamLoginPage() {
 
   // Redirect if already logged in as member
   if (isMember) {
-    navigate('/member/dashboard');
+    // Check if alumni
+    teamService.getMemberByUsername(localStorage.getItem('auth_user') ? JSON.parse(localStorage.getItem('auth_user')!).username : '').then((res) => {
+      if (res.success && res.data && (res.data.position === 'alumni' || res.data.position?.toLowerCase() === 'alumni')) {
+        navigate('/alumni/dashboard');
+      } else {
+        navigate('/member/dashboard');
+      }
+    });
     return null;
   }
 
@@ -45,7 +53,13 @@ export default function TeamLoginPage() {
 
     if (res.success && res.user && res.token) {
       login(res.user, res.token);
-      navigate('/member/dashboard');
+      // Check if user is alumni
+      const memberRes = await teamService.getMemberByUsername(res.user.username);
+      if (memberRes.success && memberRes.data && (memberRes.data.position === 'alumni' || memberRes.data.position?.toLowerCase() === 'alumni')) {
+        navigate('/alumni/dashboard');
+      } else {
+        navigate('/member/dashboard');
+      }
     } else {
       setError(res.error || 'Login failed. Please try again.');
     }
@@ -108,15 +122,6 @@ export default function TeamLoginPage() {
     setResetStep('chooseOption');
     setResetMessage('We found your account. Choose how you want to verify your identity.');
     setIdentifierLoading(false);
-  };
-
-  const resetOptionState = () => {
-    setResetCode('');
-    setResetNewPassword('');
-    setResetConfirmPassword('');
-    setResetError('');
-    setResetMessage('');
-    setResetStep('enterCode');
   };
 
   const handleSelectEmailReset = async () => {
@@ -203,7 +208,7 @@ export default function TeamLoginPage() {
         <div className="absolute top-20 left-10 w-64 h-64 bg-accent/10 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
       </div>
-      
+
       <div className="w-full max-w-md relative z-10">
         <div className="bg-card rounded-2xl p-8 shadow-lg animate-fade-in-up border border-border">
           {/* Header */}
@@ -215,9 +220,9 @@ export default function TeamLoginPage() {
                 className="w-full h-full object-contain"
               />
             </div>
-            <h1 className="font-heading text-2xl font-bold text-foreground">Team Member Login</h1>
+            <h1 className="font-heading text-2xl font-bold text-foreground">Team Member & Alumni Login</h1>
             <p className="text-muted-foreground text-sm mt-2">
-              Access your member dashboard
+              Access your member or alumni dashboard
             </p>
           </div>
 
@@ -427,7 +432,7 @@ export default function TeamLoginPage() {
                       <button
                         type="button"
                         onClick={() => setShowResetNewPassword(!showResetNewPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                       >
                         {showResetNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -451,7 +456,7 @@ export default function TeamLoginPage() {
                       <button
                         type="button"
                         onClick={() => setShowResetConfirmPassword(!showResetConfirmPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                       >
                         {showResetConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -532,7 +537,7 @@ export default function TeamLoginPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -576,7 +581,7 @@ export default function TeamLoginPage() {
           {/* Footer */}
           <div className="mt-6 text-center">
             <p className="text-xs text-muted-foreground">
-              Research group members only. Contact admin for access.
+              Research group members & alumni only. Contact admin for access.
             </p>
           </div>
         </div>

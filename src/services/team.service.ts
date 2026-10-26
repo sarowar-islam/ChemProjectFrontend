@@ -43,7 +43,7 @@ export const teamService = {
 
   async updateMemberProfile(
     username: string,
-    updates: Partial<Pick<TeamMember, 'bio' | 'photoUrl' | 'googleScholarLink' | 'email' | 'phone' | 'expertise' | 'socialLinks'>>
+    updates: Partial<TeamMember>
   ): Promise<ApiResponse<TeamMember>> {
     const response = await apiRequest<TeamMember>({
       method: 'PUT',

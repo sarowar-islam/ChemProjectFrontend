@@ -22,19 +22,19 @@ export default function TeamPage() {
     },
   });
 
-  // Group and sort members by position and title seniority
-  const teamLeaders = useMemo(() => 
-    sortMembersWithinSection(members.filter((m) => m.position === 'team_leader')), [members]);
-  const faculty = useMemo(() => 
-    sortMembersWithinSection(members.filter((m) => m.position === 'faculty')), [members]);
-  const researchers = useMemo(() => 
-    sortMembersWithinSection(members.filter((m) => m.position === 'researcher')), [members]);
-  const students = useMemo(() => 
-    sortMembersWithinSection(members.filter((m) => m.position === 'student')), [members]);
+  // Group and sort members by position and title seniority (excluding alumni)
+  const activeMembers = useMemo(() => members.filter((m) => m.position !== 'alumni' && m.position?.toLowerCase() !== 'alumni'), [members]);
+
+  const teamLeaders = useMemo(() =>
+    sortMembersWithinSection(activeMembers.filter((m) => m.position === 'team_leader')), [activeMembers]);
+  const faculty = useMemo(() =>
+    sortMembersWithinSection(activeMembers.filter((m) => m.position === 'faculty')), [activeMembers]);
+  const researchers = useMemo(() =>
+    sortMembersWithinSection(activeMembers.filter((m) => m.position === 'researcher')), [activeMembers]);
+  const students = useMemo(() =>
+    sortMembersWithinSection(activeMembers.filter((m) => m.position === 'student')), [activeMembers]);
   const Administrative = useMemo(() =>
-    sortMembersWithinSection(members.filter((m) => m.position === 'Administrative')), [members]);
-  const alumni = useMemo(() =>
-    sortMembersWithinSection(members.filter((m) => m.position === 'alumni' || m.position?.toLowerCase() === 'alumni')), [members]);
+    sortMembersWithinSection(activeMembers.filter((m) => m.position === 'Administrative')), [activeMembers]);
 
   return (
     <div>
@@ -42,7 +42,7 @@ export default function TeamPage() {
       <section className="relative py-8 sm:py-10 md:py-14 overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
         <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-secondary/70 rounded-full blur-3xl" />
         <div className="absolute bottom-10 sm:bottom-20 left-10 sm:left-20 w-64 sm:w-96 h-64 sm:h-96 bg-secondary/55 rounded-full blur-3xl" />
-        
+
         <div className="container-wide relative">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#166534] dark:text-foreground mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
@@ -51,15 +51,25 @@ export default function TeamPage() {
             <p className="text-sm sm:text-lg md:text-xl text-muted-foreground animate-fade-in-up px-4 mb-4" style={{ animationDelay: '0.1s' }}>
               Meet the dedicated researchers and students driving our scientific discoveries and pushing the boundaries of chemistry.
             </p>
-            
-            <Link
-              to="/teamlogin"
-              className="group inline-flex items-center gap-2.5 px-6 py-3 bg-accent text-primary-foreground rounded-xl text-sm font-semibold shadow-lg hover:bg-accent/90 transition-all duration-300 hover:-translate-y-0.5 animate-fade-in-up"
-              style={{ animationDelay: '0.2s' }}
-            >
-              <LogIn className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-              Team Member Login
-            </Link>
+
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to="/teamlogin"
+                className="group inline-flex items-center gap-2.5 px-6 py-3 bg-accent text-primary-foreground rounded-xl text-sm font-semibold shadow-lg hover:bg-accent/90 transition-all duration-300 hover:-translate-y-0.5 animate-fade-in-up"
+                style={{ animationDelay: '0.2s' }}
+              >
+                <LogIn className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                Team Member Login
+              </Link>
+              <Link
+                to="/alumni"
+                className="group inline-flex items-center gap-2.5 px-6 py-3 bg-secondary text-secondary-foreground border border-border rounded-xl text-sm font-semibold shadow-sm hover:bg-secondary/80 transition-all duration-300 hover:-translate-y-0.5 animate-fade-in-up"
+                style={{ animationDelay: '0.25s' }}
+              >
+                <Users className="w-4 h-4 text-accent" />
+                View Alumni Directory
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -70,7 +80,7 @@ export default function TeamPage() {
           <button
             type="button"
             onClick={() => scrollToSection('team-leader-section')}
-            className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
+            className="bg-card rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
           >
             <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
               <GraduationCap className="w-4 h-4 sm:w-6 sm:h-6" />
@@ -81,7 +91,7 @@ export default function TeamPage() {
           <button
             type="button"
             onClick={() => scrollToSection('researchers-section')}
-            className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
+            className="bg-card rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
             style={{ animationDelay: '0.1s' }}
           >
             <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
@@ -93,7 +103,7 @@ export default function TeamPage() {
           <button
             type="button"
             onClick={() => scrollToSection('students-section')}
-            className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
+            className="bg-card rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
             style={{ animationDelay: '0.2s' }}
           >
             <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
@@ -104,15 +114,15 @@ export default function TeamPage() {
           </button>
           <button
             type="button"
-            onClick={() => scrollToSection('alumni-section')}
-            className="bg-card rounded-xl sm:rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
+            onClick={() => scrollToSection('administrative-section')}
+            className="bg-card rounded-xl p-3 sm:p-6 shadow-card border border-border text-center animate-fade-in-up hover:border-accent/40 hover:shadow-elevated transition-all duration-300 w-full"
             style={{ animationDelay: '0.3s' }}
           >
             <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center mx-auto mb-2 sm:mb-3">
-              <Users className="w-4 h-4 sm:w-6 sm:h-6" />
+              <Wrench className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
-            <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{alumni.length}</div>
-            <div className="text-[10px] sm:text-xs text-muted-foreground">Alumni</div>
+            <div className="font-heading text-lg sm:text-2xl font-bold text-accent">{Administrative.length}</div>
+            <div className="text-[10px] sm:text-xs text-muted-foreground">Administrative</div>
           </button>
         </div>
       </section>
@@ -129,7 +139,7 @@ export default function TeamPage() {
               </div>
             ))}
           </div>
-        ) : members.length === 0 ? (
+        ) : activeMembers.length === 0 ? (
           <div className="text-center py-10 bg-secondary rounded-3xl">
             <Users className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
             <h3 className="font-heading text-xl text-foreground mb-2">No team members found</h3>
@@ -140,11 +150,11 @@ export default function TeamPage() {
             {/* Team Leader */}
             {teamLeaders.length > 0 && (
               <div id="team-leader-section">
-                <TeamSection 
-                  title="Team Leader" 
+                <TeamSection
+                  title="Team Leader"
                   subtitle="Leading our research group"
                   icon={<Crown className="w-5 h-5" />}
-                  members={teamLeaders} 
+                  members={teamLeaders}
                   startIndex={0}
                   featured
                 />
@@ -153,11 +163,11 @@ export default function TeamPage() {
 
             {/* Faculty */}
             {faculty.length > 0 && (
-              <TeamSection 
-                title="Faculty" 
+              <TeamSection
+                title="Faculty"
                 subtitle="Leading our research initiatives"
                 icon={<GraduationCap className="w-5 h-5" />}
-                members={faculty} 
+                members={faculty}
                 startIndex={teamLeaders.length}
                 featured
               />
@@ -191,24 +201,13 @@ export default function TeamPage() {
 
             {/* Administrative */}
             {Administrative.length > 0 && (
-              <TeamSection
-                title="Administrative"
-                subtitle="Supporting our research operations"
-                icon={<Wrench className="w-5 h-5" />}
-                members={Administrative}
-                startIndex={teamLeaders.length + faculty.length + researchers.length + students.length}
-              />
-            )}
-
-            {/* Alumni */}
-            {alumni.length > 0 && (
-              <div id="alumni-section">
+              <div id="administrative-section">
                 <TeamSection
-                  title="Alumni"
-                  subtitle="Former members of our research group"
-                  icon={<GraduationCap className="w-5 h-5" />}
-                  members={alumni}
-                  startIndex={teamLeaders.length + faculty.length + researchers.length + students.length + Administrative.length}
+                  title="Administrative"
+                  subtitle="Supporting our research operations"
+                  icon={<Wrench className="w-5 h-5" />}
+                  members={Administrative}
+                  startIndex={teamLeaders.length + faculty.length + researchers.length + students.length}
                 />
               </div>
             )}
@@ -268,7 +267,7 @@ function MemberCard({ member, delay, featured }: { member: TeamMember; delay: st
       style={{ animationDelay: delay }}
     >
       <div className="absolute top-0 left-0 right-0 h-16 sm:h-24 bg-gradient-to-b from-secondary/80 to-transparent" />
-      
+
       <div className="relative text-center">
         <div className={`relative mx-auto mb-3 sm:mb-4 overflow-hidden rounded-full border-2 sm:border-4 border-white shadow-lg group-hover:border-[#15803D] transition-colors ${featured ? 'w-24 h-24 sm:w-36 sm:h-36' : 'w-20 h-20 sm:w-28 sm:h-28'}`}>
           <img
@@ -277,7 +276,7 @@ function MemberCard({ member, delay, featured }: { member: TeamMember; delay: st
             className="w-full h-full object-contain object-center [image-orientation:from-image] bg-secondary/35"
           />
         </div>
-        
+
         <h3 className={`font-heading font-semibold text-foreground group-hover:text-accent transition-colors ${featured ? 'text-base sm:text-xl' : 'text-sm sm:text-lg'}`}>
           {member.name}
         </h3>
@@ -300,7 +299,7 @@ function MemberCard({ member, delay, featured }: { member: TeamMember; delay: st
             />
           </div>
         )}
-        
+
         {member.researchArea && (
           <div className="mt-2 sm:mt-3 inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-secondary text-secondary-foreground text-[10px] sm:text-xs font-medium">
             {member.researchArea}

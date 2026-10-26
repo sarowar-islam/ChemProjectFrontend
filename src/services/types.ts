@@ -12,6 +12,23 @@ export interface SocialLink {
   url: string;
 }
 
+export interface CareerItem {
+  title: string;
+  organization: string;
+  startDate: string;
+  endDate?: string;
+  isCurrent?: boolean;
+  description?: string;
+}
+
+export interface EducationItem {
+  degree: string;
+  institution: string;
+  department?: string;
+  graduationYear?: string;
+  thesis?: string;
+}
+
 export interface TeamMember {
   id: string;
   username: string;
@@ -28,6 +45,23 @@ export interface TeamMember {
   socialLinks?: SocialLink[];
   expertise: string[];
   joinedDate: string;
+  // Alumni / Professional fields
+  currentTitle?: string;
+  currentOrganization?: string;
+  currentDepartment?: string;
+  location?: string;
+  currentPositionStartDate?: string;
+  currentPositionDescription?: string;
+  formerRole?: string;
+  labAffiliation?: string;
+  labContributions?: string;
+  orcid?: string;
+  researchGate?: string;
+  personalWebsite?: string;
+  isEmailPublic?: boolean;
+  isContactPublic?: boolean;
+  careerHistory?: CareerItem[];
+  education?: EducationItem[];
 }
 
 export interface Project {
