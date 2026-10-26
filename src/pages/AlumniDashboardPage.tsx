@@ -135,6 +135,9 @@ export default function AlumniDashboardPage() {
   const [location, setLocation] = useState('');
   const [currentPositionStartDate, setCurrentPositionStartDate] = useState('');
   const [currentPositionDescription, setCurrentPositionDescription] = useState('');
+  const [formerRole, setFormerRole] = useState('');
+  const [labAffiliation, setLabAffiliation] = useState('');
+  const [labContributions, setLabContributions] = useState('');
 
   // Career History state
   const [careerHistory, setCareerHistory] = useState<CareerItem[]>([]);
@@ -198,6 +201,36 @@ export default function AlumniDashboardPage() {
     return '';
   };
 
+  const applyMemberData = (m: TeamMember) => {
+    setMember(m);
+    setName(m.name || '');
+    setEmail(m.email || '');
+    setPhone(m.phone || '');
+    setBio(m.bio || '');
+    setPhotoUrl(m.photoUrl || '');
+    setGoogleScholarLink(m.googleScholarLink || '');
+    setOrcid(m.orcid || '');
+    setResearchGate(m.researchGate || '');
+    setPersonalWebsite(m.personalWebsite || '');
+    setSocialLinks(m.socialLinks || []);
+    setExpertise(m.expertise || []);
+    setResearchArea(m.researchArea || '');
+    setCurrentTitle(m.currentTitle || '');
+    setCurrentOrganization(m.currentOrganization || '');
+    setCurrentDepartment(m.currentDepartment || '');
+    setLocation(m.location || '');
+    setCurrentPositionStartDate(m.currentPositionStartDate || '');
+    setCurrentPositionDescription(m.currentPositionDescription || '');
+    setFormerRole(m.formerRole || '');
+    setLabAffiliation(m.labAffiliation || '');
+    setLabContributions(m.labContributions || '');
+    setCareerHistory(m.careerHistory || []);
+    setEducation(m.education || []);
+    setIsEmailPublic(m.isEmailPublic ?? true);
+    setIsContactPublic(m.isContactPublic ?? true);
+    setSettingsUsername(m.username || '');
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const uname = getUsername();
@@ -206,30 +239,7 @@ export default function AlumniDashboardPage() {
       const memberRes = await teamService.getMemberByUsername(uname);
       if (memberRes.success && memberRes.data) {
         const m = memberRes.data;
-        setMember(m);
-        setName(m.name || '');
-        setEmail(m.email || '');
-        setPhone(m.phone || '');
-        setBio(m.bio || '');
-        setPhotoUrl(m.photoUrl || '');
-        setGoogleScholarLink(m.googleScholarLink || '');
-        setOrcid(m.orcid || '');
-        setResearchGate(m.researchGate || '');
-        setPersonalWebsite(m.personalWebsite || '');
-        setSocialLinks(m.socialLinks || []);
-        setExpertise(m.expertise || []);
-        setResearchArea(m.researchArea || '');
-        setCurrentTitle(m.currentTitle || '');
-        setCurrentOrganization(m.currentOrganization || '');
-        setCurrentDepartment(m.currentDepartment || '');
-        setLocation(m.location || '');
-        setCurrentPositionStartDate(m.currentPositionStartDate || '');
-        setCurrentPositionDescription(m.currentPositionDescription || '');
-        setCareerHistory(m.careerHistory || []);
-        setEducation(m.education || []);
-        setIsEmailPublic(m.isEmailPublic ?? true);
-        setIsContactPublic(m.isContactPublic ?? true);
-        setSettingsUsername(m.username || '');
+        applyMemberData(m);
 
         if (m.googleScholarLink) {
           await fetchPublications(m.id);
@@ -288,6 +298,20 @@ export default function AlumniDashboardPage() {
     setSaving(true);
     setSuccessMessage('');
 
+    let currentCareerList = [...careerHistory];
+    if (newCareer.title.trim() && newCareer.organization.trim()) {
+      currentCareerList.push(newCareer);
+      setCareerHistory(currentCareerList);
+      setNewCareer({ title: '', organization: '', startDate: '', endDate: '', isCurrent: false, description: '' });
+    }
+
+    let currentEduList = [...education];
+    if (newEdu.degree.trim() && newEdu.institution.trim()) {
+      currentEduList.push(newEdu);
+      setEducation(currentEduList);
+      setNewEdu({ degree: '', institution: '', department: '', graduationYear: '', thesis: '' });
+    }
+
     const payload: Partial<TeamMember> = {
       name,
       email,
@@ -307,8 +331,11 @@ export default function AlumniDashboardPage() {
       location,
       currentPositionStartDate,
       currentPositionDescription,
-      careerHistory,
-      education,
+      formerRole,
+      labAffiliation,
+      labContributions,
+      careerHistory: currentCareerList,
+      education: currentEduList,
       isEmailPublic,
       isContactPublic,
     };
@@ -317,8 +344,8 @@ export default function AlumniDashboardPage() {
       const res = await teamService.updateMemberProfile(uname, payload);
 
       if (res.success && res.data) {
-        setMember(res.data);
-        setSuccessMessage('Profile updated successfully!');
+        applyMemberData(res.data);
+        setSuccessMessage('Profile updated and saved to database successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
       } else {
         const errorMsg = res.error || 'Failed to update profile in database.';
@@ -360,6 +387,9 @@ export default function AlumniDashboardPage() {
       location,
       currentPositionStartDate,
       currentPositionDescription,
+      formerRole,
+      labAffiliation,
+      labContributions,
       careerHistory,
       education,
       isEmailPublic,
@@ -369,8 +399,8 @@ export default function AlumniDashboardPage() {
     try {
       const res = await teamService.updateMemberProfile(uname, payload);
       if (res.success && res.data) {
-        setMember(res.data);
-        setSuccessMessage('Saved successfully!');
+        applyMemberData(res.data);
+        setSuccessMessage('Saved to database successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
       } else {
         const errorMsg = res.error || 'Failed to save to database.';
