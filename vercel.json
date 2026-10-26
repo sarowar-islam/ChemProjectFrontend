@@ -4,6 +4,28 @@
   "framework": "vite",
   "rewrites": [
     {
+      "source": "/team/:username",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(WhatsApp|facebookexternalhit|Twitterbot|LinkedInBot|TelegramBot|Slackbot|Discordbot|Applebot)"
+        }
+      ],
+      "destination": "https://chemprojectbackend.onrender.com/api/members/og/:username"
+    },
+    {
+      "source": "/alumni/:username",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(WhatsApp|facebookexternalhit|Twitterbot|LinkedInBot|TelegramBot|Slackbot|Discordbot|Applebot)"
+        }
+      ],
+      "destination": "https://chemprojectbackend.onrender.com/api/members/og/:username"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "https://chemprojectbackend.onrender.com/api/sitemap.xml"
     },
