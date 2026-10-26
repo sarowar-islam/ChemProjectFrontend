@@ -300,12 +300,6 @@ function MemberCard({ member, delay, featured }: { member: TeamMember; delay: st
           </div>
         )}
 
-        {member.researchArea && (
-          <div className="mt-2 sm:mt-3 inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-secondary text-secondary-foreground text-[10px] sm:text-xs font-medium">
-            {member.researchArea}
-          </div>
-        )}
-
         {/* Expertise Tags */}
         {member.expertise && member.expertise.length > 0 && (
           <div className="mt-2 flex flex-wrap justify-center gap-1">

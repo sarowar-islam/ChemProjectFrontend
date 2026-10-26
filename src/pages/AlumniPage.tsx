@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Users, Search, GraduationCap, Building2, MapPin, ExternalLink, Briefcase, Linkedin, BookOpen, Globe } from 'lucide-react';
 import { teamService } from '@/services/team.service';
 import { TeamMember } from '@/services/types';
+import { sortAlumniByJoinDate } from '@/lib/memberSorting';
 import { useQuery } from '@tanstack/react-query';
 
 export default function AlumniPage() {
@@ -18,7 +19,8 @@ export default function AlumniPage() {
   });
 
   const alumniList = useMemo(() => {
-    return members.filter((m) => m.position === 'alumni' || m.position?.toLowerCase() === 'alumni');
+    const rawAlumni = members.filter((m) => m.position === 'alumni' || m.position?.toLowerCase() === 'alumni');
+    return sortAlumniByJoinDate(rawAlumni);
   }, [members]);
 
   const researchAreas = useMemo(() => {

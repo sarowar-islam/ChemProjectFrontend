@@ -182,18 +182,12 @@ export default function AlumniDetailsPage() {
             {/* 1. Center Photo */}
             <div className="relative mb-6">
               <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 border-card shadow-2xl bg-secondary relative group mx-auto">
-                {member.photoUrl && !imageError ? (
-                  <img
-                    src={member.photoUrl}
-                    alt={member.name}
-                    onError={() => setImageError(true)}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-accent to-[#166534] text-primary-foreground flex items-center justify-center font-heading text-5xl font-bold">
-                    {getInitials(member.name)}
-                  </div>
-                )}
+                <img
+                  src={!imageError && member.photoUrl ? member.photoUrl : '/photos/blank_profile.png'}
+                  alt={member.name}
+                  onError={() => setImageError(true)}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
               </div>
               <div className="absolute bottom-1 right-2 bg-accent text-primary-foreground p-2.5 rounded-full shadow-lg border-2 border-card">
                 <GraduationCap className="w-5 h-5" />

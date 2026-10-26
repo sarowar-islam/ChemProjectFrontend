@@ -113,3 +113,12 @@ export function sortMembersForAdmin(members: TeamMember[]): TeamMember[] {
     return compareByTitleAndDate(a, b);
   });
 }
+
+export function sortAlumniByJoinDate(members: TeamMember[]): TeamMember[] {
+  return [...members].sort((a, b) => {
+    const timeA = getJoinedTime(a.joinedDate);
+    const timeB = getJoinedTime(b.joinedDate);
+    if (timeA !== timeB) return timeA - timeB;
+    return a.name.localeCompare(b.name);
+  });
+}
