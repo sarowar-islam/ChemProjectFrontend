@@ -1,14 +1,13 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ExternalLink, FolderKanban, Beaker, Clock, CheckCircle2, Calendar, ArrowRight } from 'lucide-react';
 import { projectService } from '@/services/project.service';
 import { Project } from '@/services/types';
 import { stripHtml } from '@/lib/htmlUtils';
+import { useQuery } from '@tanstack/react-query';
 
 export default function ProjectsPage() {
   const navigate = useNavigate();
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'ongoing' | 'completed'>('all');
 
   const createSlug = (title: string) => {
@@ -16,17 +15,13 @@ export default function ProjectsPage() {
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   };
 
-  useEffect(() => {
-    const fetchProjects = async () => {
+  const { data: projects = [], isLoading: loading } = useQuery({
+    queryKey: ['projects'],
+    queryFn: async () => {
       const res = await projectService.getProjects();
-      if (res.success && res.data) {
-        setProjects(res.data);
-      }
-      setLoading(false);
-    };
-
-    fetchProjects();
-  }, []);
+      return res.success && res.data ? res.data : [];
+    },
+  });
 
   const filteredProjects = projects.filter((project) => {
     if (filter === 'all') return true;

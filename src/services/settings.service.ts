@@ -9,8 +9,6 @@ export interface SiteSettings {
   updatedAt: string;
 }
 
-const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
-
 export const settingsService = {
   async getSettings(): Promise<ApiResponse<SiteSettings>> {
     const response = await apiRequest<SiteSettings>({
@@ -50,20 +48,30 @@ export const settingsService = {
   async uploadHeroImage(file: File): Promise<ApiResponse<{ imageUrl: string }>> {
     const formData = new FormData();
     formData.append('file', file);
-    const token = localStorage.getItem('token');
-    try {
-      const response = await fetch(`${baseUrl}/upload/hero-image`, {
-        method: 'POST',
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        body: formData,
-      });
-      const data = await response.json();
-      if (!response.ok || !data.success) {
-        return { success: false, error: data.error || 'Failed to upload hero image' };
-      }
-      return { success: true, data: { imageUrl: data.imageUrl } };
-    } catch (error) {
-      return { success: false, error: 'Network error uploading hero image' };
+
+    const response = await apiRequest<{ success: boolean; imageUrl?: string; error?: string }>({
+      method: 'POST',
+      url: '/upload/hero-image',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (!response.success) {
+      return { success: false, error: response.error };
     }
+
+    const data = response.data;
+    if (data && data.success === false) {
+      return { success: false, error: data.error || 'Failed to upload hero image' };
+    }
+
+    const imageUrl = data.imageUrl || (typeof data === 'string' ? data : (data as any).url);
+    if (!imageUrl) {
+      return { success: false, error: 'Failed to upload hero image' };
+    }
+
+    return { success: true, data: { imageUrl } };
   },
 };

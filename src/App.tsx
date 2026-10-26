@@ -44,7 +44,16 @@ import AdminNewsEditPage from "./pages/AdminNewsEditPage";
 import AdminProjectEditPage from "./pages/AdminProjectEditPage";
 import MemberDashboardPage from "./pages/MemberDashboardPage";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 10,   // 10 minutes
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

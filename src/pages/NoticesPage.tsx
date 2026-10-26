@@ -1,28 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Bell, Search, ExternalLink, FileText } from 'lucide-react';
 import { noticeService } from '@/services/notice.service';
 import { Notice } from '@/services/types';
+import { useQuery } from '@tanstack/react-query';
 
 export default function NoticesPage() {
-  const [notices, setNotices] = useState<Notice[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    const fetchNotices = async () => {
+  const { data: notices = [], isLoading: loading } = useQuery({
+    queryKey: ['notices'],
+    queryFn: async () => {
       const res = await noticeService.getNotices();
       if (res.success && res.data) {
-        // Sort by date, newest first
-        const sorted = [...res.data].sort(
+        return [...res.data].sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
-        setNotices(sorted);
       }
-      setLoading(false);
-    };
-
-    fetchNotices();
-  }, []);
+      return [];
+    },
+  });
 
   const filteredNotices = notices.filter(
     (notice) =>

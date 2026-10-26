@@ -1,14 +1,12 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, GraduationCap, Microscope, BookUser, ExternalLink, LogIn, Crown, Wrench } from 'lucide-react';
 import { teamService } from '@/services/team.service';
 import { TeamMember } from '@/services/types';
 import { normalizeMemberTitle, sortMembersWithinSection } from '@/lib/memberSorting';
+import { useQuery } from '@tanstack/react-query';
 
 export default function TeamPage() {
-  const [members, setMembers] = useState<TeamMember[]>([]);
-  const [loading, setLoading] = useState(true);
-
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
@@ -16,17 +14,13 @@ export default function TeamPage() {
     }
   };
 
-  useEffect(() => {
-    const fetchMembers = async () => {
+  const { data: members = [], isLoading: loading } = useQuery({
+    queryKey: ['members'],
+    queryFn: async () => {
       const res = await teamService.getMembers();
-      if (res.success && res.data) {
-        setMembers(res.data);
-      }
-      setLoading(false);
-    };
-
-    fetchMembers();
-  }, []);
+      return res.success && res.data ? res.data : [];
+    },
+  });
 
   // Group and sort members by position and title seniority
   const teamLeaders = useMemo(() => 

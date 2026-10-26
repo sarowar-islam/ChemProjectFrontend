@@ -1,30 +1,25 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Newspaper, Calendar, User, ArrowRight } from 'lucide-react';
 import { newsService } from '@/services/news.service';
 import { News } from '@/services/types';
 import { stripHtml } from '@/lib/htmlUtils';
+import { useQuery } from '@tanstack/react-query';
 
 export default function NewsPage() {
   const navigate = useNavigate();
-  const [news, setNews] = useState<News[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchNews = async () => {
+  const { data: news = [], isLoading: loading } = useQuery({
+    queryKey: ['news'],
+    queryFn: async () => {
       const res = await newsService.getNews();
       if (res.success && res.data) {
-        // Sort by date, newest first
-        const sorted = [...res.data].sort(
+        return [...res.data].sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
-        setNews(sorted);
       }
-      setLoading(false);
-    };
-
-    fetchNews();
-  }, []);
+      return [];
+    },
+  });
 
   const createSlug = (title: string) => {
     if (!title) return '';

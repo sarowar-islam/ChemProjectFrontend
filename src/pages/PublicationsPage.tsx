@@ -1,16 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, ExternalLink, BookOpen, GraduationCap, Quote, Award, RefreshCw } from 'lucide-react';
 import { scholarService, ScholarPublication, ScholarProfile } from '@/services';
 import { settingsService } from '@/services/settings.service';
+import { useQuery } from '@tanstack/react-query';
 
 export default function PublicationsPage() {
   const navigate = useNavigate();
-  const [publications, setPublications] = useState<ScholarPublication[]>([]);
-  const [profile, setProfile] = useState<ScholarProfile | null>(null);
-  const [scholarUrl, setScholarUrl] = useState<string>('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'recent' | 'citations'>('recent');
 
@@ -19,38 +15,46 @@ export default function PublicationsPage() {
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   };
 
-  const fetchPublications = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
+  const { data: pubData, isLoading: loading, error: queryError, refetch: fetchPublications } = useQuery({
+    queryKey: ['publications-page'],
+    queryFn: async () => {
+      let url = '';
       const settingsRes = await settingsService.getSettings();
       if (settingsRes.success && settingsRes.data?.googleScholarUrl) {
-        setScholarUrl(settingsRes.data.googleScholarUrl);
+        url = settingsRes.data.googleScholarUrl;
       }
 
       const res = await scholarService.getMainPublications();
-
       if (res.success && res.data) {
         if (res.data.success) {
-          setPublications(res.data.publications || []);
-          setProfile(res.data.profile || null);
+          return {
+            scholarUrl: url,
+            publications: res.data.publications || [],
+            profile: res.data.profile || null,
+            error: null,
+          };
         } else {
-          setError(res.data.error || 'Failed to fetch publications');
+          return {
+            scholarUrl: url,
+            publications: [],
+            profile: null,
+            error: res.data.error || 'Failed to fetch publications',
+          };
         }
-      } else {
-        setError(res.error || 'Failed to fetch publications');
       }
-    } catch (err) {
-      setError('Failed to connect to server');
-    }
+      return {
+        scholarUrl: url,
+        publications: [],
+        profile: null,
+        error: 'Failed to fetch publications',
+      };
+    },
+  });
 
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchPublications();
-  }, []);
+  const publications = pubData?.publications || [];
+  const profile = pubData?.profile || null;
+  const scholarUrl = pubData?.scholarUrl || '';
+  const error = pubData?.error || (queryError ? 'Failed to connect to server' : null);
 
   const years = [...new Set(publications.map((p) => p.year).filter(Boolean))].sort((a, b) =>
     parseInt(b) - parseInt(a)
