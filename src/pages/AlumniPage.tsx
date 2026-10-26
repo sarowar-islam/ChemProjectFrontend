@@ -5,6 +5,7 @@ import { teamService } from '@/services/team.service';
 import { TeamMember } from '@/services/types';
 import { sortAlumniByJoinDate } from '@/lib/memberSorting';
 import { useQuery } from '@tanstack/react-query';
+import { SEO } from '@/components/SEO';
 
 export default function AlumniPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -49,6 +50,11 @@ export default function AlumniPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Alumni Directory"
+        description="Explore the professional directory of former lab members of Biochemical and Environmental Research Lab (BCER Lab)."
+        canonicalPath="/alumni"
+      />
       {/* Hero Section */}
       <section className="relative py-10 sm:py-14 md:py-16 overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
         <div className="absolute top-10 right-20 w-72 h-72 bg-secondary/70 rounded-full blur-3xl" />

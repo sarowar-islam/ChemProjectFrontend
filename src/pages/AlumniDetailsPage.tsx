@@ -30,6 +30,7 @@ import { teamService } from '@/services/team.service';
 import { scholarService, ScholarPublication, ScholarProfile } from '@/services';
 import { TeamMember } from '@/services/types';
 import { linkifyHtml } from '@/lib/htmlUtils';
+import { SEO } from '@/components/SEO';
 
 type PortfolioTab =
   | 'overview'
@@ -158,6 +159,32 @@ export default function AlumniDetailsPage() {
 
   return (
     <div className="min-h-screen bg-background pb-28">
+      <SEO
+        title={member ? `${member.name} - Alumni Portfolio` : 'Alumni Portfolio'}
+        description={member ? `Professional academic portfolio of ${member.name}, alumnus of BCER Lab. ${member.currentTitle ? `Current position: ${member.currentTitle}` : ''}` : 'Alumni profile at BCER Lab.'}
+        canonicalPath={`/alumni/${slug}`}
+        image={member?.photoUrl || '/photos/bcerlab-og-image.png'}
+        type="profile"
+        schema={member ? {
+          "@context": "https://schema.org",
+          "@type": "ProfilePage",
+          "mainEntity": {
+            "@type": "Person",
+            "name": member.name,
+            "jobTitle": member.currentTitle || member.title,
+            "worksFor": {
+              "@type": "Organization",
+              "name": member.currentOrganization || "Research Institution"
+            },
+            "description": member.bio?.replace(/<[^>]*>/g, ''),
+            "image": member.photoUrl || "https://bcerlab.com/photos/blank_profile.png",
+            "alumniOf": {
+              "@type": "ResearchOrganization",
+              "name": "Biochemical and Environmental Research Lab (BCER Lab)"
+            }
+          }
+        } : undefined}
+      />
       {/* Top Header / Back Link */}
       <div className="bg-card/70 backdrop-blur-md border-b border-border sticky top-0 z-40">
         <div className="container-wide py-3.5 flex items-center justify-between">

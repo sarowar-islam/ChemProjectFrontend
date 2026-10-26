@@ -9,6 +9,7 @@ import { researchFocusService } from '@/services/researchFocus.service';
 import { Notice, News, ResearchFocus } from '@/services/types';
 import HeroTitle from '@/components/HeroTitle';
 import { linkifyHtml } from '@/lib/htmlUtils';
+import { SEO } from '@/components/SEO';
 
 export default function HomePage() {
   const [stats, setStats] = useState({
@@ -74,8 +75,31 @@ export default function HomePage() {
     fetchData();
   }, []);
 
+  const homeSchema = {
+    "@context": "https://schema.org",
+    "@type": "ResearchOrganization",
+    "name": "Biochemical and Environmental Research Lab",
+    "alternateName": "BCER Lab",
+    "url": "https://bcerlab.com",
+    "logo": "https://bcerlab.com/photos/Logo.png",
+    "image": "https://bcerlab.com/photos/bcerlab-og-image.png",
+    "description": "Official research laboratory led by Professor Dr. Yunus Ahmed at CUET, specializing in environmental remediation, nanomaterials, and sustainable chemistry.",
+    "leader": {
+      "@type": "Person",
+      "name": "Professor Dr. Yunus Ahmed",
+      "jobTitle": "Professor"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Department of Chemistry",
+      "addressLocality": "Chittagong",
+      "addressCountry": "Bangladesh"
+    }
+  };
+
   return (
     <div>
+      <SEO schema={homeSchema} canonicalPath="/" />
       {/* Hero Section with Split Layout & Featured Images Slideshow */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
         {/* Floating Elements */}

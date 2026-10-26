@@ -1,4 +1,4 @@
-import { apiRequest } from '@/lib/api';
+import { apiRequest, API_BASE_URL } from '@/lib/api';
 import { TeamMember, ApiResponse } from './types';
 
 export const teamService = {
@@ -104,7 +104,7 @@ export const teamService = {
     formData.append('file', file);
 
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+      const baseUrl = API_BASE_URL;
       const token = localStorage.getItem('auth_token');
       
       const response = await fetch(`${baseUrl}/upload/member-photo/${username}`, {

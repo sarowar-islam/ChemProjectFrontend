@@ -5,6 +5,7 @@ import { teamService } from '@/services/team.service';
 import { scholarService, ScholarPublication, ScholarProfile } from '@/services';
 import { TeamMember } from '@/services/types';
 import { linkifyHtml } from '@/lib/htmlUtils';
+import { SEO } from '@/components/SEO';
 
 export default function MemberProfilePage() {
   const { username } = useParams<{ username: string }>();
@@ -147,6 +148,28 @@ export default function MemberProfilePage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={member ? `${member.name} - ${member.title}` : 'Team Member Profile'}
+        description={member ? (member.bio?.replace(/<[^>]*>/g, '').slice(0, 160) || `Research profile of ${member.name}, ${member.title} at BCER Lab.`) : 'Research team member profile at BCER Lab.'}
+        canonicalPath={`/team/${username}`}
+        image={member?.photoUrl || '/photos/bcerlab-og-image.png'}
+        type="profile"
+        schema={member ? {
+          "@context": "https://schema.org",
+          "@type": "ProfilePage",
+          "mainEntity": {
+            "@type": "Person",
+            "name": member.name,
+            "jobTitle": member.title,
+            "description": member.bio?.replace(/<[^>]*>/g, ''),
+            "image": member.photoUrl || "https://bcerlab.com/photos/blank_profile.png",
+            "worksFor": {
+              "@type": "ResearchOrganization",
+              "name": "Biochemical and Environmental Research Lab (BCER Lab)"
+            }
+          }
+        } : undefined}
+      />
       {/* Hero Banner */}
       <div className="bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
         <div className="container-wide py-4">

@@ -5,6 +5,7 @@ import { teamService } from '@/services/team.service';
 import { TeamMember } from '@/services/types';
 import { normalizeMemberTitle, sortMembersWithinSection } from '@/lib/memberSorting';
 import { useQuery } from '@tanstack/react-query';
+import { SEO } from '@/components/SEO';
 
 export default function TeamPage() {
   const scrollToSection = (sectionId: string) => {
@@ -38,6 +39,11 @@ export default function TeamPage() {
 
   return (
     <div>
+      <SEO
+        title="Our Research Team"
+        description="Meet the dedicated researchers, faculty, and students driving scientific discoveries at Biochemical and Environmental Research Lab (BCER Lab)."
+        canonicalPath="/team"
+      />
       {/* Hero Section */}
       <section className="relative py-8 sm:py-10 md:py-14 overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
         <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-secondary/70 rounded-full blur-3xl" />
