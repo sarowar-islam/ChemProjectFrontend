@@ -31,12 +31,12 @@ export function Header() {
                 className="w-full h-full object-contain"
               />
             </div>
-            <div className="hidden sm:flex flex-col leading-tight">
-              <span className="font-heading text-sm lg:text-base font-semibold text-foreground">
+            <div className="flex flex-col leading-tight">
+              <span className="font-heading text-[14px] sm:text-sm lg:text-base font-semibold text-foreground">
                 <span>Biochemical and </span>
                 <span className="text-[#15803D]">Environmental</span>
               </span>
-              <span className="text-[10px] lg:text-xs uppercase tracking-[0.35em] text-[#15803D] font-medium mt-0.5">
+              <span className="text-[10px] sm:text-[10px] lg:text-xs uppercase tracking-[0.25em] sm:tracking-[0.35em] text-[#15803D] font-medium mt-0.5">
                 Research Lab
               </span>
             </div>
