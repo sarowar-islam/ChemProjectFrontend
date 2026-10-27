@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Search, GraduationCap, Building2, MapPin, ExternalLink, Briefcase, Linkedin, BookOpen, Globe } from 'lucide-react';
+import { Users, Search, GraduationCap, Building2, MapPin, ExternalLink, Briefcase, Linkedin, BookOpen, Globe, LogIn } from 'lucide-react';
 import { teamService } from '@/services/team.service';
 import { TeamMember } from '@/services/types';
 import { sortAlumniByJoinDate } from '@/lib/memberSorting';
@@ -56,9 +56,24 @@ export default function AlumniPage() {
         canonicalPath="/alumni"
       />
       {/* Hero Section */}
-      <section className="relative py-10 sm:py-14 md:py-16 overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
+      <section className="relative py-12 sm:py-16 md:py-20 overflow-hidden bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
         <div className="absolute top-10 right-20 w-72 h-72 bg-secondary/70 rounded-full blur-3xl" />
         <div className="absolute bottom-10 left-20 w-96 h-96 bg-secondary/55 rounded-full blur-3xl" />
+
+        {/* Top Right Corner Action / Stats */}
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-8 flex items-center gap-3 z-20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-3 bg-card rounded-xl text-xs sm:text-sm font-semibold text-foreground shadow-card border border-border">
+            <Users className="w-4 h-4 text-accent" />
+            <span>{alumniList.length} Alumni</span>
+          </div>
+          <Link
+            to="/teamlogin"
+            className="group inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-accent text-primary-foreground rounded-xl text-xs sm:text-sm font-semibold shadow-lg hover:bg-accent/90 transition-all duration-300 hover:-translate-y-0.5"
+          >
+            <LogIn className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+            <span>Alumni Login</span>
+          </Link>
+        </div>
 
         <div className="container-wide relative">
           <div className="max-w-3xl mx-auto text-center">
