@@ -22,7 +22,11 @@ export default function HomePage() {
   const [recentNotices, setRecentNotices] = useState<Notice[]>([]);
   const [researchFocusList, setResearchFocusList] = useState<ResearchFocus[]>([]);
   const [aboutUs, setAboutUs] = useState<string>('');
-  const [heroImages, setHeroImages] = useState<string[]>([]);
+  const [heroImages, setHeroImages] = useState<string[]>([
+    '/Images/hero-image/1.jpg',
+    '/Images/hero-image/2.jpg',
+    '/Images/hero-image/3.jpg',
+  ]);
   const [loading, setLoading] = useState(true);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
