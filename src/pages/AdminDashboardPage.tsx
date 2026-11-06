@@ -92,10 +92,6 @@ export default function AdminDashboardPage() {
     if (tabParam && VALID_TABS.includes(tabParam)) {
       return tabParam;
     }
-    const saved = localStorage.getItem('admin_active_tab') as Tab | null;
-    if (saved && VALID_TABS.includes(saved)) {
-      return saved;
-    }
     return 'dashboard';
   };
 
@@ -103,7 +99,6 @@ export default function AdminDashboardPage() {
 
   const setActiveTab = (tab: Tab) => {
     setActiveTabState(tab);
-    localStorage.setItem('admin_active_tab', tab);
     setSearchParams(tab === 'dashboard' ? {} : { tab }, { replace: true });
   };
 
@@ -112,12 +107,13 @@ export default function AdminDashboardPage() {
     if (tabParam && VALID_TABS.includes(tabParam)) {
       if (tabParam !== activeTab) {
         setActiveTabState(tabParam);
-        localStorage.setItem('admin_active_tab', tabParam);
       }
-    } else if (!tabParam && activeTab !== 'dashboard') {
-      setSearchParams({ tab: activeTab }, { replace: true });
+    } else if (!tabParam) {
+      if (activeTab !== 'dashboard') {
+        setActiveTabState('dashboard');
+      }
     }
-  }, [searchParams, activeTab, setSearchParams]);
+  }, [searchParams, activeTab]);
 
   const [pendingBookings, setPendingBookings] = useState(() => instrumentService.getPendingCount());
   useEffect(() => {
@@ -334,15 +330,16 @@ function DashboardView({
     totalPublications: number;
     totalMembers: number;
     ongoingProjects: number;
+    totalAlumni: number;
   };
   loading: boolean;
 }) {
   return (
     <div>
       <h2 className="font-heading text-2xl text-foreground mb-6">Overview</h2>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
         {loading ? (
-          Array.from({ length: 4 }).map((_, i) => (
+          Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="bg-card border border-border rounded-xl p-6 animate-pulse shadow-sm">
               <div className="h-10 w-20 bg-secondary rounded mb-2" />
               <div className="h-4 w-24 bg-secondary rounded" />
@@ -365,6 +362,10 @@ function DashboardView({
             <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
               <div className="text-3xl font-bold text-accent mb-1">{stats.ongoingProjects}</div>
               <div className="text-sm text-muted-foreground">Ongoing Projects</div>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+              <div className="text-3xl font-bold text-accent mb-1">{stats.totalAlumni}</div>
+              <div className="text-sm text-muted-foreground">Alumni</div>
             </div>
           </>
         )}
