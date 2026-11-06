@@ -192,10 +192,10 @@ export function InstrumentCalendar({ instrument, events, loading, onSelectSlot }
                     <div
                       key={`${e.id}-${d.toDateString()}`}
                       className={cn(
-                        'absolute inset-x-1 rounded-md px-2 py-1 overflow-hidden text-[11px] leading-tight border',
+                        'absolute inset-x-1 rounded-md px-2 py-1 overflow-hidden text-[11px] leading-tight border shadow-sm',
                         blocked
-                          ? 'border-rose-300 dark:border-rose-500/40 text-rose-800 dark:text-rose-300'
-                          : 'bg-amber-100 dark:bg-amber-500/20 border-amber-300 dark:border-amber-500/40 text-amber-900 dark:text-amber-200'
+                          ? 'bg-rose-600 text-white font-semibold border-rose-700 dark:bg-rose-700 dark:border-rose-600'
+                          : 'bg-amber-500 text-amber-950 font-semibold border-amber-600 dark:bg-amber-600 dark:text-white dark:border-amber-500'
                       )}
                       style={{ top: pos.top + 1, height: pos.height, ...(blocked ? hatch : {}) }}
                       title={`${e.title}${e.subtitle ? ' – ' + e.subtitle : ''}\n${format(e.start, 'h:mm a')} – ${format(e.end, 'h:mm a')}`}
@@ -265,10 +265,10 @@ export function InstrumentCalendar({ instrument, events, loading, onSelectSlot }
                   <span
                     key={`${e.id}-${d.toDateString()}`}
                     className={cn(
-                      'w-full truncate rounded px-1.5 py-0.5 text-[10px] font-medium border',
+                      'w-full truncate rounded px-1.5 py-0.5 text-[10px] font-semibold border',
                       e.kind === 'unavailable'
-                        ? 'border-rose-300 dark:border-rose-500/40 text-rose-800 dark:text-rose-300'
-                        : 'bg-amber-100 dark:bg-amber-500/20 border-amber-300 dark:border-amber-500/40 text-amber-900 dark:text-amber-200'
+                        ? 'bg-rose-600 text-white border-rose-700 dark:bg-rose-700 dark:border-rose-600'
+                        : 'bg-amber-500 text-amber-950 border-amber-600 dark:bg-amber-600 dark:text-white dark:border-amber-500'
                     )}
                     style={e.kind === 'unavailable' ? hatch : undefined}
                   >
@@ -337,9 +337,9 @@ export function InstrumentCalendar({ instrument, events, loading, onSelectSlot }
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3 border-t border-border text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-2"><span className="w-3 h-3 rounded bg-emerald-500/20 border border-emerald-500/50" /> Available (click a slot to book)</span>
-        <span className="inline-flex items-center gap-2"><span className="w-3 h-3 rounded bg-amber-100 border border-amber-300" /> Reserved</span>
-        <span className="inline-flex items-center gap-2"><span className="w-3 h-3 rounded border border-rose-300" style={hatch} /> Unavailable</span>
-        <span className="inline-flex items-center gap-2"><span className="w-3 h-3 rounded bg-muted" /> Past</span>
+        <span className="inline-flex items-center gap-2"><span className="w-3 h-3 rounded bg-amber-500 border border-amber-600" /> Reserved</span>
+        <span className="inline-flex items-center gap-2"><span className="w-3 h-3 rounded bg-rose-600 border border-rose-700" style={hatch} /> Unavailable</span>
+        <span className="inline-flex items-center gap-2"><span className="w-3 h-3 rounded bg-muted border border-border" /> Past</span>
         <span className="ml-auto">
           Bookable {String(instrument.openingHour).padStart(2, '0')}:00 – {String(instrument.closingHour).padStart(2, '0')}:00
         </span>

@@ -176,9 +176,7 @@ export default function InstrumentDetailPage() {
 
                 <div>
                   <h2 className="font-heading text-2xl text-foreground mb-3">About this instrument</h2>
-                  <div className="space-y-3 text-muted-foreground leading-relaxed">
-                    {instrument.description.split('\n\n').map((p, i) => <p key={i}>{p}</p>)}
-                  </div>
+                  <div className="prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: instrument.description }} />
                 </div>
 
                 {instrument.features.length > 0 && (

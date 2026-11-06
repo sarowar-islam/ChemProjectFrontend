@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import RichTextEditor from '@/components/RichTextEditor';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
@@ -387,7 +388,7 @@ export function AdminInstrumentsView() {
               </div>
               <div className="space-y-1.5 sm:col-span-2">
                 <Label>Full description</Label>
-                <Textarea rows={4} value={form.description} onChange={(e) => setField('description', e.target.value)} placeholder="Separate paragraphs with a blank line." />
+                <RichTextEditor value={form.description} onChange={(val) => setField('description', val)} placeholder="Provide detailed description with formatting..." />
               </div>
               <div className="space-y-1.5"><Label>Manufacturer</Label><Input value={form.manufacturer} onChange={(e) => setField('manufacturer', e.target.value)} /></div>
               <div className="space-y-1.5"><Label>Model</Label><Input value={form.model} onChange={(e) => setField('model', e.target.value)} /></div>

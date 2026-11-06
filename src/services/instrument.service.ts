@@ -1,24 +1,9 @@
 /**
- * Instrument service.
+ * Instrument service - Backend Integration
  *
- * Every function returns the same `ApiResponse<T>` shape as the other services,
- * so pages never know where data comes from. For now the "database" is the
- * dummy data in `@/data/dummyinstrument`, persisted to localStorage so admin
- * actions (approve / reject / edit) survive a page refresh and show up on the
- * public calendar.
- *
- * BACKEND MIGRATION: replace each function body with an `apiRequest` call.
- * Suggested REST endpoints are noted above each function.
+ * All functions now connect to the real backend API endpoints.
  */
-import {
-  dummyInstrumentBookings,
-  dummyInstrumentCategories,
-  dummyInstrumentReviews,
-  dummyInstrumentRows,
-  dummyInstrumentSpecifications,
-  dummyInstrumentUnavailablePeriods,
-} from '@/data/dummyinstruments';
-import { overlaps, createInstrumentSlug } from '@/lib/instrumentUtils';
+import { apiRequest } from '@/lib/api';
 import {
   ApiResponse,
   BookingStatus,
@@ -28,289 +13,279 @@ import {
   InstrumentCalendarEvent,
   InstrumentCategory,
   InstrumentReview,
-  InstrumentSpecification,
   InstrumentStatus,
   InstrumentUnavailablePeriod,
 } from './types';
 
-type InstrumentRow = Omit<Instrument, 'specifications' | 'averageRating' | 'reviewCount'>;
-
-interface InstrumentDb {
-  instruments: InstrumentRow[];
-  specifications: InstrumentSpecification[];
-  bookings: InstrumentBooking[];
-  unavailablePeriods: InstrumentUnavailablePeriod[];
-  reviews: InstrumentReview[];
-}
-
-const STORAGE_KEY = 'bcer_instrument_db_v1';
 export const INSTRUMENTS_CHANGED_EVENT = 'bcer:instruments-changed';
 
-const seed = (): InstrumentDb => ({
-  instruments: structuredClone(dummyInstrumentRows),
-  specifications: structuredClone(dummyInstrumentSpecifications),
-  bookings: structuredClone(dummyInstrumentBookings),
-  unavailablePeriods: structuredClone(dummyInstrumentUnavailablePeriods),
-  reviews: structuredClone(dummyInstrumentReviews),
-});
-
-function loadDb(): InstrumentDb {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw) as InstrumentDb;
-  } catch {
-    /* fall through to seed */
+async function unwrap<T>(promise: Promise<{ success: true; data: any } | { success: false; error: string }>): Promise<ApiResponse<T>> {
+  const res = await promise;
+  if (!res.success) {
+    return { success: false, error: res.error };
   }
-  const db = seed();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-  return db;
-}
-
-function saveDb(db: InstrumentDb) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-  window.dispatchEvent(new Event(INSTRUMENTS_CHANGED_EVENT));
-}
-
-const delay = () => new Promise((r) => setTimeout(r, 120));
-const newId = (prefix: string) => `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
-
-function hydrate(db: InstrumentDb, row: InstrumentRow): Instrument {
-  const reviews = db.reviews.filter((r) => r.instrumentId === row.id);
-  const averageRating = reviews.length ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
-  return {
-    ...row,
-    specifications: db.specifications
-      .filter((s) => s.instrumentId === row.id)
-      .sort((a, b) => a.sortOrder - b.sortOrder),
-    averageRating,
-    reviewCount: reviews.length,
-  };
-}
-
-/** True if the window collides with an approved booking or an unavailable period. */
-function findConflict(db: InstrumentDb, instrumentId: string, startAt: string, endAt: string, ignoreBookingId?: string) {
-  const s = new Date(startAt);
-  const e = new Date(endAt);
-  const booking = db.bookings.find(
-    (b) =>
-      b.instrumentId === instrumentId &&
-      b.status === 'approved' &&
-      b.id !== ignoreBookingId &&
-      overlaps(s, e, new Date(b.startAt), new Date(b.endAt))
-  );
-  if (booking) return 'This time overlaps with an existing approved reservation.';
-  const block = db.unavailablePeriods.find(
-    (u) => u.instrumentId === instrumentId && overlaps(s, e, new Date(u.startAt), new Date(u.endAt))
-  );
-  if (block) return `The instrument is unavailable during this period (${block.reason}).`;
-  return null;
+  const payload = res.data;
+  if (payload && typeof payload === 'object' && 'success' in payload && 'data' in payload) {
+    return { success: true, data: payload.data };
+  }
+  return { success: true, data: payload };
 }
 
 export const instrumentService = {
-  // GET /instruments
+  // GET /api/instruments
   async getInstruments(): Promise<ApiResponse<Instrument[]>> {
-    await delay();
-    const db = loadDb();
-    return { success: true, data: db.instruments.map((r) => hydrate(db, r)) };
+    return unwrap<Instrument[]>(apiRequest({
+      method: 'GET',
+      url: '/instruments',
+    }));
   },
 
-  // GET /instruments/slug/:slug
+  // GET /api/instruments/slug/:slug
   async getInstrumentBySlug(slug: string): Promise<ApiResponse<Instrument>> {
-    await delay();
-    const db = loadDb();
-    const row = db.instruments.find((i) => i.slug === slug);
-    return row ? { success: true, data: hydrate(db, row) } : { success: false, error: 'Instrument not found' };
+    return unwrap<Instrument>(apiRequest({
+      method: 'GET',
+      url: `/instruments/slug/${slug}`,
+    }));
   },
 
-  // GET /instrument-categories
+  // GET /api/instrument-categories
   async getCategories(): Promise<ApiResponse<InstrumentCategory[]>> {
-    return { success: true, data: dummyInstrumentCategories };
+    return unwrap<InstrumentCategory[]>(apiRequest({
+      method: 'GET',
+      url: '/instrument-categories',
+    }));
   },
 
-  // POST /admin/instruments
+  // POST /api/admin/instruments
   async createInstrument(
     input: Omit<Instrument, 'id' | 'slug' | 'createdAt' | 'updatedAt' | 'averageRating' | 'reviewCount' | 'specifications'> & {
       specifications: { label: string; value: string }[];
     }
   ): Promise<ApiResponse<Instrument>> {
-    await delay();
-    const db = loadDb();
-    const { specifications, ...rest } = input;
-    let slug = createInstrumentSlug(rest.name);
-    if (db.instruments.some((i) => i.slug === slug)) slug = `${slug}-${Date.now().toString(36).slice(-3)}`;
-    const now = new Date().toISOString();
-    const row: InstrumentRow = { ...rest, id: newId('ins'), slug, createdAt: now, updatedAt: now };
-    db.instruments.push(row);
-    db.specifications.push(
-      ...specifications.map((s, i) => ({ id: newId('spec'), instrumentId: row.id, label: s.label, value: s.value, sortOrder: i }))
-    );
-    saveDb(db);
-    return { success: true, data: hydrate(db, row) };
+    const result = await unwrap<Instrument>(apiRequest({
+      method: 'POST',
+      url: '/admin/instruments',
+      data: input,
+    }));
+
+    if (result.success) {
+      window.dispatchEvent(new Event(INSTRUMENTS_CHANGED_EVENT));
+    }
+
+    return result;
   },
 
-  // PUT /admin/instruments/:id
+  // PUT /api/admin/instruments/:id
   async updateInstrument(
     id: string,
     updates: Partial<Omit<Instrument, 'id' | 'specifications'>> & { specifications?: { label: string; value: string }[] }
   ): Promise<ApiResponse<Instrument>> {
-    await delay();
-    const db = loadDb();
-    const idx = db.instruments.findIndex((i) => i.id === id);
-    if (idx === -1) return { success: false, error: 'Instrument not found' };
-    const { specifications, ...rest } = updates;
-    db.instruments[idx] = { ...db.instruments[idx], ...rest, updatedAt: new Date().toISOString() } as InstrumentRow;
-    if (specifications) {
-      db.specifications = db.specifications.filter((s) => s.instrumentId !== id);
-      db.specifications.push(
-        ...specifications.map((s, i) => ({ id: newId('spec'), instrumentId: id, label: s.label, value: s.value, sortOrder: i }))
-      );
+    const result = await unwrap<Instrument>(apiRequest({
+      method: 'PUT',
+      url: `/admin/instruments/${id}`,
+      data: updates,
+    }));
+
+    if (result.success) {
+      window.dispatchEvent(new Event(INSTRUMENTS_CHANGED_EVENT));
     }
-    saveDb(db);
-    return { success: true, data: hydrate(db, db.instruments[idx]) };
+
+    return result;
   },
 
-  // PATCH /admin/instruments/:id/status
+  // PATCH /api/admin/instruments/:id/status
   async updateStatus(id: string, status: InstrumentStatus): Promise<ApiResponse<Instrument>> {
-    return this.updateInstrument(id, { status });
-  },
+    const result = await unwrap<Instrument>(apiRequest({
+      method: 'PATCH',
+      url: `/admin/instruments/${id}/status`,
+      data: { status },
+    }));
 
-  // DELETE /admin/instruments/:id  (cascade bookings, reviews, specs, periods)
-  async deleteInstrument(id: string): Promise<ApiResponse<void>> {
-    await delay();
-    const db = loadDb();
-    db.instruments = db.instruments.filter((i) => i.id !== id);
-    db.specifications = db.specifications.filter((s) => s.instrumentId !== id);
-    db.bookings = db.bookings.filter((b) => b.instrumentId !== id);
-    db.reviews = db.reviews.filter((r) => r.instrumentId !== id);
-    db.unavailablePeriods = db.unavailablePeriods.filter((u) => u.instrumentId !== id);
-    saveDb(db);
-    return { success: true };
-  },
-
-  // POST /upload/instrument-image  (multipart; backend returns the stored URL)
-  async uploadInstrumentImage(file: File): Promise<ApiResponse<{ imageUrl: string }>> {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve({ success: true, data: { imageUrl: reader.result as string } });
-      reader.onerror = () => resolve({ success: false, error: 'Failed to read image' });
-      reader.readAsDataURL(file);
-    });
-  },
-
-  // GET /instruments/:id/calendar?from=&to=   (approved bookings + unavailable periods only)
-  async getCalendarEvents(instrumentId: string): Promise<ApiResponse<InstrumentCalendarEvent[]>> {
-    await delay();
-    const db = loadDb();
-    const bookings: InstrumentCalendarEvent[] = db.bookings
-      .filter((b) => b.instrumentId === instrumentId && b.status === 'approved')
-      .map((b) => ({
-        id: b.id,
-        instrumentId,
-        kind: 'booking',
-        title: 'Reserved',
-        subtitle: b.requesterName,
-        startAt: b.startAt,
-        endAt: b.endAt,
-      }));
-    const blocks: InstrumentCalendarEvent[] = db.unavailablePeriods
-      .filter((u) => u.instrumentId === instrumentId)
-      .map((u) => ({
-        id: u.id,
-        instrumentId,
-        kind: 'unavailable',
-        title: u.type === 'maintenance' ? 'Maintenance' : u.type === 'calibration' ? 'Calibration' : 'Closed',
-        subtitle: u.reason,
-        startAt: u.startAt,
-        endAt: u.endAt,
-      }));
-    return { success: true, data: [...bookings, ...blocks] };
-  },
-
-  // GET /instruments/:id/reviews
-  async getReviews(instrumentId: string): Promise<ApiResponse<InstrumentReview[]>> {
-    await delay();
-    const db = loadDb();
-    return {
-      success: true,
-      data: db.reviews
-        .filter((r) => r.instrumentId === instrumentId)
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
-    };
-  },
-
-  // POST /instrument-bookings   (always created with status "pending")
-  async createBooking(payload: CreateBookingPayload): Promise<ApiResponse<InstrumentBooking>> {
-    await delay();
-    const db = loadDb();
-    if (new Date(payload.endAt) <= new Date(payload.startAt)) {
-      return { success: false, error: 'End time must be after the start time.' };
+    if (result.success) {
+      window.dispatchEvent(new Event(INSTRUMENTS_CHANGED_EVENT));
     }
-    const conflict = findConflict(db, payload.instrumentId, payload.startAt, payload.endAt);
-    if (conflict) return { success: false, error: conflict };
-    const booking: InstrumentBooking = {
-      ...payload,
-      id: newId('bk'),
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-    };
-    db.bookings.push(booking);
-    saveDb(db);
-    return { success: true, data: booking };
+
+    return result;
   },
 
-  // GET /admin/instrument-bookings?status=
+  // DELETE /api/admin/instruments/:id
+  async deleteInstrument(id: string): Promise<ApiResponse<void>> {
+    const result = await unwrap<void>(apiRequest({
+      method: 'DELETE',
+      url: `/admin/instruments/${id}`,
+    }));
+
+    if (result.success) {
+      window.dispatchEvent(new Event(INSTRUMENTS_CHANGED_EVENT));
+    }
+
+    return result;
+  },
+
+  // POST /api/upload/instrument-image
+  async uploadInstrumentImage(file: File): Promise<ApiResponse<{ imageUrl: string }>> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await unwrap<{ imageUrl: string }>(apiRequest({
+      method: 'POST',
+      url: '/upload/instrument-image',
+      data: formData,
+    }));
+    return res;
+  },
+
+  // GET /api/instruments/:id/calendar
+  async getCalendarEvents(instrumentId: string): Promise<ApiResponse<InstrumentCalendarEvent[]>> {
+    return unwrap<InstrumentCalendarEvent[]>(apiRequest({
+      method: 'GET',
+      url: `/instruments/${instrumentId}/calendar`,
+    }));
+  },
+
+  // GET /api/instruments/:id/reviews
+  async getReviews(instrumentId: string): Promise<ApiResponse<InstrumentReview[]>> {
+    return unwrap<InstrumentReview[]>(apiRequest({
+      method: 'GET',
+      url: `/instruments/${instrumentId}/reviews`,
+    }));
+  },
+
+  // POST /api/instrument-bookings
+  async createBooking(payload: CreateBookingPayload): Promise<ApiResponse<InstrumentBooking>> {
+    const result = await unwrap<InstrumentBooking>(apiRequest({
+      method: 'POST',
+      url: '/instrument-bookings',
+      data: payload,
+    }));
+
+    if (result.success) {
+      window.dispatchEvent(new Event(INSTRUMENTS_CHANGED_EVENT));
+    }
+
+    return result;
+  },
+
+  // GET /api/admin/instrument-bookings?status=
   async getBookings(status?: BookingStatus): Promise<ApiResponse<InstrumentBooking[]>> {
-    await delay();
-    const db = loadDb();
-    const list = db.bookings
-      .filter((b) => !status || b.status === status)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    return { success: true, data: list };
+    const params = status ? { status } : {};
+    return unwrap<InstrumentBooking[]>(apiRequest({
+      method: 'GET',
+      url: '/admin/instrument-bookings',
+      params,
+    }));
   },
 
-  /** Synchronous count for the admin sidebar badge. */
-  getPendingCount(): number {
-    return loadDb().bookings.filter((b) => b.status === 'pending').length;
+  // GET /api/admin/instrument-bookings/pending-count
+  async getPendingCount(): Promise<number> {
+    const result = await unwrap<{ count: number }>(apiRequest({
+      method: 'GET',
+      url: '/admin/instrument-bookings/pending-count',
+    }));
+
+    if (result.success && result.data) {
+      return result.data.count;
+    }
+    return 0;
   },
 
-  /** Conflict message for a pending booking if approving it now would double-book. */
-  checkBookingConflict(booking: InstrumentBooking): string | null {
-    return findConflict(loadDb(), booking.instrumentId, booking.startAt, booking.endAt, booking.id);
+  // GET /api/admin/instrument-bookings/:id
+  async getBookingById(id: string): Promise<ApiResponse<InstrumentBooking>> {
+    return unwrap<InstrumentBooking>(apiRequest({
+      method: 'GET',
+      url: `/admin/instrument-bookings/${id}`,
+    }));
   },
 
-  // PATCH /admin/instrument-bookings/:id/approve
-  async approveBooking(id: string, reviewerId: string, adminNote?: string): Promise<ApiResponse<InstrumentBooking>> {
-    await delay();
-    const db = loadDb();
-    const idx = db.bookings.findIndex((b) => b.id === id);
-    if (idx === -1) return { success: false, error: 'Booking not found' };
-    const b = db.bookings[idx];
-    const conflict = findConflict(db, b.instrumentId, b.startAt, b.endAt, b.id);
-    if (conflict) return { success: false, error: conflict };
-    db.bookings[idx] = { ...b, status: 'approved', adminNote, reviewedBy: reviewerId, reviewedAt: new Date().toISOString() };
-    saveDb(db);
-    return { success: true, data: db.bookings[idx] };
+  // PATCH /api/admin/instrument-bookings/:id/approve
+  async approveBooking(id: string, adminNote?: string): Promise<ApiResponse<InstrumentBooking>> {
+    const result = await unwrap<InstrumentBooking>(apiRequest({
+      method: 'PATCH',
+      url: `/admin/instrument-bookings/${id}/approve`,
+      data: { adminNote },
+    }));
+
+    if (result.success) {
+      window.dispatchEvent(new Event(INSTRUMENTS_CHANGED_EVENT));
+    }
+
+    return result;
   },
 
-  // PATCH /admin/instrument-bookings/:id/reject
-  async rejectBooking(id: string, reviewerId: string, adminNote: string): Promise<ApiResponse<InstrumentBooking>> {
-    await delay();
-    const db = loadDb();
-    const idx = db.bookings.findIndex((b) => b.id === id);
-    if (idx === -1) return { success: false, error: 'Booking not found' };
-    db.bookings[idx] = { ...db.bookings[idx], status: 'rejected', adminNote, reviewedBy: reviewerId, reviewedAt: new Date().toISOString() };
-    saveDb(db);
-    return { success: true, data: db.bookings[idx] };
+  // PATCH /api/admin/instrument-bookings/:id/reject
+  async rejectBooking(id: string, adminNote: string): Promise<ApiResponse<InstrumentBooking>> {
+    const result = await unwrap<InstrumentBooking>(apiRequest({
+      method: 'PATCH',
+      url: `/admin/instrument-bookings/${id}/reject`,
+      data: { adminNote },
+    }));
+
+    if (result.success) {
+      window.dispatchEvent(new Event(INSTRUMENTS_CHANGED_EVENT));
+    }
+
+    return result;
   },
 
-  // DELETE /admin/instrument-bookings/:id  (cancel an approved booking, frees the slot)
-  async cancelBooking(id: string, reviewerId: string, adminNote?: string): Promise<ApiResponse<InstrumentBooking>> {
-    await delay();
-    const db = loadDb();
-    const idx = db.bookings.findIndex((b) => b.id === id);
-    if (idx === -1) return { success: false, error: 'Booking not found' };
-    db.bookings[idx] = { ...db.bookings[idx], status: 'cancelled', adminNote, reviewedBy: reviewerId, reviewedAt: new Date().toISOString() };
-    saveDb(db);
-    return { success: true, data: db.bookings[idx] };
+  // DELETE /api/admin/instrument-bookings/:id
+  async cancelBooking(id: string, adminNote?: string): Promise<ApiResponse<InstrumentBooking>> {
+    const result = await unwrap<InstrumentBooking>(apiRequest({
+      method: 'DELETE',
+      url: `/admin/instrument-bookings/${id}`,
+      data: { adminNote },
+    }));
+
+    if (result.success) {
+      window.dispatchEvent(new Event(INSTRUMENTS_CHANGED_EVENT));
+    }
+
+    return result;
+  },
+
+  // POST /api/instrument-reviews
+  async createReview(review: {
+    instrumentId: string;
+    bookingId?: string;
+    reviewerName: string;
+    reviewerAffiliation?: string;
+    rating: number;
+    comment: string;
+  }): Promise<ApiResponse<InstrumentReview>> {
+    return unwrap<InstrumentReview>(apiRequest({
+      method: 'POST',
+      url: '/instrument-reviews',
+      data: review,
+    }));
+  },
+
+  // POST /api/admin/instrument-categories
+  async createCategory(name: string): Promise<ApiResponse<InstrumentCategory>> {
+    return unwrap<InstrumentCategory>(apiRequest({
+      method: 'POST',
+      url: '/admin/instrument-categories',
+      data: { name },
+    }));
+  },
+
+  // POST /api/admin/instrument-unavailable-periods
+  async createUnavailablePeriod(period: Omit<InstrumentUnavailablePeriod, 'id'>): Promise<ApiResponse<InstrumentUnavailablePeriod>> {
+    return unwrap<InstrumentUnavailablePeriod>(apiRequest({
+      method: 'POST',
+      url: '/admin/instrument-unavailable-periods',
+      data: period,
+    }));
+  },
+
+  // DELETE /api/admin/instrument-unavailable-periods/:id
+  async deleteUnavailablePeriod(id: string): Promise<ApiResponse<void>> {
+    return unwrap<void>(apiRequest({
+      method: 'DELETE',
+      url: `/admin/instrument-unavailable-periods/${id}`,
+    }));
+  },
+
+  /** Conflict message check (backend validates on approve). */
+  checkBookingConflict(_booking: InstrumentBooking): string | null {
+    return null;
   },
 };
