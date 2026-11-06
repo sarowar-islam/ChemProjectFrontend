@@ -389,9 +389,36 @@ export default function MemberProfilePage() {
       <div className="container-wide py-10">
         <div className="max-w-4xl mx-auto">
 
+          
+          
           {/* 1. OVERVIEW TAB */}
           {activeTab === 'overview' && (
             <div className="space-y-8 animate-fade-in">
+              {/* Research Metrics Section */}
+              <div className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-card">
+                <h3 className="font-heading text-xl font-bold text-foreground mb-6 flex items-center gap-2.5">
+                  <Award className="w-5 h-5 text-accent" /> Research Metrics
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="p-4 rounded-2xl bg-secondary/50 border border-border text-center">
+                    <p className="text-2xl md:text-3xl font-bold text-accent mb-1">{publications.length}</p>
+                    <p className="text-xs text-muted-foreground font-medium">Publications</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-secondary/50 border border-border text-center">
+                    <p className="text-2xl md:text-3xl font-bold text-accent mb-1">{scholarProfile?.totalCitations || 0}</p>
+                    <p className="text-xs text-muted-foreground font-medium">Total Citations</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-secondary/50 border border-border text-center">
+                    <p className="text-2xl md:text-3xl font-bold text-accent mb-1">{scholarProfile?.hIndex || 0}</p>
+                    <p className="text-xs text-muted-foreground font-medium">h-index</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-secondary/50 border border-border text-center">
+                    <p className="text-2xl md:text-3xl font-bold text-accent mb-1">{scholarProfile?.i10Index || 0}</p>
+                    <p className="text-xs text-muted-foreground font-medium">i10-index</p>
+                  </div>
+                </div>
+              </div>
+              
               {/* Snapshot Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Current Role Snapshot */}
@@ -422,6 +449,8 @@ export default function MemberProfilePage() {
                   </div>
                 </div>
               </div>
+
+              
 
               {/* Bio Section */}
               <div className="bg-card border border-border rounded-3xl p-8 shadow-card">

@@ -101,34 +101,7 @@ export default function AlumniPage() {
 
       {/* Filters & Grid */}
       <section className="container-wide py-10 bg-background">
-        {/* Filter Pills */}
-        {researchAreas.length > 0 && (
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
-            <button
-              onClick={() => setSelectedResearchArea('all')}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all ${
-                selectedResearchArea === 'all'
-                  ? 'bg-accent text-primary-foreground shadow-md'
-                  : 'bg-card text-muted-foreground border border-border hover:bg-secondary'
-              }`}
-            >
-              All Research Areas
-            </button>
-            {researchAreas.map((area) => (
-              <button
-                key={area}
-                onClick={() => setSelectedResearchArea(area)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all ${
-                  selectedResearchArea === area
-                    ? 'bg-accent text-primary-foreground shadow-md'
-                    : 'bg-card text-muted-foreground border border-border hover:bg-secondary'
-                }`}
-              >
-                {area}
-              </button>
-            ))}
-          </div>
-        )}
+       
 
         {loading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -175,7 +148,7 @@ export default function AlumniPage() {
                           {alumnus.name}
                         </h3>
                         {alumnus.researchArea && (
-                          <span className="inline-block px-2.5 py-0.5 rounded-md bg-secondary text-secondary-foreground text-[11px] font-medium mt-1 truncate">
+                          <span className="inline-block px-2.5 py-0.5 rounded-md bg-secondary text-secondary-foreground text-[11px] font-medium mt-1 break-words">
                             {alumnus.researchArea}
                           </span>
                         )}

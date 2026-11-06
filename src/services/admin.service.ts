@@ -15,6 +15,7 @@ export const adminService = {
     totalPublications: number;
     totalMembers: number;
     ongoingProjects: number;
+    totalAlumni: number;
   }>> {
     const [projectsRes, scholarRes, membersRes] = await Promise.all([
       projectService.getProjects(),
@@ -30,13 +31,16 @@ export const adminService = {
       ? scholarRes.data.publications.length
       : 0;
 
+    const totalAlumni = members.filter(m => m.position === 'alumni' || m.position?.toLowerCase() === 'alumni').length;
+
     return {
       success: true,
       data: {
         totalProjects: projects.length,
         totalPublications,
-        totalMembers: members.length,
-        ongoingProjects: projects.filter(p => p.status === 'ongoing').length
+        totalMembers: members.filter(m => m.position !== 'alumni' && m.position?.toLowerCase() !== 'alumni').length,
+        ongoingProjects: projects.filter(p => p.status === 'ongoing').length,
+        totalAlumni,
       }
     };
   },

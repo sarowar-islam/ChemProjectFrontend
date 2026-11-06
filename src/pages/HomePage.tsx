@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FlaskConical, BookOpen, Users, FolderKanban, ArrowRight, Bell, Info, Beaker, Atom, Microscope, Award, Target, Sparkles, Calendar, Newspaper, Image as ImageIcon, FileText, ExternalLink } from 'lucide-react';
+import { FlaskConical, BookOpen, Users, FolderKanban, GraduationCap, ArrowRight, Bell, Info, Beaker, Atom, Microscope, Award, Target, Sparkles, Calendar, Newspaper, Image as ImageIcon, FileText, ExternalLink } from 'lucide-react';
 import { adminService } from '@/services/admin.service';
 import { noticeService } from '@/services/notice.service';
 import { newsService } from '@/services/news.service';
@@ -17,6 +17,7 @@ export default function HomePage() {
     totalPublications: 0,
     totalMembers: 0,
     ongoingProjects: 0,
+    totalAlumni: 0,
   });
   const [recentNews, setRecentNews] = useState<News[]>([]);
   const [recentNotices, setRecentNotices] = useState<Notice[]>([]);
@@ -201,7 +202,7 @@ export default function HomePage() {
               <StatCard icon={<FolderKanban className="w-6 h-6" />} number={stats.totalProjects} label="Research Projects" delay="0s" color="bg-secondary text-secondary-foreground" to="/projects" />
               <StatCard icon={<BookOpen className="w-6 h-6" />} number={stats.totalPublications} label="Publications" delay="0.1s" color="bg-secondary text-secondary-foreground" to="/publications" />
               <StatCard icon={<Users className="w-6 h-6" />} number={stats.totalMembers} label="Team Members" delay="0.2s" color="bg-secondary text-secondary-foreground" to="/team" />
-              <StatCard icon={<FlaskConical className="w-6 h-6" />} number={stats.ongoingProjects} label="Ongoing Projects" delay="0.3s" color="bg-secondary text-secondary-foreground" to="/projects" />
+              <StatCard icon={<GraduationCap className="w-6 h-6" />} number={stats.totalAlumni} label="Alumni" delay="0.3s" color="bg-secondary text-secondary-foreground" to="/alumni" />
             </>
           )}
         </div>
