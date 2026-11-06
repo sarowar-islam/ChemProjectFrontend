@@ -8,10 +8,11 @@ const navItems = [
   { label: 'Projects', path: '/projects' },
   { label: 'Publications', path: '/publications' },
   { label: 'Team', path: '/team' },
-  { label: 'Instruments', path: '/instruments' },
+  
   { label: 'Alumni', path: '/alumni' },
   { label: 'News', path: '/news' },
   { label: 'Notices', path: '/notices' },
+  { label: 'Instruments', path: '/instruments' },
 ];
 
 export function Header() {
