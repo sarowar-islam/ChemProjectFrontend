@@ -7,6 +7,7 @@ import { instrumentService } from '@/services/instrument.service';
 import { Instrument, InstrumentCategory, InstrumentStatus } from '@/services/types';
 import { INSTRUMENT_STATUSES, STATUS_CONFIG } from '@/lib/instrumentUtils';
 import { optimizeImage } from '@/lib/imageUtils';
+import { inlineUrl } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -418,7 +419,9 @@ export function AdminInstrumentsView() {
                   </Button>
                   {form.sopUrl && (
                     <div className="flex items-center justify-between text-xs bg-secondary/50 p-2 rounded border border-border">
-                      <span className="truncate max-w-[180px] text-foreground font-medium">{form.sopUrl.split('/').pop()}</span>
+                      <a href={inlineUrl(form.sopUrl)} target="_blank" rel="noopener noreferrer" className="truncate max-w-[180px] text-primary hover:underline font-medium">
+                        {form.sopUrl.split('/').pop()}
+                      </a>
                       <button type="button" onClick={() => setField('sopUrl', '')} className="text-destructive hover:underline ml-2 font-medium">Remove</button>
                     </div>
                   )}
@@ -436,7 +439,9 @@ export function AdminInstrumentsView() {
                   </Button>
                   {form.operatingProcedureUrl && (
                     <div className="flex items-center justify-between text-xs bg-secondary/50 p-2 rounded border border-border">
-                      <span className="truncate max-w-[180px] text-foreground font-medium">{form.operatingProcedureUrl.split('/').pop()}</span>
+                      <a href={inlineUrl(form.operatingProcedureUrl)} target="_blank" rel="noopener noreferrer" className="truncate max-w-[180px] text-primary hover:underline font-medium">
+                        {form.operatingProcedureUrl.split('/').pop()}
+                      </a>
                       <button type="button" onClick={() => setField('operatingProcedureUrl', '')} className="text-destructive hover:underline ml-2 font-medium">Remove</button>
                     </div>
                   )}

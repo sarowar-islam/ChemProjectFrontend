@@ -11,6 +11,7 @@ import HeroTitle from '@/components/HeroTitle';
 import { linkifyHtml } from '@/lib/htmlUtils';
 import { SEO } from '@/components/SEO';
 import { InstrumentsOverview } from '@/components/InstrumentsOverview';
+import { inlineUrl } from '@/lib/utils';
 
 export default function HomePage() {
   const [stats, setStats] = useState({
@@ -489,7 +490,7 @@ export default function HomePage() {
                         <td className="py-4 px-4 sm:px-6 text-center">
                           {notice.fileUrl ? (
                             <a
-                              href={notice.fileUrl}
+                              href={inlineUrl(notice.fileUrl)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#166534] text-white hover:bg-[#166534]/90 transition-all shadow-sm"

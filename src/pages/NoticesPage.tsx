@@ -3,6 +3,7 @@ import { Bell, Search, ExternalLink, FileText } from 'lucide-react';
 import { noticeService } from '@/services/notice.service';
 import { Notice } from '@/services/types';
 import { useQuery } from '@tanstack/react-query';
+import { inlineUrl } from '@/lib/utils';
 
 export default function NoticesPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -116,7 +117,7 @@ export default function NoticesPage() {
                         <td className="py-4 px-4 sm:px-6 text-center">
                           {notice.fileUrl ? (
                             <a
-                              href={notice.fileUrl}
+                              href={inlineUrl(notice.fileUrl)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#166534] text-white hover:bg-[#166534]/90 transition-all shadow-sm"

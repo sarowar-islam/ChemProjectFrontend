@@ -37,6 +37,7 @@ import { newsService } from '@/services/news.service';
 import { normalizeMemberTitle, sortMembersForAdmin, sortMembersWithinSection } from '@/lib/memberSorting';
 import RichTextEditor from '@/components/RichTextEditor';
 import { optimizeImage } from '@/lib/imageUtils';
+import { inlineUrl } from '@/lib/utils';
 import { instrumentService, INSTRUMENTS_CHANGED_EVENT } from '@/services/instrument.service';
 import { AdminInstrumentsView } from '@/components/AdminInstrumentsView';
 import { AdminBookingRequestsView } from '@/components/AdminBookingRequestsView';
@@ -1193,7 +1194,7 @@ function NoticesView({
               <div className="flex items-center gap-2 shrink-0">
                 {notice.fileUrl && (
                   <a
-                    href={notice.fileUrl}
+                    href={inlineUrl(notice.fileUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#166534] text-white hover:bg-[#166534]/90 transition-all flex items-center gap-1 shadow-sm"
@@ -1253,7 +1254,7 @@ function NoticesView({
                 </label>
                 {formData.fileUrl ? (
                   <a
-                    href={formData.fileUrl}
+                    href={inlineUrl(formData.fileUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-primary underline truncate max-w-[200px]"
