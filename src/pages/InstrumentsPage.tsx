@@ -39,7 +39,7 @@ export default function InstrumentsPage() {
   return (
     <div className="bg-background">
       <SEO
-        title="Laboratory Instruments"
+        title="Laboratory Properties and Facilities"
         description="Browse BCER Lab research instruments, check availability and request a booking online."
         canonicalPath="/instruments"
       />
@@ -53,7 +53,7 @@ export default function InstrumentsPage() {
             <span>Instrument Booking</span>
           </div>
           <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#166534] dark:text-foreground mb-4 sm:mb-6 animate-fade-in-up" style={{ letterSpacing: '-0.02em' }}>
-            Laboratory Instruments
+            Laboratory Properties and Facilities
           </h1>
           <p className="text-sm sm:text-lg md:text-xl text-muted-foreground animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.1s' }}>
             Discover our research equipment, check availability and request a time slot in a few clicks.

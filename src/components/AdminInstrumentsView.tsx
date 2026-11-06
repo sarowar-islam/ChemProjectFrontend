@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { ImagePlus, Loader2, Microscope, Plus, Search, Trash2, Edit, X } from 'lucide-react';
+import { ImagePlus, Loader2, Microscope, Plus, Search, Trash2, Edit, X, FileText } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { instrumentService } from '@/services/instrument.service';
@@ -33,6 +33,8 @@ interface FormState {
   categoryId: string;
   status: InstrumentStatus;
   imageUrl: string;
+  sopUrl: string;
+  operatingProcedureUrl: string;
   manufacturer: string;
   model: string;
   serialNumber: string;
@@ -57,6 +59,8 @@ const blankForm = (categoryId: string): FormState => ({
   categoryId,
   status: 'available',
   imageUrl: '',
+  sopUrl: '',
+  operatingProcedureUrl: '',
   manufacturer: '',
   model: '',
   serialNumber: '',
@@ -81,6 +85,8 @@ export function AdminInstrumentsView() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const fileRef = useRef<HTMLInputElement>(null);
+  const sopFileRef = useRef<HTMLInputElement>(null);
+  const opFileRef = useRef<HTMLInputElement>(null);
 
   const [instruments, setInstruments] = useState<Instrument[]>([]);
   const [categories, setCategories] = useState<InstrumentCategory[]>([]);
@@ -93,6 +99,8 @@ export function AdminInstrumentsView() {
   const [form, setForm] = useState<FormState>(blankForm(''));
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingSop, setUploadingSop] = useState(false);
+  const [uploadingOp, setUploadingOp] = useState(false);
   const [toDelete, setToDelete] = useState<Instrument | null>(null);
 
   const refresh = async () => {
@@ -141,6 +149,8 @@ export function AdminInstrumentsView() {
       categoryId: i.categoryId,
       status: i.status,
       imageUrl: i.imageUrl,
+      sopUrl: i.sopUrl ?? '',
+      operatingProcedureUrl: i.operatingProcedureUrl ?? '',
       manufacturer: i.manufacturer,
       model: i.model,
       serialNumber: i.serialNumber ?? '',
@@ -178,6 +188,36 @@ export function AdminInstrumentsView() {
     if (fileRef.current) fileRef.current.value = '';
   };
 
+  const handleSop = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingSop(true);
+    try {
+      const res = await instrumentService.uploadInstrumentDocument(file);
+      if (res.success && res.data) setField('sopUrl', res.data.fileUrl);
+      else toast({ title: 'SOP upload failed', description: res.error, variant: 'destructive' });
+    } catch (err) {
+      toast({ title: 'SOP upload failed', description: err instanceof Error ? err.message : 'Invalid file', variant: 'destructive' });
+    }
+    setUploadingSop(false);
+    if (sopFileRef.current) sopFileRef.current.value = '';
+  };
+
+  const handleOp = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingOp(true);
+    try {
+      const res = await instrumentService.uploadInstrumentDocument(file);
+      if (res.success && res.data) setField('operatingProcedureUrl', res.data.fileUrl);
+      else toast({ title: 'Operating Procedure upload failed', description: res.error, variant: 'destructive' });
+    } catch (err) {
+      toast({ title: 'Operating Procedure upload failed', description: err instanceof Error ? err.message : 'Invalid file', variant: 'destructive' });
+    }
+    setUploadingOp(false);
+    if (opFileRef.current) opFileRef.current.value = '';
+  };
+
   const handleSave = async () => {
     if (!form.name.trim() || !form.shortDescription.trim() || !form.categoryId) {
       toast({ title: 'Missing information', description: 'Name, short description and category are required.', variant: 'destructive' });
@@ -197,6 +237,8 @@ export function AdminInstrumentsView() {
       category: category?.name ?? '',
       status: form.status,
       imageUrl: form.imageUrl,
+      sopUrl: form.sopUrl.trim() || undefined,
+      operatingProcedureUrl: form.operatingProcedureUrl.trim() || undefined,
       manufacturer: form.manufacturer.trim(),
       model: form.model.trim(),
       serialNumber: form.serialNumber.trim() || undefined,
@@ -358,6 +400,45 @@ export function AdminInstrumentsView() {
                   <p className="text-xs text-muted-foreground">JPG or PNG, up to 4 MB.</p>
                   {form.imageUrl && (
                     <button type="button" onClick={() => setField('imageUrl', '')} className="text-xs text-destructive hover:underline">Remove image</button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* SOP and Operating Procedure Document Upload (2 in a row) */}
+            <div className="grid sm:grid-cols-2 gap-4 pt-3 border-t border-border">
+              {/* SOP Upload */}
+              <div className="space-y-2">
+                <Label>Upload SOP Document</Label>
+                <div className="space-y-2">
+                  <input ref={sopFileRef} type="file" accept=".pdf,.doc,.docx,.txt" className="hidden" onChange={handleSop} />
+                  <Button type="button" variant="outline" size="sm" disabled={uploadingSop} onClick={() => sopFileRef.current?.click()} className="w-full">
+                    {uploadingSop ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2 text-accent" />}
+                    {form.sopUrl ? 'Change SOP Document' : 'Upload SOP (PDF/Doc)'}
+                  </Button>
+                  {form.sopUrl && (
+                    <div className="flex items-center justify-between text-xs bg-secondary/50 p-2 rounded border border-border">
+                      <span className="truncate max-w-[180px] text-foreground font-medium">{form.sopUrl.split('/').pop()}</span>
+                      <button type="button" onClick={() => setField('sopUrl', '')} className="text-destructive hover:underline ml-2 font-medium">Remove</button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Operating Procedure Upload */}
+              <div className="space-y-2">
+                <Label>Operating Procedure Document</Label>
+                <div className="space-y-2">
+                  <input ref={opFileRef} type="file" accept=".pdf,.doc,.docx,.txt" className="hidden" onChange={handleOp} />
+                  <Button type="button" variant="outline" size="sm" disabled={uploadingOp} onClick={() => opFileRef.current?.click()} className="w-full">
+                    {uploadingOp ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2 text-accent" />}
+                    {form.operatingProcedureUrl ? 'Change Procedure Document' : 'Upload Procedure (PDF/Doc)'}
+                  </Button>
+                  {form.operatingProcedureUrl && (
+                    <div className="flex items-center justify-between text-xs bg-secondary/50 p-2 rounded border border-border">
+                      <span className="truncate max-w-[180px] text-foreground font-medium">{form.operatingProcedureUrl.split('/').pop()}</span>
+                      <button type="button" onClick={() => setField('operatingProcedureUrl', '')} className="text-destructive hover:underline ml-2 font-medium">Remove</button>
+                    </div>
                   )}
                 </div>
               </div>

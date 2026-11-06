@@ -10,6 +10,7 @@ import {
   ClipboardList,
   Cpu,
   Factory,
+  FileText,
   Hash,
   MapPin,
   Microscope,
@@ -22,7 +23,7 @@ import { Button } from '@/components/ui/button';
 import { InstrumentImage, RatingStars, StatusBadge } from '@/components/InstrumentShared';
 import { InstrumentCalendar } from '@/components/InstrumentCalendar';
 import { BookingRequestDialog } from '@/components/BookingRequestDialog';
-import { STATUS_CONFIG, formatDuration } from '@/lib/instrumentUtils';
+import { STATUS_CONFIG, formatDuration, inlineUrl } from '@/lib/instrumentUtils';
 import { SEO } from '@/components/SEO';
 
 const TABS = ['details', 'calendar', 'ratings'] as const;
@@ -173,6 +174,33 @@ export default function InstrumentDetailPage() {
                 <div className="rounded-2xl overflow-hidden border border-border bg-secondary aspect-[16/9]">
                   <InstrumentImage src={instrument.imageUrl} alt={instrument.name} className="w-full h-full" />
                 </div>
+
+                {(instrument.sopUrl || instrument.operatingProcedureUrl) && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {instrument.sopUrl && (
+                      <Button
+                        size="lg"
+                        asChild
+                        className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-sm gap-2 w-full"
+                      >
+                        <a href={inlineUrl(instrument.sopUrl)} target="_blank" rel="noopener noreferrer">
+                          <FileText className="w-5 h-5" /> Explore SOP
+                        </a>
+                      </Button>
+                    )}
+                    {instrument.operatingProcedureUrl && (
+                      <Button
+                        size="lg"
+                        asChild
+                        className={`bg-accent text-accent-foreground hover:bg-accent/90 shadow-sm gap-2 w-full ${!instrument.sopUrl ? 'sm:col-span-2' : ''}`}
+                      >
+                        <a href={inlineUrl(instrument.operatingProcedureUrl)} target="_blank" rel="noopener noreferrer">
+                          <FileText className="w-5 h-5" /> Operating Procedure
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+                )}
 
                 <div>
                   <h2 className="font-heading text-2xl text-foreground mb-3">About this instrument</h2>

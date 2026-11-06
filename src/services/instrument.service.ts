@@ -135,6 +135,19 @@ export const instrumentService = {
     return res;
   },
 
+  // POST /api/upload/instrument-document
+  async uploadInstrumentDocument(file: File): Promise<ApiResponse<{ fileUrl: string }>> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await unwrap<{ fileUrl: string }>(apiRequest({
+      method: 'POST',
+      url: '/upload/instrument-document',
+      data: formData,
+    }));
+    return res;
+  },
+
   // GET /api/instruments/:id/calendar
   async getCalendarEvents(instrumentId: string): Promise<ApiResponse<InstrumentCalendarEvent[]>> {
     return unwrap<InstrumentCalendarEvent[]>(apiRequest({

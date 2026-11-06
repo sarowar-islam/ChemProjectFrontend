@@ -82,4 +82,9 @@ export const bookingMinutes = (startIso: string, endIso: string) =>
 export const createInstrumentSlug = (name: string) =>
   name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
+export function inlineUrl(url?: string): string {
+  if (!url) return '';
+  return url;
+}
+
 export { addMinutes, isBefore, startOfDay };

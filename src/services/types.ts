@@ -164,6 +164,8 @@ export interface Instrument {
   category: string;                   // denormalised category name for convenience
   status: InstrumentStatus;
   imageUrl: string;
+  sopUrl?: string;
+  operatingProcedureUrl?: string;
   manufacturer: string;
   model: string;
   serialNumber?: string;

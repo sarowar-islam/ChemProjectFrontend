@@ -58,8 +58,6 @@ export function BookingRequestDialog({ instrument, events, open, onOpenChange, i
     setEndTime(idx >= 0 && times[idx + 2] ? times[idx + 2] : idx >= 0 && times[idx + 1] ? times[idx + 1] : '');
     setForm({
       ...emptyForm,
-      requesterName: user?.username ?? '',
-      requesterEmail: user?.email ?? '',
     });
     setSubmitted(false);
     setError('');
@@ -196,11 +194,11 @@ export function BookingRequestDialog({ instrument, events, open, onOpenChange, i
             <div className="grid sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="bk-name">Full name *</Label>
-                <Input id="bk-name" value={form.requesterName} onChange={set('requesterName')} />
+                <Input id="bk-name" placeholder="e.g. John Doe" value={form.requesterName} onChange={set('requesterName')} />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="bk-email">Email *</Label>
-                <Input id="bk-email" type="email" value={form.requesterEmail} onChange={set('requesterEmail')} />
+                <Input id="bk-email" type="email" placeholder="e.g. john@cuet.ac.bd" value={form.requesterEmail} onChange={set('requesterEmail')} />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="bk-phone">Phone</Label>
