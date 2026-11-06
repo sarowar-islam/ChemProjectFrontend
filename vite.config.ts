@@ -7,6 +7,15 @@ export default defineConfig({
   server: {
     host: "::",
     port: 5173,
+    proxy: process.env.FIGMA
+      ? {
+          "/api": {
+            target: "https://chemprojectbackend.onrender.com",
+            changeOrigin: true,
+            secure: true,
+          },
+        }
+      : undefined,
   },
   plugins: [react()],
   resolve: {

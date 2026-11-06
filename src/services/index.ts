@@ -9,6 +9,7 @@ export { adminService } from './admin.service';
 export { settingsService } from './settings.service';
 export { scholarService } from './scholar.service';
 export { researchFocusService } from './researchFocus.service';
+export { instrumentService } from './instrument.service';
 
 // Re-export types
 export type {

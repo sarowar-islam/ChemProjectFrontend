@@ -18,6 +18,8 @@ import {
   Menu,
   Compass,
   FileImage,
+  Microscope,
+  ClipboardCheck,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { adminService } from '@/services/admin.service';
@@ -35,9 +37,12 @@ import { newsService } from '@/services/news.service';
 import { normalizeMemberTitle, sortMembersForAdmin, sortMembersWithinSection } from '@/lib/memberSorting';
 import RichTextEditor from '@/components/RichTextEditor';
 import { optimizeImage } from '@/lib/imageUtils';
+import { instrumentService, INSTRUMENTS_CHANGED_EVENT } from '@/services/instrument.service';
+import { AdminInstrumentsView } from '@/components/AdminInstrumentsView';
+import { AdminBookingRequestsView } from '@/components/AdminBookingRequestsView';
 
-type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'focus' | 'settings' | 'homepage-images';
-const VALID_TABS: Tab[] = ['dashboard', 'projects', 'members', 'news', 'notices', 'focus', 'settings', 'homepage-images'];
+type Tab = 'dashboard' | 'projects' | 'members' | 'news' | 'notices' | 'focus' | 'instruments' | 'bookings' | 'settings' | 'homepage-images';
+const VALID_TABS: Tab[] = ['dashboard', 'projects', 'members', 'news', 'notices', 'focus', 'instruments', 'bookings', 'settings', 'homepage-images'];
 
 // Position options - determines the category/section on team page
 const POSITION_OPTIONS = [
@@ -114,6 +119,13 @@ export default function AdminDashboardPage() {
     }
   }, [searchParams, activeTab, setSearchParams]);
 
+  const [pendingBookings, setPendingBookings] = useState(() => instrumentService.getPendingCount());
+  useEffect(() => {
+    const update = () => setPendingBookings(instrumentService.getPendingCount());
+    window.addEventListener(INSTRUMENTS_CHANGED_EVENT, update);
+    return () => window.removeEventListener(INSTRUMENTS_CHANGED_EVENT, update);
+  }, []);
+
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [stats, setStats] = useState({
@@ -121,6 +133,7 @@ export default function AdminDashboardPage() {
     totalPublications: 0,
     totalMembers: 0,
     ongoingProjects: 0,
+    totalAlumni: 0,
   });
   const [projects, setProjects] = useState<Project[]>([]);
   const [members, setMembers] = useState<TeamMember[]>([]);
@@ -167,6 +180,8 @@ export default function AdminDashboardPage() {
     { id: 'projects' as Tab, label: 'Projects', icon: FolderKanban },
     { id: 'members' as Tab, label: 'Members', icon: Users },
     { id: 'focus' as Tab, label: 'Research Focus', icon: Compass },
+    { id: 'instruments' as Tab, label: 'Instruments', icon: Microscope },
+    { id: 'bookings' as Tab, label: 'Booking Requests', icon: ClipboardCheck },
     { id: 'news' as Tab, label: 'News', icon: Newspaper },
     { id: 'notices' as Tab, label: 'Notices', icon: Bell },
     { id: 'homepage-images' as Tab, label: 'Homepage Images', icon: FileImage },
@@ -254,6 +269,11 @@ export default function AdminDashboardPage() {
                 >
                   <tab.icon className="w-5 h-5 shrink-0" />
                   {!sidebarCollapsed && <span>{tab.label}</span>}
+                  {!sidebarCollapsed && tab.id === 'bookings' && pendingBookings > 0 && (
+                    <span className="ml-auto min-w-5 h-5 px-1.5 rounded-full bg-amber-500 text-white text-xs font-semibold flex items-center justify-center">
+                      {pendingBookings}
+                    </span>
+                  )}
                 </button>
               ))}
             </nav>
@@ -285,6 +305,8 @@ export default function AdminDashboardPage() {
           {activeTab === 'focus' && (
             <ResearchFocusView focusList={researchFocusList} loading={loading} onRefresh={fetchData} toast={toast} />
           )}
+          {activeTab === 'instruments' && <AdminInstrumentsView />}
+          {activeTab === 'bookings' && <AdminBookingRequestsView />}
           {activeTab === 'news' && (
             <NewsView news={news} loading={loading} onRefresh={fetchData} toast={toast} />
           )}

@@ -8,6 +8,7 @@ const navItems = [
   { label: 'Projects', path: '/projects' },
   { label: 'Publications', path: '/publications' },
   { label: 'Team', path: '/team' },
+  { label: 'Instruments', path: '/instruments' },
   { label: 'Alumni', path: '/alumni' },
   { label: 'News', path: '/news' },
   { label: 'Notices', path: '/notices' },
@@ -16,6 +17,8 @@ const navItems = [
 export function Header() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isActive = (path: string) =>
+    path === '/' ? location.pathname === '/' : location.pathname === path || location.pathname.startsWith(`${path}/`);
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -49,7 +52,7 @@ export function Header() {
                 key={item.path}
                 to={item.path}
                 className={`px-1.5 py-1 rounded-md text-sm font-medium transition-colors duration-200 ${
-                  location.pathname === item.path
+                  isActive(item.path)
                     ? 'text-accent bg-secondary/80 dark:bg-secondary/40'
                     : 'text-muted-foreground hover:text-accent hover:bg-secondary/60 dark:hover:bg-secondary/30'
                 }`}
@@ -90,7 +93,7 @@ export function Header() {
                   to={item.path}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${
-                    location.pathname === item.path
+                    isActive(item.path)
                       ? 'bg-accent text-accent-foreground'
                       : 'text-muted-foreground hover:bg-secondary/80 hover:text-accent'
                   }`}

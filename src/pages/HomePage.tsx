@@ -10,6 +10,7 @@ import { Notice, News, ResearchFocus } from '@/services/types';
 import HeroTitle from '@/components/HeroTitle';
 import { linkifyHtml } from '@/lib/htmlUtils';
 import { SEO } from '@/components/SEO';
+import { InstrumentsOverview } from '@/components/InstrumentsOverview';
 
 export default function HomePage() {
   const [stats, setStats] = useState({
@@ -186,6 +187,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Instrument Booking overview */}
+      <InstrumentsOverview />
 
       {/* Stats Section - Floating Cards */}
       <section className="container-wide mt-4 sm:mt-6 relative z-20 pb-6 sm:pb-8 md:pb-10">

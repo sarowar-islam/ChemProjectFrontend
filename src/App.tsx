@@ -27,6 +27,7 @@ import AlumniPage from "./pages/AlumniPage";
 import AlumniDetailsPage from "./pages/AlumniDetailsPage";
 import NewsPage from "./pages/NewsPage";
 import NoticesPage from "./pages/NoticesPage";
+import InstrumentsPage from "./pages/InstrumentsPage";
 import NotFound from "./pages/NotFound";
 
 // Detail Pages
@@ -35,6 +36,7 @@ import NoticeDetailPage from "./pages/NoticeDetailPage";
 import ProjectDetailPage from "./pages/ProjectDetailPage";
 import PublicationDetailPage from "./pages/PublicationDetailPage";
 import ResearchFocusDetailPage from "./pages/ResearchFocusDetailPage";
+import InstrumentDetailPage from "./pages/InstrumentDetailPage";
 
 // Auth Pages
 import AdminLoginPage from "./pages/AdminLoginPage";
@@ -65,7 +67,12 @@ const App = () => (
         <AuthProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
+          <BrowserRouter
+            future={{
+              v7_startTransition: true,
+              v7_relativeSplatPath: true,
+            }}
+          >
             <ScrollToTop />
             <Routes>
               {/* Public Routes with MainLayout */}
@@ -82,6 +89,8 @@ const App = () => (
                 <Route path="/news" element={<NewsPage />} />
                 <Route path="/news/:slug" element={<NewsDetailPage />} />
                 <Route path="/research-focus/:id" element={<ResearchFocusDetailPage />} />
+                <Route path="/instruments" element={<InstrumentsPage />} />
+                <Route path="/instruments/:slug" element={<InstrumentDetailPage />} />
                 <Route path="/notices" element={<NoticesPage />} />
                 <Route path="/notices/:slug" element={<NoticeDetailPage />} />
               </Route>
