@@ -42,6 +42,7 @@ import { scholarService, ScholarPublication, ScholarProfile } from '@/services';
 import { TeamMember, SocialLink, CareerItem, EducationItem } from '@/services/types';
 import RichTextEditor from '@/components/RichTextEditor';
 import { stripHtml } from '@/lib/htmlUtils';
+import { normalizeMemberTitle } from '@/lib/memberSorting';
 
 type ActiveSection =
   | 'dashboard'
@@ -561,16 +562,7 @@ export default function AlumniDashboardPage() {
           </div>
 
           <div className="flex items-center gap-4">
-            {slug && (
-              <Link
-                to={`/alumni/${slug}`}
-                target="_blank"
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary text-secondary-foreground text-xs font-medium hover:bg-secondary/80 transition-colors"
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-                Preview Public Profile
-              </Link>
-            )}
+           
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-border bg-secondary">
                 <img
@@ -614,7 +606,9 @@ export default function AlumniDashboardPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-foreground text-sm truncate">{member?.name}</p>
-                <p className="text-xs text-muted-foreground truncate">{currentTitle || 'Alumnus'}</p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {normalizeMemberTitle(member?.title || '') || currentTitle || (member?.position === 'alumni' ? 'Alumnus' : (member?.position ? member.position.charAt(0).toUpperCase() + member.position.slice(1).replace('_', ' ') : 'Research Team Member'))}
+                </p>
               </div>
             </div>
           </div>

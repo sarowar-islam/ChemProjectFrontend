@@ -1,11 +1,44 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ExternalLink, Mail, Phone, BookOpen, GraduationCap, Calendar, MapPin, Award, Briefcase, RefreshCw, Quote, FileText, Globe, Linkedin, Facebook, Instagram, Twitter, Github, Youtube } from 'lucide-react';
+import {
+  ArrowLeft,
+  ExternalLink,
+  Mail,
+  BookOpen,
+  GraduationCap,
+  Calendar,
+  MapPin,
+  Award,
+  Briefcase,
+  Globe,
+  Linkedin,
+  Facebook,
+  Instagram,
+  Twitter,
+  Github,
+  Youtube,
+  Building2,
+  BookMarked,
+  User,
+  LayoutDashboard,
+  Sparkles,
+  CheckCircle2,
+} from 'lucide-react';
 import { teamService } from '@/services/team.service';
 import { scholarService, ScholarPublication, ScholarProfile } from '@/services';
 import { TeamMember } from '@/services/types';
 import { linkifyHtml } from '@/lib/htmlUtils';
 import { SEO } from '@/components/SEO';
+
+type PortfolioTab =
+  | 'overview'
+  | 'position'
+  | 'about'
+  | 'career'
+  | 'education'
+  | 'expertise'
+  | 'publications'
+  | 'lab';
 
 export default function MemberProfilePage() {
   const { username } = useParams<{ username: string }>();
@@ -15,64 +48,23 @@ export default function MemberProfilePage() {
   const [scholarProfile, setScholarProfile] = useState<ScholarProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [pubsLoading, setPubsLoading] = useState(false);
-  const [pubsError, setPubsError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'publications'>('overview');
-  const [selectedYear, setSelectedYear] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<'recent' | 'citations'>('recent');
+  const [activeTab, setActiveTab] = useState<PortfolioTab>('overview');
+  const [imageError, setImageError] = useState(false);
 
   const createSlug = (title: string) => {
     if (!title) return '';
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   };
 
-  const years = [...new Set(publications.map((p) => p.year).filter(Boolean))].sort((a, b) =>
-    parseInt(b) - parseInt(a)
-  );
-
-  const filteredPublications = selectedYear
-    ? publications.filter((p) => p.year === selectedYear)
-    : publications;
-
-  const sortedPublications = [...filteredPublications].sort((a, b) => {
-    if (sortBy === 'citations') {
-      const citeA = parseInt(a.citedBy) || 0;
-      const citeB = parseInt(b.citedBy) || 0;
-      if (citeB !== citeA) return citeB - citeA;
-      return (parseInt(b.year) || 0) - (parseInt(a.year) || 0);
-    } else {
-      const yearA = parseInt(a.year) || 0;
-      const yearB = parseInt(b.year) || 0;
-      if (yearB !== yearA) return yearB - yearA;
-      return (parseInt(b.citedBy) || 0) - (parseInt(a.citedBy) || 0);
-    }
-  });
-
-  const groupedByYear = sortedPublications.reduce((acc, pub) => {
-    const year = pub.year || 'Unknown';
-    if (!acc[year]) acc[year] = [];
-    acc[year].push(pub);
-    return acc;
-  }, {} as Record<string, ScholarPublication[]>);
-
-  const totalPubCitations = scholarProfile?.totalCitations ||
-    publications.reduce((sum, pub) => sum + (parseInt(pub.citedBy) || 0), 0);
-
   const fetchPublications = async (memberId: string) => {
     setPubsLoading(true);
-    setPubsError(null);
-    
     const res = await scholarService.getMemberPublications(memberId);
     if (res.success && res.data) {
       if (res.data.success) {
         setPublications(res.data.publications || []);
         setScholarProfile(res.data.profile || null);
-      } else {
-        setPubsError(res.data.error || res.data.message || 'Failed to fetch publications');
       }
-    } else {
-      setPubsError(res.error || 'Failed to fetch publications');
     }
-    
     setPubsLoading(false);
   };
 
@@ -80,13 +72,26 @@ export default function MemberProfilePage() {
     const fetchData = async () => {
       if (!username) return;
 
-      const memberRes = await teamService.getMemberByUsername(username);
-      if (memberRes.success && memberRes.data) {
-        setMember(memberRes.data);
-
-        // Fetch member's publications from their Google Scholar profile
-        if (memberRes.data.googleScholarLink) {
-          await fetchPublications(memberRes.data.id);
+      const res = await teamService.getMemberByUsername(username);
+      if (res.success && res.data) {
+        setMember(res.data);
+        if (res.data.googleScholarLink) {
+          await fetchPublications(res.data.id);
+        }
+      } else {
+        const allRes = await teamService.getMembers();
+        if (allRes.success && allRes.data) {
+          const found = allRes.data.find(
+            (m) =>
+              m.username?.toLowerCase() === username.toLowerCase() ||
+              m.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === username.toLowerCase()
+          );
+          if (found) {
+            setMember(found);
+            if (found.googleScholarLink) {
+              await fetchPublications(found.id);
+            }
+          }
         }
       }
       setLoading(false);
@@ -97,30 +102,10 @@ export default function MemberProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="container-wide py-6">
-          <div className="max-w-5xl mx-auto animate-pulse">
-            <div className="h-6 w-24 bg-secondary rounded mb-4" />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-1">
-                <div className="bg-card border border-border rounded-xl p-6 text-center">
-                  <div className="w-48 h-48 bg-secondary rounded-full mx-auto mb-4" />
-                  <div className="h-6 w-32 bg-secondary rounded mx-auto mb-2" />
-                  <div className="h-4 w-24 bg-secondary rounded mx-auto" />
-                </div>
-              </div>
-              <div className="lg:col-span-2">
-                <div className="bg-card border border-border rounded-xl p-6">
-                  <div className="h-8 w-48 bg-secondary rounded mb-4" />
-                  <div className="space-y-2">
-                    <div className="h-4 w-full bg-secondary rounded" />
-                    <div className="h-4 w-full bg-secondary rounded" />
-                    <div className="h-4 w-2/3 bg-secondary rounded" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-accent border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm font-medium text-muted-foreground animate-pulse">Loading Member Portfolio...</p>
         </div>
       </div>
     );
@@ -128,29 +113,43 @@ export default function MemberProfilePage() {
 
   if (!member) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="font-heading text-2xl text-foreground mb-4">Member Not Found</h1>
-          <p className="text-muted-foreground mb-6">
-            The team member you're looking for doesn't exist.
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="text-center max-w-md bg-card p-8 rounded-3xl border border-border shadow-elevated">
+          <div className="w-16 h-16 bg-secondary text-accent rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <User className="w-8 h-8" />
+          </div>
+          <h1 className="font-heading text-2xl font-bold text-foreground mb-2">Member Not Found</h1>
+          <p className="text-muted-foreground text-sm mb-6">
+            The team member profile you're looking for doesn't exist or may have been removed.
           </p>
           <Link
             to="/team"
-            className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-medium"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-primary-foreground rounded-xl text-sm font-semibold hover:bg-accent/90 transition-all shadow-md"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Team
+            Back to Team Directory
           </Link>
         </div>
       </div>
     );
   }
 
+  const navTabs: { id: PortfolioTab; label: string; icon: any; count?: number }[] = [
+    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'position', label: 'Current Position', icon: Briefcase },
+    { id: 'about', label: 'About', icon: User },
+    { id: 'career', label: 'Career History', icon: Building2, count: member.careerHistory?.length },
+    { id: 'education', label: 'Education', icon: GraduationCap, count: member.education?.length },
+    { id: 'expertise', label: 'Research & Expertise', icon: Award },
+    { id: 'publications', label: 'Publications', icon: BookOpen, count: publications.length },
+    { id: 'lab', label: 'Lab Experience', icon: BookMarked },
+  ];
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-28">
       <SEO
-        title={member ? `${member.name} - ${member.title}` : 'Team Member Profile'}
-        description={member ? (member.bio?.replace(/<[^>]*>/g, '').slice(0, 160) || `Research profile of ${member.name}, ${member.title} at BCER Lab.`) : 'Research team member profile at BCER Lab.'}
+        title={member ? `${member.name} - ${member.title || 'Team Member'}` : 'Team Member Portfolio'}
+        description={member ? `Professional academic portfolio of ${member.name}, ${member.title || 'Team Member'} at BCER Lab.` : 'Research team member profile at BCER Lab.'}
         canonicalPath={`/team/${username}`}
         image={member?.photoUrl || '/photos/bcerlab-og-image.png'}
         type="profile"
@@ -161,619 +160,591 @@ export default function MemberProfilePage() {
             "@type": "Person",
             "name": member.name,
             "jobTitle": member.title,
-            "description": member.bio?.replace(/<[^>]*>/g, ''),
-            "image": member.photoUrl || "https://bcerlab.com/photos/blank_profile.png",
             "worksFor": {
               "@type": "ResearchOrganization",
               "name": "Biochemical and Environmental Research Lab (BCER Lab)"
-            }
+            },
+            "description": member.bio?.replace(/<[^>]*>/g, ''),
+            "image": member.photoUrl || "https://bcerlab.com/photos/blank_profile.png"
           }
         } : undefined}
       />
-      {/* Hero Banner */}
-      <div className="bg-gradient-to-br from-secondary/70 dark:from-secondary/25 via-secondary/45 dark:via-secondary/15 to-background">
-        <div className="container-wide py-4">
+      {/* Top Header / Back Link */}
+      <div className="bg-card/70 backdrop-blur-md border-b border-border sticky top-0 z-40">
+        <div className="container-wide py-3.5 flex items-center justify-between">
           <Link
             to="/team"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm font-semibold group"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Team
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1 text-accent" />
+            Back to Team Directory
           </Link>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-accent/15 text-accent rounded-full text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" /> Team Member Portfolio
+          </span>
         </div>
       </div>
 
-      <div className="container-wide py-4 -mt-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Column - Profile Card */}
-            <div className="lg:col-span-1">
-              <div className="bg-card border border-border rounded-xl p-6 text-center sticky top-8">
-                {/* Profile Image */}
-                <div className="relative -mt-10 mb-4">
-                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-[#15803D] shadow-xl bg-secondary">
-                    <img
-                      src={member.photoUrl || '/photos/blank_profile.png'}
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
+      {/* TOP CENTER PORTFOLIO HERO */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-secondary/50 via-secondary/15 to-background pt-14 pb-12 border-b border-border">
+        <div className="container-wide relative z-10">
+          <div className="max-w-3xl mx-auto flex flex-col items-center text-center">
 
-                {/* Name & Title */}
-                <h1 className="font-heading text-2xl font-bold text-foreground mb-1">
-                  {member.name}
-                </h1>
-                <p className="text-accent font-medium mb-3">
-                  {member.title}
-                </p>
-
-                {/* Research Area Badge */}
-                {member.researchArea && (
-                  <span className="inline-block px-4 py-1.5 bg-accent/15 text-accent rounded-full text-sm font-semibold border border-[#15803D]/30 mb-4">
-                    {member.researchArea}
-                  </span>
-                )}
-
-                {/* Top 2% Scientist Badge for Prof. Dr. Yunus Ahmed */}
-                {(member.name.toLowerCase().includes('yunus ahmed') || member.username?.toLowerCase().includes('yunus')) && (
-                  <div className="mb-4 flex justify-center">
-                    <a
-                      href="https://topscinet.com/scientist_profile/Ahmed,%20Yunus/2010/?stype=single_year"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block hover:opacity-95 transition-opacity"
-                    >
-                      <img
-                        src="https://topscinet.com/badge/U50012.png?style=horizontal-light&type=single&name=1"
-                        alt="Top 2% Scientist badge, TOPSCINET, 2026"
-                        className="w-full max-w-[320px] h-auto rounded-lg shadow-sm"
-                      />
-                    </a>
-                  </div>
-                )}
-
-                {/* Contact Buttons */}
-                <div className="space-y-2 mb-6">
-                  {member.email && (
-                    <a
-                      href={`https://mail.google.com/mail/?view=cm&to=${member.email}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-accent text-primary-foreground rounded-lg text-sm font-medium hover:bg-accent/90 transition-colors"
-                    >
-                      <Mail className="w-4 h-4" />
-                      Send Email
-                    </a>
-                  )}
-                  {member.googleScholarLink && (
-                    <a
-                      href={member.googleScholarLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-secondary text-foreground rounded-lg text-sm font-medium hover:bg-accent/15 transition-colors border border-border"
-                    >
-                      <BookOpen className="w-4 h-4" />
-                      Google Scholar
-                    </a>
-                  )}
-
-                  {/* Social Media Icons Row */}
-                  {member.socialLinks && member.socialLinks.length > 0 && (
-                    <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
-                      {member.socialLinks.map((link, index) => {
-                        const platformLower = link.platform.toLowerCase();
-                        let IconComponent = Globe;
-                        if (platformLower.includes('linkedin')) IconComponent = Linkedin;
-                        else if (platformLower.includes('facebook')) IconComponent = Facebook;
-                        else if (platformLower.includes('instagram')) IconComponent = Instagram;
-                        else if (platformLower.includes('twitter') || platformLower.includes('x')) IconComponent = Twitter;
-                        else if (platformLower.includes('github')) IconComponent = Github;
-                        else if (platformLower.includes('youtube')) IconComponent = Youtube;
-
-                        return (
-                          <a
-                            key={index}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title={link.platform}
-                            className="p-2.5 rounded-full bg-secondary text-foreground hover:bg-accent hover:text-primary-foreground transition-all duration-300 shadow-sm border border-border"
-                          >
-                            <IconComponent className="w-4 h-4" />
-                          </a>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                {/* Quick Info */}
-                <div className="border-t border-border pt-4 space-y-3 text-left">
-                  {member.phone && (
-                    <div className="flex items-center gap-3 text-sm">
-                      <Phone className="w-4 h-4 text-accent" />
-                      <span className="text-muted-foreground">{member.phone}</span>
-                    </div>
-                  )}
-                  {member.email && (
-                    <div className="flex items-center gap-3 text-sm">
-                      <Mail className="w-4 h-4 text-accent" />
-                      <span className="text-muted-foreground truncate">{member.email}</span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-3 text-sm">
-                    <MapPin className="w-4 h-4 text-accent" />
-                    <span className="text-muted-foreground">CUET, Chittagong</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <Calendar className="w-4 h-4 text-accent" />
-                    <span className="text-muted-foreground">
-                      Member since {new Date(member.joinedDate).getFullYear()}
-                    </span>
-                  </div>
-                </div>
+            {/* 1. Center Photo */}
+            <div className="relative mb-6">
+              <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 border-card shadow-2xl bg-secondary relative group mx-auto">
+                <img
+                  src={!imageError && member.photoUrl ? member.photoUrl : '/photos/blank_profile.png'}
+                  alt={member.name}
+                  onError={() => setImageError(true)}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="absolute bottom-1 right-2 bg-accent text-primary-foreground p-2.5 rounded-full shadow-lg border-2 border-card">
+                <GraduationCap className="w-5 h-5" />
               </div>
             </div>
 
-            {/* Right Column - Details */}
-            <div className="lg:col-span-2">
-              {/* Tabs */}
-              <div className="flex gap-4 mb-6 border-b border-border bg-card rounded-t-xl px-2">
+            {/* 2. Center Name */}
+            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-2.5">
+              {member.name}
+            </h1>
+
+            {/* 3. Center Current Title / Role */}
+            <p className="text-xl sm:text-2xl font-semibold text-accent mb-2">
+              {member.title || 'Research Team Member'}
+            </p>
+
+            {/* Top 2% Scientist Badge for Prof. Dr. Yunus Ahmed */}
+            {(member.name.toLowerCase().includes('yunus ahmed') || member.username?.toLowerCase().includes('yunus')) && (
+              <div className="mb-4 flex justify-center">
+                <a
+                  href="https://topscinet.com/scientist_profile/Ahmed,%20Yunus/2010/?stype=single_year"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block hover:opacity-95 transition-opacity"
+                >
+                  <img
+                    src="https://topscinet.com/badge/U50012.png?style=horizontal-light&type=single&name=1"
+                    alt="Top 2% Scientist badge, TOPSCINET, 2026"
+                    className="w-full max-w-[320px] h-auto rounded-lg shadow-sm"
+                  />
+                </a>
+              </div>
+            )}
+
+            {/* 4. Center Little Details (Organization & Location) */}
+            <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground font-medium mb-4">
+              <span className="flex items-center gap-1.5 text-foreground font-semibold bg-secondary/80 px-3.5 py-1.5 rounded-full border border-border">
+                <Building2 className="w-4 h-4 text-accent" />
+                Biochemical and Environmental Research Lab (BCER Lab)
+              </span>
+              <span className="flex items-center gap-1 bg-secondary/80 px-3 py-1.5 rounded-full border border-border">
+                <MapPin className="w-4 h-4 text-accent" />
+                CUET, Chittagong
+              </span>
+            </div>
+
+            {/* Research Focus Tag */}
+            {member.researchArea && (
+              <div className="mb-6">
+                <span className="px-4 py-1.5 bg-accent/15 text-accent rounded-full text-xs sm:text-sm font-semibold border border-accent/20">
+                  Focus: {member.researchArea}
+                </span>
+              </div>
+            )}
+
+            {/* 5. Center Contact & Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+              {member.email && member.isEmailPublic !== false && (
+                <a
+                  href={`mailto:${member.email}`}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-accent text-primary-foreground rounded-xl text-sm font-semibold hover:bg-accent/90 transition-all shadow-md hover:-translate-y-0.5"
+                >
+                  <Mail className="w-4 h-4" />
+                  Contact
+                </a>
+              )}
+              {member.googleScholarLink && (
+                <a
+                  href={member.googleScholarLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-card text-foreground rounded-xl text-sm font-semibold hover:bg-secondary transition-all border border-border shadow-sm hover:-translate-y-0.5"
+                >
+                  <BookOpen className="w-4 h-4 text-accent" />
+                  Google Scholar
+                </a>
+              )}
+              {member.orcid && (
+                <a
+                  href={member.orcid.startsWith('http') ? member.orcid : `https://orcid.org/${member.orcid}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-card text-foreground rounded-xl text-sm font-semibold hover:bg-secondary transition-all border border-border shadow-sm hover:-translate-y-0.5"
+                >
+                  <svg className="w-4 h-4 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.375c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.72 3.47h1.44v11.78H6.649V7.845zm5.31 0h3.585c2.616 0 4.239 1.638 4.239 4.097 0 2.476-1.623 4.11-4.239 4.11h-2.146v3.573H11.96V7.845zm1.44 6.78h2.001c1.785 0 2.766-.937 2.766-2.683 0-1.734-.981-2.67-2.766-2.67h-2.001v5.353z"/>
+                  </svg>
+                  ORCID
+                </a>
+              )}
+              {member.researchGate && (
+                <a
+                  href={member.researchGate.startsWith('http') ? member.researchGate : `https://www.researchgate.net/profile/${member.researchGate}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-card text-foreground rounded-xl text-sm font-semibold hover:bg-secondary transition-all border border-border shadow-sm hover:-translate-y-0.5"
+                >
+                  <svg className="w-4 h-4 text-emerald-700 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.59 2.41a12 12 0 1 0 0 19.18 12 12 0 0 0 0-19.18zM9.54 16.55H8.33V7.45h1.21zm4.77 0h-1.21v-4.1h-2.14v4.1H8.33V7.45h1.21v3.95h2.14V7.45h1.21z"/>
+                  </svg>
+                  ResearchGate
+                </a>
+              )}
+              {member.personalWebsite && (
+                <a
+                  href={member.personalWebsite.startsWith('http') ? member.personalWebsite : `https://${member.personalWebsite}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-card text-foreground rounded-xl text-sm font-semibold hover:bg-secondary transition-all border border-border shadow-sm hover:-translate-y-0.5"
+                >
+                  <ExternalLink className="w-4 h-4 text-accent" />
+                  Website
+                </a>
+              )}
+            </div>
+
+            {/* 6. Social Links Row */}
+            {member.socialLinks && member.socialLinks.length > 0 && (
+              <div className="flex flex-wrap items-center justify-center gap-2.5">
+                {member.socialLinks.map((link, idx) => {
+                  const plat = link.platform.toLowerCase();
+                  let IconComp = Globe;
+                  if (plat.includes('linkedin')) IconComp = Linkedin;
+                  else if (plat.includes('facebook')) IconComp = Facebook;
+                  else if (plat.includes('instagram')) IconComp = Instagram;
+                  else if (plat.includes('twitter') || plat.includes('x')) IconComp = Twitter;
+                  else if (plat.includes('github')) IconComp = Github;
+                  else if (plat.includes('youtube')) IconComp = Youtube;
+
+                  return (
+                    <a
+                      key={idx}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={link.platform}
+                      className="p-3 rounded-full bg-card hover:bg-accent hover:text-primary-foreground text-foreground border border-border transition-all shadow-sm hover:-translate-y-0.5"
+                    >
+                      <IconComp className="w-4 h-4" />
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+
+          </div>
+        </div>
+      </section>
+
+      {/* PORTFOLIO SECTION SELECTOR / TABS */}
+      <div className="sticky top-14 z-30 bg-card/95 backdrop-blur-md border-b border-border shadow-sm">
+        <div className="container-wide">
+          <nav className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 py-2 px-4">
+            {navTabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
                 <button
-                  onClick={() => setActiveTab('overview')}
-                  className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors border-b-2 -mb-px ${
-                    activeTab === 'overview'
-                      ? 'border-[#15803D] text-accent'
-                      : 'border-transparent text-muted-foreground hover:text-foreground'
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    isActive
+                      ? 'bg-accent text-primary-foreground shadow-sm font-semibold'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
                   }`}
                 >
-                  <Briefcase className="w-4 h-4" />
-                  Overview
-                </button>
-                <button
-                  onClick={() => setActiveTab('publications')}
-                  className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors border-b-2 -mb-px ${
-                    activeTab === 'publications'
-                      ? 'border-[#15803D] text-accent'
-                      : 'border-transparent text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  <BookOpen className="w-4 h-4" />
-                  Publications
-                  {publications.length > 0 && (
-                    <span className="text-xs bg-accent/15 text-accent px-2 py-0.5 rounded-full">
-                      {publications.length}
+                  <Icon className="w-3.5 h-3.5 shrink-0" />
+                  <span>{tab.label}</span>
+                  {tab.count !== undefined && tab.count > 0 && (
+                    <span
+                      className={`ml-0.5 px-1.5 py-0.2 rounded text-[10px] font-bold ${
+                        isActive
+                          ? 'bg-primary-foreground/20 text-primary-foreground'
+                          : 'bg-secondary text-muted-foreground'
+                      }`}
+                    >
+                      {tab.count}
                     </span>
                   )}
                 </button>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+
+      {/* ACTIVE SECTION PORTFOLIO VIEW */}
+      <div className="container-wide py-10">
+        <div className="max-w-4xl mx-auto">
+
+          {/* 1. OVERVIEW TAB */}
+          {activeTab === 'overview' && (
+            <div className="space-y-8 animate-fade-in">
+              {/* Snapshot Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Current Role Snapshot */}
+                <div className="bg-card border border-border rounded-3xl p-6 shadow-card flex flex-col justify-between">
+                  <div>
+                    <span className="text-xs font-bold text-accent uppercase tracking-wider mb-1 block">Role & Position</span>
+                    <h3 className="font-heading text-xl font-bold text-foreground mb-2">{member.title || 'Team Member'}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">Biochemical and Environmental Research Lab (BCER Lab)</p>
+                  </div>
+                  <div className="pt-4 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Member Since</span>
+                    <span className="font-semibold text-foreground">
+                      {member.joinedDate ? new Date(member.joinedDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Active'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Research Focus Snapshot */}
+                <div className="bg-card border border-border rounded-3xl p-6 shadow-card flex flex-col justify-between">
+                  <div>
+                    <span className="text-xs font-bold text-accent uppercase tracking-wider mb-1 block">Research Focus</span>
+                    <h3 className="font-heading text-xl font-bold text-foreground mb-2">{member.researchArea || 'General Chemistry'}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">Active research and publications in biochemical and environmental sciences.</p>
+                  </div>
+                  <div className="pt-4 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Publications Count</span>
+                    <span className="font-semibold text-accent">{publications.length} Papers</span>
+                  </div>
+                </div>
               </div>
 
-              {activeTab === 'overview' && (
-                <div className="space-y-6">
-                  {/* Biography */}
-                  <div className="bg-card border border-border rounded-xl p-6">
-                    <h2 className="font-heading text-xl text-foreground mb-4 flex items-center gap-2">
-                      <Award className="w-5 h-5 text-accent" />
-                      About
-                    </h2>
-                    {member.bio ? (
-                      <div
-                        className="prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80 [&_strong]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground"
-                        dangerouslySetInnerHTML={{ __html: linkifyHtml(member.bio) }}
-                      />
-                    ) : (
-                      <p className="text-muted-foreground italic">
-                        No biography available yet.
-                      </p>
-                    )}
+              {/* Bio Section */}
+              <div className="bg-card border border-border rounded-3xl p-8 shadow-card">
+                <h3 className="font-heading text-xl font-bold text-foreground mb-4 flex items-center gap-2.5">
+                  <User className="w-5 h-5 text-accent" /> Biography
+                </h3>
+                {member.bio ? (
+                  <div
+                    className="prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed text-sm [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80 [&_strong]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground"
+                    dangerouslySetInnerHTML={{ __html: linkifyHtml(member.bio) }}
+                  />
+                ) : (
+                  <p className="text-muted-foreground text-sm italic">Biography has not been added yet.</p>
+                )}
+              </div>
+
+              {/* Education Preview */}
+              {member.education && member.education.length > 0 && (
+                <div className="bg-card border border-border rounded-3xl p-8 shadow-card">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2.5">
+                      <GraduationCap className="w-5 h-5 text-accent" /> Education Background
+                    </h3>
+                    <button
+                      onClick={() => setActiveTab('education')}
+                      className="text-xs font-bold text-accent hover:underline inline-flex items-center gap-1"
+                    >
+                      View All →
+                    </button>
                   </div>
-
-                  {/* Expertise */}
-                  {member.expertise && member.expertise.length > 0 && (
-                    <div className="bg-card border border-border rounded-xl p-6">
-                      <h2 className="font-heading text-xl text-foreground mb-4 flex items-center gap-2">
-                        <GraduationCap className="w-5 h-5 text-accent" />
-                        Areas of Expertise
-                      </h2>
-                      <div className="flex flex-wrap gap-2">
-                        {member.expertise.map((item) => (
-                          <span
-                            key={item}
-                            className="inline-flex items-center px-4 py-2 bg-accent/15 text-accent rounded-lg text-sm font-medium border border-[#15803D]/20"
-                          >
-                            {item}
+                  <div className="space-y-4">
+                    {member.education.slice(0, 3).map((item, idx) => (
+                      <div key={idx} className="p-4 rounded-2xl bg-secondary/40 border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <p className="font-bold text-foreground text-sm">{item.degree}</p>
+                          <p className="text-xs text-muted-foreground">{[item.institution, item.department].filter(Boolean).join(' • ')}</p>
+                        </div>
+                        {item.graduationYear && (
+                          <span className="text-xs font-semibold text-accent bg-accent/15 px-3 py-1 rounded-full w-fit">
+                            Graduated {item.graduationYear}
                           </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Research Stats */}
-                  {(publications.length > 0 || scholarProfile) && (
-                    <div className="bg-card border border-border rounded-xl p-6">
-                      <h2 className="font-heading text-xl text-foreground mb-4 flex items-center gap-2">
-                        <BookOpen className="w-5 h-5 text-accent" />
-                        Research Metrics
-                      </h2>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div className="bg-secondary rounded-xl p-4 text-center">
-                          <p className="text-3xl font-bold text-accent mb-1">
-                            {publications.length}
-                          </p>
-                          <p className="text-sm text-muted-foreground">Publications</p>
-                        </div>
-                        <div className="bg-secondary rounded-xl p-4 text-center">
-                          <p className="text-3xl font-bold text-accent mb-1">
-                            {scholarProfile?.totalCitations || publications.reduce((sum, pub) => sum + (parseInt(pub.citedBy) || 0), 0)}
-                          </p>
-                          <p className="text-sm text-muted-foreground">Total Citations</p>
-                        </div>
-                        {scholarProfile && (
-                          <>
-                            <div className="bg-secondary rounded-xl p-4 text-center">
-                              <p className="text-3xl font-bold text-accent mb-1">
-                                {scholarProfile.hIndex}
-                              </p>
-                              <p className="text-sm text-muted-foreground">h-index</p>
-                            </div>
-                            <div className="bg-secondary rounded-xl p-4 text-center">
-                              <p className="text-3xl font-bold text-accent mb-1">
-                                {scholarProfile.i10Index}
-                              </p>
-                              <p className="text-sm text-muted-foreground">i10-index</p>
-                            </div>
-                          </>
                         )}
                       </div>
-                    </div>
-                  )}
+                    ))}
+                  </div>
                 </div>
               )}
 
-              {activeTab === 'publications' && (
-                <div className="space-y-5">
-                  {/* Publications Stats & Filter Card */}
-                  <div className="bg-card border border-border rounded-xl p-3 sm:p-4 shadow-2xs">
-                    {/* Top Stats Row */}
-                    <div className="flex items-center justify-between flex-wrap gap-3 pb-2.5">
-                      <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
-                        <div className="flex items-center gap-2">
-                          <div className="p-1.5 rounded-md bg-secondary text-secondary-foreground">
-                            <FileText className="w-3.5 h-3.5 text-accent" />
-                          </div>
-                          <div>
-                            <div className="font-heading text-base sm:text-lg font-bold text-accent leading-none">{publications.length}</div>
-                            <div className="text-[10px] text-muted-foreground mt-0.5">Publications</div>
-                          </div>
+              {/* Recent Publications Preview */}
+              {publications.length > 0 && (
+                <div className="bg-card border border-border rounded-3xl p-8 shadow-card">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2.5">
+                      <BookOpen className="w-5 h-5 text-accent" /> Selected Publications ({publications.length})
+                    </h3>
+                    <button
+                      onClick={() => setActiveTab('publications')}
+                      className="text-xs font-bold text-accent hover:underline inline-flex items-center gap-1"
+                    >
+                      View All Publications →
+                    </button>
+                  </div>
+                  <div className="space-y-3">
+                    {publications.slice(0, 3).map((pub, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => navigate(`/publications/${createSlug(pub.title) || pub.scholarId || idx}`)}
+                        className="p-4 rounded-2xl bg-secondary/40 border border-border hover:border-accent/40 cursor-pointer transition-all"
+                      >
+                        <p className="font-bold text-foreground text-sm mb-1 line-clamp-1">{pub.title}</p>
+                        <p className="text-xs text-muted-foreground">{pub.journal} • {pub.year}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 2. CURRENT POSITION TAB */}
+          {activeTab === 'position' && (
+            <div className="bg-card border border-border rounded-3xl p-8 shadow-card animate-fade-in space-y-6">
+              <h2 className="font-heading text-2xl font-bold text-foreground flex items-center gap-3">
+                <Briefcase className="w-6 h-6 text-accent" /> Current Position & Role
+              </h2>
+
+              <div className="space-y-4">
+                <div className="p-5 rounded-2xl bg-secondary/50 border border-border">
+                  <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">Title / Designation</p>
+                  <p className="text-2xl font-bold text-foreground">{member.title || 'Team Member'}</p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-secondary/50 border border-border">
+                  <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">Laboratory / Organization</p>
+                  <p className="text-xl font-semibold text-foreground">Biochemical and Environmental Research Lab (BCER Lab)</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-4 rounded-2xl bg-secondary/50 border border-border">
+                    <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">Department / Position Type</p>
+                    <p className="text-base font-medium text-foreground capitalize">{member.position || 'Research Member'}</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-secondary/50 border border-border">
+                    <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">Location</p>
+                    <p className="text-base font-medium text-foreground">CUET, Chittagong</p>
+                  </div>
+                </div>
+
+                {member.joinedDate && (
+                  <div className="p-4 rounded-2xl bg-secondary/50 border border-border">
+                    <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">Joined Date</p>
+                    <p className="text-base font-medium text-foreground">
+                      {new Date(member.joinedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 3. ABOUT TAB */}
+          {activeTab === 'about' && (
+            <div className="bg-card border border-border rounded-3xl p-8 shadow-card animate-fade-in space-y-6">
+              <h2 className="font-heading text-2xl font-bold text-foreground flex items-center gap-3">
+                <User className="w-6 h-6 text-accent" /> About Member
+              </h2>
+              {member.bio ? (
+                <div
+                  className="prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed text-base [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:my-1 [&_a]:text-accent [&_a]:underline hover:[&_a]:text-accent/80 [&_strong]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground"
+                  dangerouslySetInnerHTML={{ __html: linkifyHtml(member.bio) }}
+                />
+              ) : (
+                <p className="text-muted-foreground text-sm italic">Biography has not been added yet.</p>
+              )}
+            </div>
+          )}
+
+          {/* 4. CAREER HISTORY TAB */}
+          {activeTab === 'career' && (
+            <div className="bg-card border border-border rounded-3xl p-8 shadow-card animate-fade-in space-y-6">
+              <h2 className="font-heading text-2xl font-bold text-foreground flex items-center gap-3">
+                <Building2 className="w-6 h-6 text-accent" /> Career History
+              </h2>
+
+              {member.careerHistory && member.careerHistory.length > 0 ? (
+                <div className="space-y-6 relative before:absolute before:inset-0 before:left-4 before:w-0.5 before:bg-border">
+                  {member.careerHistory.map((career, index) => (
+                    <div key={index} className="relative pl-10">
+                      <div className="absolute left-2.5 top-2 w-3.5 h-3.5 rounded-full bg-accent ring-4 ring-card" />
+                      <div className="p-6 rounded-2xl bg-secondary/50 border border-border shadow-sm">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                          <h3 className="font-heading font-bold text-foreground text-lg">{career.title}</h3>
+                          <span className="text-xs font-bold text-accent bg-accent/15 px-3 py-1 rounded-full w-fit">
+                            {career.startDate} {career.endDate ? `- ${career.endDate}` : career.isCurrent ? '- Present' : ''}
+                          </span>
                         </div>
-
-                        <div className="w-px h-6 bg-border" />
-
-                        <div className="flex items-center gap-2">
-                          <div className="p-1.5 rounded-md bg-secondary text-secondary-foreground">
-                            <Quote className="w-3.5 h-3.5 text-accent" />
-                          </div>
-                          <div>
-                            <div className="font-heading text-base sm:text-lg font-bold text-accent leading-none">{totalPubCitations}</div>
-                            <div className="text-[10px] text-muted-foreground mt-0.5">Citations</div>
-                          </div>
-                        </div>
-
-                        {scholarProfile && (
-                          <>
-                            <div className="w-px h-6 bg-border hidden sm:block" />
-                            <div className="flex items-center gap-2">
-                              <div className="p-1.5 rounded-md bg-secondary text-secondary-foreground">
-                                <GraduationCap className="w-3.5 h-3.5 text-accent" />
-                              </div>
-                              <div>
-                                <div className="font-heading text-base sm:text-lg font-bold text-accent leading-none">{scholarProfile.hIndex}</div>
-                                <div className="text-[10px] text-muted-foreground mt-0.5">h-index</div>
-                              </div>
-                            </div>
-
-                            <div className="w-px h-6 bg-border hidden sm:block" />
-                            <div className="flex items-center gap-2">
-                              <div className="p-1.5 rounded-md bg-secondary text-secondary-foreground">
-                                <Award className="w-3.5 h-3.5 text-accent" />
-                              </div>
-                              <div>
-                                <div className="font-heading text-base sm:text-lg font-bold text-accent leading-none">{scholarProfile.i10Index}</div>
-                                <div className="text-[10px] text-muted-foreground mt-0.5">i10-index</div>
-                              </div>
-                            </div>
-                          </>
+                        <p className="text-sm font-semibold text-muted-foreground mb-3">{career.organization}</p>
+                        {career.description && (
+                          <p className="text-sm text-muted-foreground leading-relaxed">{career.description}</p>
                         )}
                       </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-sm italic">No career history entries listed.</p>
+              )}
+            </div>
+          )}
 
-                      {member?.googleScholarLink && (
-                        <button
-                          onClick={() => member && fetchPublications(member.id)}
-                          disabled={pubsLoading}
-                          className="p-1.5 rounded-md bg-secondary hover:bg-secondary/80 text-accent transition-colors disabled:opacity-50"
-                          title="Refresh publications"
-                        >
-                          <RefreshCw className={`w-3.5 h-3.5 ${pubsLoading ? 'animate-spin' : ''}`} />
-                        </button>
+          {/* 5. EDUCATION TAB */}
+          {activeTab === 'education' && (
+            <div className="bg-card border border-border rounded-3xl p-8 shadow-card animate-fade-in space-y-6">
+              <h2 className="font-heading text-2xl font-bold text-foreground flex items-center gap-3">
+                <GraduationCap className="w-6 h-6 text-accent" /> Education Background
+              </h2>
+
+              {member.education && member.education.length > 0 ? (
+                <div className="space-y-6">
+                  {member.education.map((edu, index) => (
+                    <div key={index} className="p-6 rounded-2xl bg-secondary/50 border border-border shadow-sm">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                        <h3 className="font-heading font-bold text-foreground text-lg">{edu.degree}</h3>
+                        {edu.graduationYear && (
+                          <span className="text-xs font-bold text-accent bg-accent/15 px-3 py-1 rounded-full w-fit">
+                            Graduated {edu.graduationYear}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm font-semibold text-muted-foreground mb-2">
+                        {[edu.institution, edu.department].filter(Boolean).join(' • ')}
+                      </p>
+                      {edu.thesis && (
+                        <p className="text-sm text-muted-foreground mt-3 italic bg-secondary/60 p-3 rounded-xl border border-border">
+                          <span className="font-bold not-italic text-foreground">Thesis:</span> {edu.thesis}
+                        </p>
                       )}
                     </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-sm italic">No education history entries listed.</p>
+              )}
+            </div>
+          )}
 
-                    {/* Filter & Sort Controls Row */}
-                    {publications.length > 0 && (
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pt-2.5 border-t border-border/70">
-                        {/* Sort By Controls */}
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
-                            Sort by:
-                          </span>
-                          <div className="inline-flex p-0.5 bg-secondary/80 rounded-md border border-border">
-                            <button
-                              type="button"
-                              onClick={() => setSortBy('recent')}
-                              className={`px-2.5 py-0.5 rounded text-xs font-medium transition-all ${
-                                sortBy === 'recent'
-                                  ? 'bg-accent text-primary-foreground shadow-2xs'
-                                  : 'text-muted-foreground hover:text-foreground'
-                              }`}
-                            >
-                              Recent
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setSortBy('citations')}
-                              className={`px-2.5 py-0.5 rounded text-xs font-medium transition-all ${
-                                sortBy === 'citations'
-                                  ? 'bg-accent text-primary-foreground shadow-2xs'
-                                  : 'text-muted-foreground hover:text-foreground'
-                              }`}
-                            >
-                              Citations
-                            </button>
-                          </div>
-                        </div>
+          {/* 6. RESEARCH & EXPERTISE TAB */}
+          {activeTab === 'expertise' && (
+            <div className="bg-card border border-border rounded-3xl p-8 shadow-card animate-fade-in space-y-6">
+              <h2 className="font-heading text-2xl font-bold text-foreground flex items-center gap-3">
+                <Award className="w-6 h-6 text-accent" /> Research & Expertise
+              </h2>
 
-                        {/* Year Filter Controls - 3 Recent Years + Dropdown */}
-                        <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => setSelectedYear(null)}
-                            className={`px-2.5 py-0.5 rounded-md text-xs font-medium transition-all ${
-                              selectedYear === null
-                                ? 'bg-accent text-primary-foreground shadow-xs'
-                                : 'bg-card text-muted-foreground border border-border hover:bg-secondary'
-                            }`}
-                          >
-                            All
-                          </button>
-                          {years.slice(0, 3).map((year) => (
-                            <button
-                              key={year}
-                              type="button"
-                              onClick={() => setSelectedYear(year)}
-                              className={`px-2.5 py-0.5 rounded-md text-xs font-medium transition-all ${
-                                selectedYear === year
-                                  ? 'bg-accent text-primary-foreground shadow-xs'
-                                  : 'bg-card text-muted-foreground border border-border hover:bg-secondary'
-                              }`}
-                            >
-                              {year}
-                            </button>
-                          ))}
-                          {years.length > 3 && (
-                            <select
-                              value={years.slice(3).includes(selectedYear || '') ? (selectedYear || '') : ''}
-                              onChange={(e) => setSelectedYear(e.target.value || null)}
-                              className={`px-2 py-0.5 rounded-md text-xs font-medium transition-all border cursor-pointer focus:outline-none ${
-                                years.slice(3).includes(selectedYear || '')
-                                  ? 'bg-accent text-primary-foreground border-accent'
-                                  : 'bg-card text-muted-foreground border-border hover:bg-secondary'
-                              }`}
-                            >
-                              <option value="" className="bg-card text-foreground">
-                                {years.slice(3).includes(selectedYear || '') ? selectedYear : 'More Years...'}
-                              </option>
-                              {years.slice(3).map((year) => (
-                                <option key={year} value={year} className="bg-card text-foreground">
-                                  {year}
-                                </option>
-                              ))}
-                            </select>
+              {member.researchArea && (
+                <div className="p-6 rounded-2xl bg-secondary/50 border border-border">
+                  <p className="text-xs text-muted-foreground uppercase font-semibold mb-2">Primary Research Area</p>
+                  <p className="text-lg font-bold text-foreground">{member.researchArea}</p>
+                </div>
+              )}
+
+              {member.expertise && member.expertise.length > 0 ? (
+                <div>
+                  <p className="text-xs text-muted-foreground uppercase font-semibold mb-3">Skills & Technical Competencies</p>
+                  <div className="flex flex-wrap gap-2.5">
+                    {member.expertise.map((skill) => (
+                      <span
+                        key={skill}
+                        className="px-4 py-2 rounded-xl bg-accent/15 text-accent text-sm font-semibold border border-accent/20 flex items-center gap-1.5"
+                      >
+                        <CheckCircle2 className="w-4 h-4" />
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-sm italic">No expertise tags listed.</p>
+              )}
+            </div>
+          )}
+
+          {/* 7. PUBLICATIONS TAB */}
+          {activeTab === 'publications' && (
+            <div className="bg-card border border-border rounded-3xl p-8 shadow-card animate-fade-in space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+                <div>
+                  <h2 className="font-heading text-2xl font-bold text-foreground flex items-center gap-3">
+                    <BookOpen className="w-6 h-6 text-accent" /> Publications ({publications.length})
+                  </h2>
+                  <p className="text-xs text-muted-foreground mt-1">Research papers indexed from Google Scholar</p>
+                </div>
+                {member.googleScholarLink && (
+                  <a
+                    href={member.googleScholarLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-foreground hover:bg-accent hover:text-primary-foreground rounded-xl text-xs font-semibold transition-all border border-border shadow-sm w-fit"
+                  >
+                    Google Scholar Profile <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                )}
+              </div>
+
+              {pubsLoading ? (
+                <div className="flex items-center justify-center py-16">
+                  <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : publications.length === 0 ? (
+                <div className="text-center py-12 bg-secondary/30 rounded-2xl border border-border">
+                  <BookOpen className="w-12 h-12 text-muted-foreground/50 mx-auto mb-3" />
+                  <p className="text-sm text-muted-foreground font-medium">No publications found or linked.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {publications.map((pub, index) => {
+                    const pubSlug = createSlug(pub.title) || pub.scholarId || String(index);
+                    return (
+                      <div
+                        key={pub.scholarId || index}
+                        onClick={() => navigate(`/publications/${pubSlug}`)}
+                        className="p-6 rounded-2xl bg-secondary/50 border border-border hover:border-accent/40 transition-all cursor-pointer group shadow-sm"
+                      >
+                        <h3 className="font-heading font-bold text-foreground group-hover:text-accent transition-colors text-base mb-2">
+                          {pub.title}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground mb-3 line-clamp-2">
+                          {pub.authors?.join(', ')}
+                        </p>
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground italic">
+                          <span>{pub.journal} • {pub.year}</span>
+                          {pub.citedBy && parseInt(pub.citedBy) > 0 && (
+                            <span className="bg-accent/15 text-accent px-3 py-1 rounded-full not-italic font-bold">
+                              Cited by {pub.citedBy}
+                            </span>
                           )}
                         </div>
                       </div>
-                    )}
-                  </div>
-
-                  {pubsLoading ? (
-                    <div className="bg-card border border-border rounded-xl p-8">
-                      <div className="space-y-4">
-                        {Array.from({ length: 3 }).map((_, i) => (
-                          <div key={i} className="animate-pulse">
-                            <div className="h-5 w-3/4 bg-secondary rounded mb-2" />
-                            <div className="h-4 w-1/2 bg-secondary rounded mb-2" />
-                            <div className="h-4 w-1/3 bg-secondary rounded" />
-                          </div>
-                        ))}
-                      </div>
-                      <p className="text-sm text-muted-foreground text-center mt-4">
-                        Fetching publications from Google Scholar...
-                      </p>
-                    </div>
-                  ) : pubsError ? (
-                    <div className="bg-card border border-border rounded-xl p-8 text-center">
-                      <BookOpen className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
-                      <p className="text-muted-foreground mb-2">Could not load publications.</p>
-                      <p className="text-xs text-muted-foreground mb-4">{pubsError}</p>
-                      {member?.googleScholarLink && (
-                        <button
-                          onClick={() => member && fetchPublications(member.id)}
-                          className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-primary-foreground rounded-lg hover:bg-accent/90 transition-colors"
-                        >
-                          <RefreshCw className="w-4 h-4" />
-                          Try Again
-                        </button>
-                      )}
-                    </div>
-                  ) : filteredPublications.length === 0 ? (
-                    <div className="bg-card border border-border rounded-xl p-8 text-center">
-                      <BookOpen className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
-                      <h3 className="font-heading text-lg text-foreground mb-2">
-                        {selectedYear ? `No Publications Found for ${selectedYear}` : 'No Publications Yet'}
-                      </h3>
-                      <p className="text-muted-foreground text-sm">
-                        {selectedYear ? 'Try selecting another year or click "All".' : 'Publications will appear here once they are linked to a Google Scholar profile.'}
-                      </p>
-                    </div>
-                  ) : sortBy === 'citations' ? (
-                    <div className="space-y-6">
-                      <div className="flex items-center gap-3">
-                        <div className="p-1.5 rounded-lg bg-secondary text-secondary-foreground">
-                          <Quote className="w-4 h-4 text-accent" />
-                        </div>
-                        <h3 className="font-heading text-lg font-bold text-[#166534] dark:text-foreground">
-                          {selectedYear ? `${selectedYear} Publications` : 'Publications Sorted by Citations'}
-                        </h3>
-                        <span className="px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground text-xs font-medium">
-                          {sortedPublications.length} {sortedPublications.length === 1 ? 'paper' : 'papers'}
-                        </span>
-                        <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
-                      </div>
-                      <div className="space-y-3 sm:space-y-4">
-                        {sortedPublications.map((pub, index) => {
-                          const slug = createSlug(pub.title) || pub.scholarId || String(index);
-                          const citations = parseInt(pub.citedBy) || 0;
-                          return (
-                            <div
-                              key={pub.scholarId || index}
-                              onClick={() => navigate(`/publications/${slug}`)}
-                              className="group bg-card border border-border rounded-xl p-4 sm:p-5 hover:shadow-md hover:border-accent/30 transition-all cursor-pointer"
-                            >
-                              <div className="flex items-start gap-3 sm:gap-4">
-                                <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-accent/15 text-accent font-bold text-xs sm:text-sm shrink-0 group-hover:bg-accent group-hover:text-primary-foreground transition-colors">
-                                  {index + 1}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <h3 className="font-medium text-foreground mb-1.5 leading-snug group-hover:text-accent transition-colors text-sm sm:text-base">
-                                    {pub.title}
-                                  </h3>
-                                  <p className="text-xs sm:text-sm text-muted-foreground mb-2 line-clamp-2">
-                                    {pub.authors?.join(', ') || 'Authors not available'}
-                                  </p>
-                                  <div className="flex flex-wrap items-center justify-between gap-2">
-                                    <span className="text-xs text-muted-foreground italic line-clamp-1">
-                                      {pub.journal || 'Journal not specified'} {pub.year && `• ${pub.year}`}
-                                    </span>
-                                    <div className="flex items-center gap-3">
-                                      {citations > 0 && (
-                                        <span className="inline-flex items-center gap-1 text-xs bg-accent/15 text-accent px-2.5 py-0.5 rounded-full font-semibold">
-                                          <Quote className="w-3 h-3" />
-                                          Cited by {citations}
-                                        </span>
-                                      )}
-                                      {pub.articleUrl && (
-                                        <a
-                                          href={pub.articleUrl}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          onClick={(e) => e.stopPropagation()}
-                                          className="inline-flex items-center gap-1 text-xs text-accent hover:text-accent/80 hover:underline font-medium"
-                                        >
-                                          View Paper
-                                          <ExternalLink className="w-3 h-3" />
-                                        </a>
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-8">
-                      {Object.entries(groupedByYear)
-                        .sort(([a], [b]) => {
-                          const numA = parseInt(a) || 0;
-                          const numB = parseInt(b) || 0;
-                          return numB - numA;
-                        })
-                        .map(([year, pubs]) => (
-                          <div key={year}>
-                            <div className="flex items-center gap-3 mb-3">
-                              <div className="p-1.5 rounded-lg bg-secondary text-secondary-foreground">
-                                <GraduationCap className="w-4 h-4 text-accent" />
-                              </div>
-                              <h3 className="font-heading text-lg font-bold text-[#166534] dark:text-foreground">
-                                {year}
-                              </h3>
-                              <span className="px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground text-xs font-medium">
-                                {pubs.length} {pubs.length === 1 ? 'paper' : 'papers'}
-                              </span>
-                              <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
-                            </div>
-                            <div className="space-y-3 sm:space-y-4">
-                              {pubs.map((pub, index) => {
-                                const slug = createSlug(pub.title) || pub.scholarId || String(index);
-                                const citations = parseInt(pub.citedBy) || 0;
-                                return (
-                                  <div
-                                    key={pub.scholarId || index}
-                                    onClick={() => navigate(`/publications/${slug}`)}
-                                    className="group bg-card border border-border rounded-xl p-4 sm:p-5 hover:shadow-md hover:border-accent/30 transition-all cursor-pointer"
-                                  >
-                                    <div className="flex items-start gap-3 sm:gap-4">
-                                      <div className="p-2 rounded-lg bg-secondary text-secondary-foreground shrink-0 group-hover:bg-accent group-hover:text-primary-foreground transition-colors">
-                                        <FileText className="w-4 h-4 text-accent group-hover:text-primary-foreground" />
-                                      </div>
-                                      <div className="flex-1 min-w-0">
-                                        <h3 className="font-medium text-foreground mb-1.5 leading-snug group-hover:text-accent transition-colors text-sm sm:text-base">
-                                          {pub.title}
-                                        </h3>
-                                        <p className="text-xs sm:text-sm text-muted-foreground mb-2 line-clamp-2">
-                                          {pub.authors?.join(', ') || 'Authors not available'}
-                                        </p>
-                                        <div className="flex flex-wrap items-center justify-between gap-2">
-                                          <span className="text-xs text-muted-foreground italic line-clamp-1">
-                                            {pub.journal || 'Journal not specified'} {pub.year && `• ${pub.year}`}
-                                          </span>
-                                          <div className="flex items-center gap-3">
-                                            {citations > 0 && (
-                                              <span className="inline-flex items-center gap-1 text-xs bg-accent/15 text-accent px-2.5 py-0.5 rounded-full font-semibold">
-                                                <Quote className="w-3 h-3" />
-                                                Cited by {citations}
-                                              </span>
-                                            )}
-                                            {pub.articleUrl && (
-                                              <a
-                                                href={pub.articleUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                onClick={(e) => e.stopPropagation()}
-                                                className="inline-flex items-center gap-1 text-xs text-accent hover:text-accent/80 hover:underline font-medium"
-                                              >
-                                                View Paper
-                                                <ExternalLink className="w-3 h-3" />
-                                              </a>
-                                            )}
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  )}
+                    );
+                  })}
                 </div>
               )}
             </div>
-          </div>
+          )}
+
+          {/* 8. LAB EXPERIENCE TAB */}
+          {activeTab === 'lab' && (
+            <div className="bg-card border border-border rounded-3xl p-8 shadow-card animate-fade-in space-y-6">
+              <h2 className="font-heading text-2xl font-bold text-foreground flex items-center gap-3">
+                <BookMarked className="w-6 h-6 text-accent" /> Lab Experience & Contributions
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-5 rounded-2xl bg-secondary/50 border border-border">
+                  <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">Lab Position / Role</p>
+                  <p className="text-base font-bold text-foreground">{member.title || 'Research Member'}</p>
+                </div>
+                <div className="p-5 rounded-2xl bg-secondary/50 border border-border">
+                  <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">Laboratory Affiliation</p>
+                  <p className="text-base font-bold text-foreground">Biochemical and Environmental Research Lab (BCER Lab)</p>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
     </div>

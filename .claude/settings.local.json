@@ -1,0 +1,17 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "http://localhost:20128",
+    "ANTHROPIC_AUTH_TOKEN": "omniroute",
+    "ANTHROPIC_MODEL": "coding-combo",
+    "ANTHROPIC_SMALL_FAST_MODEL": "coding-combo",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "antigravity/gemini-3.5-flash-lite",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "kr/claude-sonnet-4.5",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "antigravity/gemini-3.8-flash-medium",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"https://chemprojectbackend.onrender.com/api/sitemap.xml\")"
+    ]
+  }
+}

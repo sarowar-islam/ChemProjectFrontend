@@ -27,18 +27,47 @@ import {
   Trash2,
   Menu,
   XIcon,
+  Briefcase,
+  Building2,
+  MapPin,
+  CheckCircle,
+  AlertCircle,
+  Edit,
+  RefreshCw,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { teamService } from '@/services/team.service';
+import { authService } from '@/services/auth.service';
 import { scholarService, ScholarPublication, ScholarProfile } from '@/services';
-import { TeamMember, SocialLink } from '@/services/types';
+import { TeamMember, SocialLink, CareerItem, EducationItem } from '@/services/types';
 import RichTextEditor from '@/components/RichTextEditor';
 import { stripHtml } from '@/lib/htmlUtils';
+import { normalizeMemberTitle } from '@/lib/memberSorting';
 
-type ActiveSection = 'dashboard' | 'publications' | 'skills' | 'info' | 'settings';
-const VALID_SECTIONS: ActiveSection[] = ['dashboard', 'publications', 'skills', 'info', 'settings'];
+type ActiveSection =
+  | 'dashboard'
+  | 'profile'
+  | 'position'
+  | 'career'
+  | 'education'
+  | 'skills'
+  | 'publications'
+  | 'links'
+  | 'settings';
 
-export default function MemberDashboardPage() {
+const VALID_SECTIONS: ActiveSection[] = [
+  'dashboard',
+  'profile',
+  'position',
+  'career',
+  'education',
+  'skills',
+  'publications',
+  'links',
+  'settings',
+];
+
+export default function AlumniDashboardPage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -50,13 +79,15 @@ export default function MemberDashboardPage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [pubsLoading, setPubsLoading] = useState(false);
 
   const getInitialSection = (): ActiveSection => {
     const sectionParam = searchParams.get('section') as ActiveSection | null;
     if (sectionParam && VALID_SECTIONS.includes(sectionParam)) {
       return sectionParam;
     }
-    const saved = localStorage.getItem('member_active_section') as ActiveSection | null;
+    const saved = localStorage.getItem('alumni_active_section') as ActiveSection | null;
     if (saved && VALID_SECTIONS.includes(saved)) {
       return saved;
     }
@@ -67,7 +98,7 @@ export default function MemberDashboardPage() {
 
   const setActiveSection = (section: ActiveSection) => {
     setActiveSectionState(section);
-    localStorage.setItem('member_active_section', section);
+    localStorage.setItem('alumni_active_section', section);
     setSearchParams(section === 'dashboard' ? {} : { section }, { replace: true });
   };
 
@@ -76,17 +107,15 @@ export default function MemberDashboardPage() {
     if (sectionParam && VALID_SECTIONS.includes(sectionParam)) {
       if (sectionParam !== activeSection) {
         setActiveSectionState(sectionParam);
-        localStorage.setItem('member_active_section', sectionParam);
+        localStorage.setItem('alumni_active_section', sectionParam);
       }
     } else if (!sectionParam && activeSection !== 'dashboard') {
       setSearchParams({ section: activeSection }, { replace: true });
     }
   }, [searchParams, activeSection, setSearchParams]);
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [pubsLoading, setPubsLoading] = useState(false);
-
-  // Form state for Info section
+  // Form states
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [bio, setBio] = useState('');
@@ -94,26 +123,49 @@ export default function MemberDashboardPage() {
   const [googleScholarLink, setGoogleScholarLink] = useState('');
   const [orcid, setOrcid] = useState('');
   const [researchGate, setResearchGate] = useState('');
+  const [personalWebsite, setPersonalWebsite] = useState('');
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [expertise, setExpertise] = useState<string[]>([]);
   const [newExpertise, setNewExpertise] = useState('');
+  const [researchArea, setResearchArea] = useState('');
 
-  const handleAddSocialLink = () => {
-    setSocialLinks([...socialLinks, { platform: 'LinkedIn', url: '' }]);
-  };
+  // Current Position state
+  const [currentTitle, setCurrentTitle] = useState('');
+  const [currentOrganization, setCurrentOrganization] = useState('');
+  const [currentDepartment, setCurrentDepartment] = useState('');
+  const [location, setLocation] = useState('');
+  const [currentPositionStartDate, setCurrentPositionStartDate] = useState('');
+  const [currentPositionDescription, setCurrentPositionDescription] = useState('');
+  const [formerRole, setFormerRole] = useState('');
+  const [labAffiliation, setLabAffiliation] = useState('');
+  const [labContributions, setLabContributions] = useState('');
 
-  const handleUpdateSocialLink = (index: number, field: 'platform' | 'url', value: string) => {
-    const updated = [...socialLinks];
-    updated[index][field] = value;
-    setSocialLinks(updated);
-  };
+  // Career History state
+  const [careerHistory, setCareerHistory] = useState<CareerItem[]>([]);
+  const [newCareer, setNewCareer] = useState<CareerItem>({
+    title: '',
+    organization: '',
+    startDate: '',
+    endDate: '',
+    isCurrent: false,
+    description: '',
+  });
 
-  const handleRemoveSocialLink = (index: number) => {
-    setSocialLinks(socialLinks.filter((_, i) => i !== index));
-  };
+  // Education state
+  const [education, setEducation] = useState<EducationItem[]>([]);
+  const [newEdu, setNewEdu] = useState<EducationItem>({
+    degree: '',
+    institution: '',
+    department: '',
+    graduationYear: '',
+    thesis: '',
+  });
 
-  // Settings form state
-  const [settingsName, setSettingsName] = useState('');
+  // Privacy preferences
+  const [isEmailPublic, setIsEmailPublic] = useState(true);
+  const [isContactPublic, setIsContactPublic] = useState(true);
+
+  // Settings state
   const [settingsUsername, setSettingsUsername] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -136,27 +188,62 @@ export default function MemberDashboardPage() {
     setPubsLoading(false);
   };
 
+  const getUsername = () => {
+    if (user?.username) return user.username;
+    const stored = authService.getStoredUser();
+    if (stored?.username) return stored.username;
+    try {
+      const authUserStr = localStorage.getItem('auth_user');
+      if (authUserStr) {
+        const parsed = JSON.parse(authUserStr);
+        if (parsed?.username) return parsed.username;
+      }
+    } catch (e) {}
+    return '';
+  };
+
+  const applyMemberData = (m: TeamMember) => {
+    setMember(m);
+    setName(m.name || '');
+    setEmail(m.email || '');
+    setPhone(m.phone || '');
+    setBio(m.bio || '');
+    setPhotoUrl(m.photoUrl || '');
+    setGoogleScholarLink(m.googleScholarLink || '');
+    setOrcid(m.orcid || '');
+    setResearchGate(m.researchGate || '');
+    setPersonalWebsite(m.personalWebsite || '');
+    setSocialLinks(m.socialLinks || []);
+    setExpertise(m.expertise || []);
+    setResearchArea(m.researchArea || '');
+    setCurrentTitle(m.currentTitle || '');
+    setCurrentOrganization(m.currentOrganization || '');
+    setCurrentDepartment(m.currentDepartment || '');
+    setLocation(m.location || '');
+    setCurrentPositionStartDate(m.currentPositionStartDate || '');
+    setCurrentPositionDescription(m.currentPositionDescription || '');
+    setFormerRole(m.formerRole || '');
+    setLabAffiliation(m.labAffiliation || '');
+    setLabContributions(m.labContributions || '');
+    setCareerHistory(m.careerHistory || []);
+    setEducation(m.education || []);
+    setIsEmailPublic(m.isEmailPublic ?? true);
+    setIsContactPublic(m.isContactPublic ?? true);
+    setSettingsUsername(m.username || '');
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      if (!user?.username) return;
+      const uname = getUsername();
+      if (!uname) return;
 
-      const memberRes = await teamService.getMemberByUsername(user.username);
+      const memberRes = await teamService.getMemberByUsername(uname);
       if (memberRes.success && memberRes.data) {
-        setMember(memberRes.data);
-        setEmail(memberRes.data.email || '');
-        setPhone(memberRes.data.phone || '');
-        setBio(memberRes.data.bio);
-        setPhotoUrl(memberRes.data.photoUrl);
-        setGoogleScholarLink(memberRes.data.googleScholarLink || '');
-        setOrcid(memberRes.data.orcid || '');
-        setResearchGate(memberRes.data.researchGate || '');
-        setSocialLinks(memberRes.data.socialLinks || []);
-        setExpertise(memberRes.data.expertise || []);
-        setSettingsName(memberRes.data.name);
-        setSettingsUsername(memberRes.data.username);
+        const m = memberRes.data;
+        applyMemberData(m);
 
-        if (memberRes.data.googleScholarLink) {
-          await fetchPublications(memberRes.data.id);
+        if (m.googleScholarLink) {
+          await fetchPublications(m.id);
         }
       }
       setLoading(false);
@@ -172,7 +259,8 @@ export default function MemberDashboardPage() {
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !user?.username) return;
+    const uname = getUsername();
+    if (!file || !uname) return;
 
     if (!file.type.startsWith('image/')) {
       alert('Please select an image file');
@@ -185,42 +273,48 @@ export default function MemberDashboardPage() {
     }
 
     setUploading(true);
-
     try {
-      const res = await teamService.uploadMemberPhoto(user.username, file);
+      const res = await teamService.uploadMemberPhoto(uname, file);
       if (res.success && res.data) {
         setPhotoUrl(res.data.photoUrl);
         setSuccessMessage('Photo uploaded successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
       } else {
-        alert(res.error || 'Failed to upload photo. Please try again.');
+        alert(res.error || 'Failed to upload photo.');
       }
     } catch (error) {
-      console.error('Error uploading photo:', error);
-      alert('Failed to upload photo. Please try again.');
+      alert('Failed to upload photo.');
     } finally {
       setUploading(false);
     }
   };
 
-  const handleAddExpertise = () => {
-    if (newExpertise.trim() && !expertise.includes(newExpertise.trim())) {
-      setExpertise([...expertise, newExpertise.trim()]);
-      setNewExpertise('');
+  const handleSaveAll = async () => {
+    const uname = getUsername();
+    if (!uname) {
+      alert('User session not found. Please log in again.');
+      return;
     }
-  };
-
-  const handleRemoveExpertise = (item: string) => {
-    setExpertise(expertise.filter((e) => e !== item));
-  };
-
-  const handleSaveInfo = async () => {
-    if (!user?.username) return;
 
     setSaving(true);
     setSuccessMessage('');
 
-    const res = await teamService.updateMemberProfile(user.username, {
+    let currentCareerList = [...careerHistory];
+    if (newCareer.title.trim() && newCareer.organization.trim()) {
+      currentCareerList.push(newCareer);
+      setCareerHistory(currentCareerList);
+      setNewCareer({ title: '', organization: '', startDate: '', endDate: '', isCurrent: false, description: '' });
+    }
+
+    let currentEduList = [...education];
+    if (newEdu.degree.trim() && newEdu.institution.trim()) {
+      currentEduList.push(newEdu);
+      setEducation(currentEduList);
+      setNewEdu({ degree: '', institution: '', department: '', graduationYear: '', thesis: '' });
+    }
+
+    const payload: Partial<TeamMember> = {
+      name,
       email,
       phone,
       bio,
@@ -228,17 +322,151 @@ export default function MemberDashboardPage() {
       googleScholarLink,
       orcid,
       researchGate,
-      expertise,
+      personalWebsite,
       socialLinks,
-    });
+      expertise,
+      researchArea,
+      currentTitle,
+      currentOrganization,
+      currentDepartment,
+      location,
+      currentPositionStartDate,
+      currentPositionDescription,
+      formerRole,
+      labAffiliation,
+      labContributions,
+      careerHistory: currentCareerList,
+      education: currentEduList,
+      isEmailPublic,
+      isContactPublic,
+    };
 
-    if (res.success && res.data) {
-      setMember(res.data);
-      setSuccessMessage('Profile updated successfully!');
-      setTimeout(() => setSuccessMessage(''), 3000);
+    try {
+      const res = await teamService.updateMemberProfile(uname, payload);
+
+      if (res.success && res.data) {
+        applyMemberData(res.data);
+        setSuccessMessage('Profile updated and saved to database successfully!');
+        setTimeout(() => setSuccessMessage(''), 3000);
+      } else {
+        const errorMsg = res.error || 'Failed to update profile in database.';
+        setSuccessMessage('');
+        alert(`Error: ${errorMsg}`);
+      }
+    } catch (err: any) {
+      setSuccessMessage('');
+      alert(`Database error: ${err?.message || 'Failed to store data in database.'}`);
+    } finally {
+      setSaving(false);
     }
+  };
 
-    setSaving(false);
+  const saveDirectUpdate = async (overrides: Partial<TeamMember>) => {
+    const uname = getUsername();
+    if (!uname) {
+      alert('User session not found. Please log in again.');
+      return;
+    }
+    setSaving(true);
+    setSuccessMessage('');
+    const payload: Partial<TeamMember> = {
+      name,
+      email,
+      phone,
+      bio,
+      photoUrl,
+      googleScholarLink,
+      orcid,
+      researchGate,
+      personalWebsite,
+      socialLinks,
+      expertise,
+      researchArea,
+      currentTitle,
+      currentOrganization,
+      currentDepartment,
+      location,
+      currentPositionStartDate,
+      currentPositionDescription,
+      formerRole,
+      labAffiliation,
+      labContributions,
+      careerHistory,
+      education,
+      isEmailPublic,
+      isContactPublic,
+      ...overrides,
+    };
+    try {
+      const res = await teamService.updateMemberProfile(uname, payload);
+      if (res.success && res.data) {
+        applyMemberData(res.data);
+        setSuccessMessage('Saved to database successfully!');
+        setTimeout(() => setSuccessMessage(''), 3000);
+      } else {
+        const errorMsg = res.error || 'Failed to save to database.';
+        setSuccessMessage('');
+        alert(`Error: ${errorMsg}`);
+      }
+    } catch (err: any) {
+      setSuccessMessage('');
+      alert(`Database error: ${err?.message || 'Failed to store data in database.'}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleAddCareer = async () => {
+    if (!newCareer.title || !newCareer.organization) {
+      alert('Please enter job title and organization');
+      return;
+    }
+    const updated = [...careerHistory, newCareer];
+    setCareerHistory(updated);
+    setNewCareer({ title: '', organization: '', startDate: '', endDate: '', isCurrent: false, description: '' });
+    await saveDirectUpdate({ careerHistory: updated });
+  };
+
+  const handleRemoveCareer = async (index: number) => {
+    const updated = careerHistory.filter((_, i) => i !== index);
+    setCareerHistory(updated);
+    await saveDirectUpdate({ careerHistory: updated });
+  };
+
+  const handleAddEducation = async () => {
+    if (!newEdu.degree || !newEdu.institution) {
+      alert('Please enter degree and institution');
+      return;
+    }
+    const updated = [...education, newEdu];
+    setEducation(updated);
+    setNewEdu({ degree: '', institution: '', department: '', graduationYear: '', thesis: '' });
+    await saveDirectUpdate({ education: updated });
+  };
+
+  const handleRemoveEducation = async (index: number) => {
+    const updated = education.filter((_, i) => i !== index);
+    setEducation(updated);
+    await saveDirectUpdate({ education: updated });
+  };
+
+  const handleAddSocialLink = async () => {
+    const updated = [...socialLinks, { platform: 'LinkedIn', url: '' }];
+    setSocialLinks(updated);
+    await saveDirectUpdate({ socialLinks: updated });
+  };
+
+  const handleUpdateSocialLink = async (index: number, field: 'platform' | 'url', value: string) => {
+    const updated = [...socialLinks];
+    updated[index][field] = value;
+    setSocialLinks(updated);
+    await saveDirectUpdate({ socialLinks: updated });
+  };
+
+  const handleRemoveSocialLink = async (index: number) => {
+    const updated = socialLinks.filter((_, i) => i !== index);
+    setSocialLinks(updated);
+    await saveDirectUpdate({ socialLinks: updated });
   };
 
   const handleSaveSettings = async () => {
@@ -263,10 +491,9 @@ export default function MemberDashboardPage() {
     }
 
     setSavingSettings(true);
-
     try {
       const res = await teamService.updateMemberSettings(user.username, {
-        name: settingsName,
+        name,
         username: settingsUsername,
         currentPassword: currentPassword || undefined,
         newPassword: newPassword || undefined,
@@ -283,17 +510,20 @@ export default function MemberDashboardPage() {
         setSettingsError(res.error || 'Failed to update settings');
       }
     } catch (error) {
-      setSettingsError('An error occurred. Please try again.');
+      setSettingsError('An error occurred.');
     }
-
     setSavingSettings(false);
   };
 
   const sidebarItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
+    { id: 'profile', label: 'Profile Information', icon: User },
+    { id: 'position', label: 'Current Position', icon: Briefcase },
+    { id: 'career', label: 'Career History', icon: Building2 },
+    { id: 'education', label: 'Education', icon: GraduationCap },
+    { id: 'skills', label: 'Research & Expertise', icon: Sparkles },
     { id: 'publications', label: 'Publications', icon: BookOpen },
-    { id: 'skills', label: 'Skills & Expertise', icon: Sparkles },
-    { id: 'info', label: 'Profile Info', icon: Info },
+    { id: 'links', label: 'Professional Links & Privacy', icon: Share2 },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
@@ -304,6 +534,8 @@ export default function MemberDashboardPage() {
       </div>
     );
   }
+
+  const slug = member?.username || member?.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
   return (
     <div className="min-h-screen bg-background">
@@ -319,29 +551,18 @@ export default function MemberDashboardPage() {
             </button>
             <Link to="/" className="flex items-center gap-3">
               <div className="w-9 h-9 shrink-0">
-                <img
-                  src="/photos/Logo.png"
-                  alt="Yunus Ahmed Lab logo"
-                  className="w-full h-full object-contain"
-                />
+                <img src="/photos/Logo.png" alt="Logo" className="w-full h-full object-contain" />
               </div>
               <div className="hidden sm:flex items-center gap-2">
-                <div className="flex flex-col leading-tight">
-                  <span className="font-heading text-xs lg:text-sm font-semibold text-foreground">
-                    <span>Biochemical and </span>
-                    <span className="text-[#15803D]">Environmental</span>
-                  </span>
-                  <span className="text-[9px] lg:text-[10px] uppercase tracking-[0.3em] text-[#15803D] font-medium mt-0.5">
-                    Research Lab
-                  </span>
-                </div>
-                <span className="text-muted-foreground">|</span>
-                <span className="text-xs text-muted-foreground">Member Portal</span>
+                <span className="font-heading text-xs lg:text-sm font-semibold text-foreground">
+                  Alumni Portal
+                </span>
               </div>
             </Link>
           </div>
 
           <div className="flex items-center gap-4">
+            
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-border bg-secondary">
                 <img
@@ -350,9 +571,7 @@ export default function MemberDashboardPage() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="text-sm font-medium hidden sm:inline text-foreground">
-                {member?.name}
-              </span>
+              <span className="text-sm font-medium hidden sm:inline text-foreground">{member?.name}</span>
             </div>
             <button
               onClick={handleLogout}
@@ -366,22 +585,19 @@ export default function MemberDashboardPage() {
       </header>
 
       {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
+        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Left Sidebar */}
+      {/* Sidebar */}
       <aside
-        className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-card border-r border-border z-40 transform transition-transform duration-200 ease-in-out ${
+        className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-card border-r border-border z-40 transform transition-transform duration-200 ease-in-out overflow-y-auto ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         <div className="p-4">
-          <div className="mb-6 p-4 rounded-xl bg-secondary border border-secondary-foreground/20">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary-foreground/20">
+          <div className="mb-6 p-4 rounded-xl bg-secondary border border-border">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-border">
                 <img
                   src={photoUrl || member?.photoUrl || '/photos/blank_profile.png'}
                   alt={member?.name}
@@ -390,12 +606,10 @@ export default function MemberDashboardPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-foreground text-sm truncate">{member?.name}</p>
-                <p className="text-xs text-muted-foreground truncate">{member?.title}</p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {normalizeMemberTitle(member?.title || '') || currentTitle || (member?.position === 'alumni' ? 'Alumnus' : (member?.position ? member.position.charAt(0).toUpperCase() + member.position.slice(1).replace('_', ' ') : 'Research Team Member'))}
+                </p>
               </div>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Mail className="w-3 h-3" />
-              <span className="truncate">{member?.email}</span>
             </div>
           </div>
 
@@ -410,14 +624,14 @@ export default function MemberDashboardPage() {
                     setActiveSection(item.id as ActiveSection);
                     setSidebarOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                     isActive
                       ? 'bg-accent text-primary-foreground shadow-md'
                       : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                   }`}
                 >
-                  <Icon className="w-5 h-5" />
-                  {item.label}
+                  <Icon className="w-4 h-4" />
+                  <span className="truncate">{item.label}</span>
                   {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </button>
               );
@@ -427,296 +641,913 @@ export default function MemberDashboardPage() {
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 pt-8 min-h-screen">
-        <div className="p-6 lg:p-8 max-w-5xl">
-          {activeSection === 'dashboard' && (
-            <div className="animate-fade-in">
-              <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">
-                Welcome back, {member?.name?.split(' ')[0]}!
-              </h1>
-              <p className="text-muted-foreground mb-4">
-                Here's an overview of your profile and research activities.
-              </p>
+      <main className="lg:ml-64 pt-24 pb-16 min-h-screen">
+        <div className="p-6 lg:p-8 max-w-5xl mx-auto">
+          {successMessage && (
+            <div className="mb-6 p-4 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-2 animate-fade-in">
+              <CheckCircle className="w-5 h-5 shrink-0" />
+              <span>{successMessage}</span>
+            </div>
+          )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+          {/* 1. Overview Section */}
+          {activeSection === 'dashboard' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-1">
+                    Welcome back, {member?.name?.split(' ')[0]}!
+                  </h1>
+                  <p className="text-muted-foreground text-sm">
+                    Manage your alumni professional profile, career history, and publications.
+                  </p>
+                </div>
+                {slug && (
+                  <Link
+                    to={`/team/${slug}`}
+                    target="_blank"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-accent text-primary-foreground rounded-xl text-sm font-medium hover:bg-accent/90 transition-colors shadow-sm w-fit"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Preview Public Profile
+                  </Link>
+                )}
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 rounded-xl bg-accent/15 text-accent">
+                      <Briefcase className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold text-foreground truncate">{currentTitle || 'Not Set'}</p>
+                      <p className="text-xs text-muted-foreground">Current Title</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
                   <div className="flex items-center gap-4">
                     <div className="p-3 rounded-xl bg-accent/15 text-accent">
                       <BookOpen className="w-6 h-6" />
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-foreground">{publications.length}</p>
-                      <p className="text-sm text-muted-foreground">Publications</p>
+                      <p className="text-xs text-muted-foreground">Publications</p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-[#DCFCE7] text-[#22C55E]">
-                      <Award className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold text-foreground">
-                        {scholarProfile?.totalCitations || 0}
-                      </p>
-                      <p className="text-sm text-muted-foreground">Total Citations</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+                <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
                   <div className="flex items-center gap-4">
                     <div className="p-3 rounded-xl bg-accent/15 text-accent">
-                      <Sparkles className="w-6 h-6" />
+                      <Building2 className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-foreground">{expertise.length}</p>
-                      <p className="text-sm text-muted-foreground">Skills</p>
+                      <p className="text-2xl font-bold text-foreground">{careerHistory.length}</p>
+                      <p className="text-xs text-muted-foreground">Career Roles</p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+                <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
                   <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-[#FEF3C7] text-[#F59E0B]">
-                      <Calendar className="w-6 h-6" />
+                    <div className="p-3 rounded-xl bg-accent/15 text-accent">
+                      <GraduationCap className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-foreground">
-                        {scholarProfile?.hIndex || '-'}
-                      </p>
-                      <p className="text-sm text-muted-foreground">H-Index</p>
+                      <p className="text-2xl font-bold text-foreground">{education.length}</p>
+                      <p className="text-xs text-muted-foreground">Degrees</p>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
 
-          {activeSection === 'publications' && (
-            <div className="animate-fade-in">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">Publications</h1>
-                  <p className="text-muted-foreground">
-                    Your publications from Google Scholar
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeSection === 'skills' && (
-            <div className="animate-fade-in">
-              <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">Skills & Expertise</h1>
-              <p className="text-muted-foreground mb-4">Manage your areas of expertise and skills</p>
-            </div>
-          )}
-
-          {/* Info Section */}
-          {activeSection === 'info' && (
-            <div className="animate-fade-in">
-              <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">Profile Information</h1>
-              <p className="text-muted-foreground mb-4">
-                Update your profile details, contact information, and academic profiles (ORCID, ResearchGate, Google Scholar)
-              </p>
-
-              <div className="space-y-6">
-                {/* Profile Photo */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h2 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
+              {/* Quick Actions / Status */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+                  <h3 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
                     <User className="w-5 h-5 text-accent" />
-                    Profile Photo
-                  </h2>
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                    <div className="w-32 h-32 rounded-xl overflow-hidden border-2 border-border shadow-lg bg-secondary">
-                      {photoUrl ? (
-                        <img src={photoUrl} alt="Profile" className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <User className="w-12 h-12 text-muted-foreground" />
-                        </div>
-                      )}
+                    Profile Completion Checklist
+                  </h3>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Profile Photo</span>
+                      {photoUrl ? <span className="text-xs text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full font-medium">Complete</span> : <span className="text-xs text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full font-medium">Missing</span>}
                     </div>
-                    <div>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handlePhotoUpload}
-                        className="hidden"
-                      />
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={uploading}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-accent text-primary-foreground rounded-lg text-sm font-medium hover:bg-accent/90 transition-colors disabled:opacity-50"
-                      >
-                        <Upload className="w-4 h-4" />
-                        {uploading ? 'Uploading...' : 'Upload New Photo'}
-                      </button>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Current Position</span>
+                      {currentTitle && currentOrganization ? <span className="text-xs text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full font-medium">Complete</span> : <span className="text-xs text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full font-medium">Incomplete</span>}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Biography</span>
+                      {bio ? <span className="text-xs text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full font-medium">Complete</span> : <span className="text-xs text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full font-medium">Missing</span>}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Google Scholar</span>
+                      {googleScholarLink ? <span className="text-xs text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full font-medium">Linked</span> : <span className="text-xs text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full font-medium">Not Linked</span>}
                     </div>
                   </div>
                 </div>
 
-                {/* Contact Information */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h2 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
-                    <Mail className="w-5 h-5 text-accent" />
-                    Contact Information
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Email Address</label>
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Phone Number</label>
-                      <input
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground"
-                      />
-                    </div>
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-heading text-lg text-foreground mb-2">Quick Navigation</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Update your current career designation, add education history, or link your Google Scholar profile.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      onClick={() => setActiveSection('position')}
+                      className="px-4 py-2.5 bg-accent text-primary-foreground rounded-xl text-sm font-medium hover:bg-accent/90 transition-colors"
+                    >
+                      Update Current Position
+                    </button>
+                    <button
+                      onClick={() => setActiveSection('career')}
+                      className="px-4 py-2.5 bg-secondary text-secondary-foreground rounded-xl text-sm font-medium hover:bg-secondary/80 transition-colors border border-border"
+                    >
+                      Manage Career History
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 2. Profile Information Section */}
+          {activeSection === 'profile' && (
+            <div className="space-y-6 animate-fade-in">
+              <div>
+                <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-1">Profile Information</h1>
+                <p className="text-muted-foreground text-sm">Update your name, photo, biography, and research interests.</p>
+              </div>
+
+              {/* Photo Upload */}
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+                <h2 className="font-heading text-lg text-foreground mb-4">Profile Photo</h2>
+                <div className="flex flex-col sm:flex-row items-center gap-6">
+                  <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-border shadow-md bg-secondary">
+                    <img src={photoUrl || '/photos/blank_profile.png'} alt="Profile" className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                      className="px-4 py-2.5 bg-accent text-primary-foreground rounded-xl text-sm font-medium hover:bg-accent/90 transition-colors flex items-center gap-2"
+                    >
+                      <Upload className="w-4 h-4" />
+                      {uploading ? 'Uploading...' : 'Upload New Photo'}
+                    </button>
+                    <p className="text-xs text-muted-foreground mt-2">Recommended: Square image, max 5MB.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Basic Info */}
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+                <h2 className="font-heading text-lg text-foreground mb-4">Basic Details</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Full Name</label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Email Address</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Phone Number</label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Primary Research Area</label>
+                    <input
+                      type="text"
+                      value={researchArea}
+                      onChange={(e) => setResearchArea(e.target.value)}
+                      placeholder="e.g., Organic Synthesis & Catalysis"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
                   </div>
                 </div>
 
-                {/* Biography */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <h2 className="font-heading text-lg text-foreground mb-4 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-accent" />
-                    Biography / About Info
-                  </h2>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Biography & Professional Background</label>
                   <RichTextEditor
                     value={bio}
                     onChange={setBio}
-                    placeholder="Write a short biography about yourself..."
-                    minHeight="220px"
+                    placeholder="Write your biography, professional background, and current interests..."
+                    minHeight="200px"
                   />
                 </div>
+              </div>
 
-                {/* Academic Profiles (Google Scholar, ORCID, ResearchGate) */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-4">
-                  <h2 className="font-heading text-lg text-foreground mb-2 flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-accent" />
-                    Academic Profiles (Google Scholar, ORCID, ResearchGate)
-                  </h2>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Google Scholar Profile URL</label>
-                    <input
-                      type="url"
-                      value={googleScholarLink}
-                      onChange={(e) => setGoogleScholarLink(e.target.value)}
-                      className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground"
-                      placeholder="https://scholar.google.com/citations?user=..."
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">ORCID ID or Profile URL</label>
-                    <input
-                      type="text"
-                      value={orcid}
-                      onChange={(e) => setOrcid(e.target.value)}
-                      className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground"
-                      placeholder="0000-0002-1825-0097 or https://orcid.org/..."
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">ResearchGate Profile URL</label>
-                    <input
-                      type="url"
-                      value={researchGate}
-                      onChange={(e) => setResearchGate(e.target.value)}
-                      className="w-full bg-card border border-border rounded-lg px-4 py-2 text-foreground"
-                      placeholder="https://www.researchgate.net/profile/..."
-                    />
-                  </div>
-                </div>
-
-                {/* Social Media Links */}
-                <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="font-heading text-lg text-foreground flex items-center gap-2">
-                      <Share2 className="w-5 h-5 text-accent" />
-                      Social Media Links
-                    </h2>
-                    <button
-                      type="button"
-                      onClick={handleAddSocialLink}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      Add Link
-                    </button>
-                  </div>
-
-                  {socialLinks.length === 0 ? (
-                    <p className="text-xs text-muted-foreground italic">No social media links added yet.</p>
-                  ) : (
-                    <div className="space-y-3">
-                      {socialLinks.map((link, index) => (
-                        <div key={index} className="flex items-center gap-3">
-                          <select
-                            value={link.platform}
-                            onChange={(e) => handleUpdateSocialLink(index, 'platform', e.target.value)}
-                            className="bg-card border border-border rounded-lg px-3 py-2 text-foreground text-sm w-36"
-                          >
-                            <option value="LinkedIn">LinkedIn</option>
-                            <option value="Facebook">Facebook</option>
-                            <option value="Instagram">Instagram</option>
-                            <option value="Twitter">Twitter / X</option>
-                            <option value="GitHub">GitHub</option>
-                            <option value="YouTube">YouTube</option>
-                            <option value="ResearchGate">ResearchGate</option>
-                            <option value="Website">Website</option>
-                            <option value="Other">Other</option>
-                          </select>
-                          <input
-                            type="url"
-                            value={link.url}
-                            onChange={(e) => handleUpdateSocialLink(index, 'url', e.target.value)}
-                            placeholder="https://..."
-                            className="flex-1 bg-card border border-border rounded-lg px-4 py-2 text-foreground text-sm"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveSocialLink(index)}
-                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Save Button */}
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={handleSaveInfo}
-                    disabled={saving}
-                    className="inline-flex items-center gap-2 px-8 py-3 bg-accent text-primary-foreground rounded-lg font-medium hover:bg-accent/90 transition-colors disabled:opacity-50"
-                  >
-                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                    Save All Changes
-                  </button>
-                  {successMessage && (
-                    <span className="text-sm text-[#22C55E] font-medium bg-[#DCFCE7] px-4 py-2 rounded-lg">
-                      ✓ {successMessage}
-                    </span>
-                  )}
-                </div>
+              <div className="flex justify-end">
+                <button
+                  onClick={handleSaveAll}
+                  disabled={saving}
+                  className="px-6 py-3 bg-accent text-primary-foreground rounded-xl font-medium hover:bg-accent/90 transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  Save Changes
+                </button>
               </div>
             </div>
           )}
 
+          {/* 3. Current Position Section */}
+          {activeSection === 'position' && (
+            <div className="space-y-6 animate-fade-in">
+              <div>
+                <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-1">Current Position</h1>
+                <p className="text-muted-foreground text-sm">Manage your current job title, organization, and work description.</p>
+              </div>
+
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Current Job Title / Designation *</label>
+                    <input
+                      type="text"
+                      value={currentTitle}
+                      onChange={(e) => setCurrentTitle(e.target.value)}
+                      placeholder="e.g., Senior Research Scientist, Assistant Professor"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Company / University / Institution *</label>
+                    <input
+                      type="text"
+                      value={currentOrganization}
+                      onChange={(e) => setCurrentOrganization(e.target.value)}
+                      placeholder="e.g., MIT, Pfizer, Max Planck Institute"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Department / Division</label>
+                    <input
+                      type="text"
+                      value={currentDepartment}
+                      onChange={(e) => setCurrentDepartment(e.target.value)}
+                      placeholder="e.g., Department of Chemistry"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Location</label>
+                    <input
+                      type="text"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="e.g., Boston, MA, USA"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Starting Year / Date</label>
+                    <input
+                      type="text"
+                      value={currentPositionStartDate}
+                      onChange={(e) => setCurrentPositionStartDate(e.target.value)}
+                      placeholder="e.g., 2024 or Jan 2024"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Work Description & Responsibilities</label>
+                  <RichTextEditor
+                    value={currentPositionDescription}
+                    onChange={setCurrentPositionDescription}
+                    placeholder="Describe your current role, research focus, or responsibilities..."
+                    minHeight="160px"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  onClick={handleSaveAll}
+                  disabled={saving}
+                  className="px-6 py-3 bg-accent text-primary-foreground rounded-xl font-medium hover:bg-accent/90 transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  Save Current Position
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* 4. Career History Section */}
+          {activeSection === 'career' && (
+            <div className="space-y-6 animate-fade-in">
+              <div>
+                <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-1">Career History</h1>
+                <p className="text-muted-foreground text-sm">Add and manage previous professional positions and ongoing roles.</p>
+              </div>
+
+              {/* Existing Career Items */}
+              {careerHistory.length > 0 && (
+                <div className="space-y-4">
+                  {careerHistory.map((career, index) => (
+                    <div key={index} className="bg-card border border-border rounded-2xl p-5 flex items-start justify-between gap-4 shadow-sm">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-3">
+                          <h3 className="font-semibold text-foreground">{career.title}</h3>
+                          <span className="text-xs bg-accent/15 text-accent px-2.5 py-0.5 rounded-full font-medium">
+                            {career.startDate} {career.endDate ? `- ${career.endDate}` : career.isCurrent ? '- Present' : ''}
+                          </span>
+                        </div>
+                        <p className="text-sm font-medium text-muted-foreground">{career.organization}</p>
+                        {career.description && <p className="text-xs text-muted-foreground mt-1">{career.description}</p>}
+                      </div>
+                      <button
+                        onClick={() => handleRemoveCareer(index)}
+                        className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition-colors"
+                        title="Remove"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Add New Career Form */}
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+                <h2 className="font-heading text-lg text-foreground mb-2 flex items-center gap-2">
+                  <Plus className="w-5 h-5 text-accent" />
+                  Add Position
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Job Title *</label>
+                    <input
+                      type="text"
+                      value={newCareer.title}
+                      onChange={(e) => setNewCareer({ ...newCareer, title: e.target.value })}
+                      placeholder="e.g., Postdoctoral Fellow"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2 text-foreground text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Organization / Company *</label>
+                    <input
+                      type="text"
+                      value={newCareer.organization}
+                      onChange={(e) => setNewCareer({ ...newCareer, organization: e.target.value })}
+                      placeholder="e.g., University of Oxford"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2 text-foreground text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Start Date / Year</label>
+                    <input
+                      type="text"
+                      value={newCareer.startDate}
+                      onChange={(e) => setNewCareer({ ...newCareer, startDate: e.target.value })}
+                      placeholder="e.g., 2022"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2 text-foreground text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">End Date / Year</label>
+                    <input
+                      type="text"
+                      value={newCareer.endDate}
+                      onChange={(e) => setNewCareer({ ...newCareer, endDate: e.target.value })}
+                      placeholder="e.g., 2024"
+                      disabled={newCareer.isCurrent}
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2 text-foreground text-sm disabled:opacity-50"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="isCurrent"
+                    checked={newCareer.isCurrent || false}
+                    onChange={(e) => setNewCareer({ ...newCareer, isCurrent: e.target.checked, endDate: e.target.checked ? '' : newCareer.endDate })}
+                    className="rounded border-border text-accent focus:ring-accent"
+                  />
+                  <label htmlFor="isCurrent" className="text-sm text-foreground font-medium">I currently work here</label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Description / Responsibilities</label>
+                  <textarea
+                    value={newCareer.description || ''}
+                    onChange={(e) => setNewCareer({ ...newCareer, description: e.target.value })}
+                    rows={3}
+                    placeholder="Key responsibilities and achievements..."
+                    className="w-full bg-card border border-border rounded-xl p-3 text-foreground text-sm"
+                  />
+                </div>
+
+                <button
+                  onClick={handleAddCareer}
+                  className="px-5 py-2.5 bg-secondary text-secondary-foreground rounded-xl text-sm font-medium hover:bg-secondary/80 transition-colors border border-border flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Position to List
+                </button>
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  onClick={handleSaveAll}
+                  disabled={saving}
+                  className="px-6 py-3 bg-accent text-primary-foreground rounded-xl font-medium hover:bg-accent/90 transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  Save Career History
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* 5. Education Section */}
+          {activeSection === 'education' && (
+            <div className="space-y-6 animate-fade-in">
+              <div>
+                <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-1">Education</h1>
+                <p className="text-muted-foreground text-sm">Manage your degrees, institutions, departments, and thesis information.</p>
+              </div>
+
+              {education.length > 0 && (
+                <div className="space-y-4">
+                  {education.map((edu, index) => (
+                    <div key={index} className="bg-card border border-border rounded-2xl p-5 flex items-start justify-between gap-4 shadow-sm">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-3">
+                          <h3 className="font-semibold text-foreground">{edu.degree}</h3>
+                          {edu.graduationYear && (
+                            <span className="text-xs bg-accent/15 text-accent px-2.5 py-0.5 rounded-full font-medium">
+                              Graduated {edu.graduationYear}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm font-medium text-muted-foreground">{[edu.institution, edu.department].filter(Boolean).join(' • ')}</p>
+                        {edu.thesis && <p className="text-xs text-muted-foreground italic mt-1">Thesis: {edu.thesis}</p>}
+                      </div>
+                      <button
+                        onClick={() => handleRemoveEducation(index)}
+                        className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+                <h2 className="font-heading text-lg text-foreground mb-2 flex items-center gap-2">
+                  <Plus className="w-5 h-5 text-accent" />
+                  Add Degree / Education
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Degree *</label>
+                    <input
+                      type="text"
+                      value={newEdu.degree}
+                      onChange={(e) => setNewEdu({ ...newEdu, degree: e.target.value })}
+                      placeholder="e.g., Ph.D. in Chemistry"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2 text-foreground text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Institution / University *</label>
+                    <input
+                      type="text"
+                      value={newEdu.institution}
+                      onChange={(e) => setNewEdu({ ...newEdu, institution: e.target.value })}
+                      placeholder="e.g., CUET"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2 text-foreground text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Department</label>
+                    <input
+                      type="text"
+                      value={newEdu.department}
+                      onChange={(e) => setNewEdu({ ...newEdu, department: e.target.value })}
+                      placeholder="e.g., Department of Chemistry"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2 text-foreground text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Graduation Year</label>
+                    <input
+                      type="text"
+                      value={newEdu.graduationYear}
+                      onChange={(e) => setNewEdu({ ...newEdu, graduationYear: e.target.value })}
+                      placeholder="e.g., 2023"
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2 text-foreground text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Thesis Title / Summary (Optional)</label>
+                  <textarea
+                    value={newEdu.thesis || ''}
+                    onChange={(e) => setNewEdu({ ...newEdu, thesis: e.target.value })}
+                    rows={2}
+                    placeholder="Thesis title..."
+                    className="w-full bg-card border border-border rounded-xl p-3 text-foreground text-sm"
+                  />
+                </div>
+
+                <button
+                  onClick={handleAddEducation}
+                  className="px-5 py-2.5 bg-secondary text-secondary-foreground rounded-xl text-sm font-medium hover:bg-secondary/80 transition-colors border border-border flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Education to List
+                </button>
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  onClick={handleSaveAll}
+                  disabled={saving}
+                  className="px-6 py-3 bg-accent text-primary-foreground rounded-xl font-medium hover:bg-accent/90 transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  Save Education History
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* 6. Research & Expertise Section */}
+          {activeSection === 'skills' && (
+            <div className="space-y-6 animate-fade-in">
+              <div>
+                <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-1">Research & Expertise</h1>
+                <p className="text-muted-foreground text-sm">Manage your research interests and professional skills.</p>
+              </div>
+
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Primary Research Area / Focus</label>
+                  <input
+                    type="text"
+                    value={researchArea}
+                    onChange={(e) => setResearchArea(e.target.value)}
+                    placeholder="e.g., Catalysis, Organic Synthesis, Nanomaterials"
+                    className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Skills & Professional Expertise</label>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {expertise.map((skill) => (
+                      <span key={skill} className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-accent/15 text-accent rounded-full text-sm font-medium">
+                        {skill}
+                        <button
+                          onClick={() => setExpertise(expertise.filter((s) => s !== skill))}
+                          className="hover:bg-secondary rounded-full p-0.5 transition-colors"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </span>
+                    ))}
+                    {expertise.length === 0 && <p className="text-sm text-muted-foreground italic">No skills added yet.</p>}
+                  </div>
+
+                  <div className="flex gap-3">
+                    <input
+                      type="text"
+                      value={newExpertise}
+                      onChange={(e) => setNewExpertise(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          if (newExpertise.trim() && !expertise.includes(newExpertise.trim())) {
+                            setExpertise([...expertise, newExpertise.trim()]);
+                            setNewExpertise('');
+                          }
+                        }
+                      }}
+                      placeholder="Add a skill (e.g., NMR Spectroscopy, HPLC)..."
+                      className="flex-1 bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                    <button
+                      onClick={() => {
+                        if (newExpertise.trim() && !expertise.includes(newExpertise.trim())) {
+                          setExpertise([...expertise, newExpertise.trim()]);
+                          setNewExpertise('');
+                        }
+                      }}
+                      className="px-5 py-2.5 bg-accent text-primary-foreground rounded-xl text-sm font-medium hover:bg-accent/90 transition-colors flex items-center gap-2"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add Skill
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  onClick={handleSaveAll}
+                  disabled={saving}
+                  className="px-6 py-3 bg-accent text-primary-foreground rounded-xl font-medium hover:bg-accent/90 transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  Save Expertise
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* 7. Publications Section */}
+          {activeSection === 'publications' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-1">Publications</h1>
+                  <p className="text-muted-foreground text-sm">Your publications synced from Google Scholar.</p>
+                </div>
+                {googleScholarLink && (
+                  <button
+                    onClick={() => member && fetchPublications(member.id)}
+                    disabled={pubsLoading}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-xl text-sm font-medium hover:bg-secondary/80 transition-colors border border-border"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${pubsLoading ? 'animate-spin' : ''}`} />
+                    Refresh from Scholar
+                  </button>
+                )}
+              </div>
+
+              {pubsLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="w-8 h-8 animate-spin text-accent" />
+                </div>
+              ) : publications.length === 0 ? (
+                <div className="bg-card border border-border rounded-2xl p-8 text-center">
+                  <BookOpen className="w-12 h-12 text-muted-foreground/50 mx-auto mb-3" />
+                  <h3 className="font-heading text-lg text-foreground mb-1">No Publications Found</h3>
+                  <p className="text-muted-foreground text-sm mb-4">
+                    {googleScholarLink ? 'No publications found on your Google Scholar profile.' : 'Link your Google Scholar profile in Professional Links & Privacy to display publications.'}
+                  </p>
+                  {!googleScholarLink && (
+                    <button
+                      onClick={() => setActiveSection('links')}
+                      className="text-sm text-accent hover:underline font-medium"
+                    >
+                      Link Google Scholar →
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {publications.map((pub, index) => (
+                    <div key={index} className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+                      <h3 className="font-medium text-foreground mb-1">{pub.title}</h3>
+                      <p className="text-xs text-muted-foreground mb-2">{pub.authors?.join(', ')}</p>
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground italic">
+                        <span>{pub.journal} • {pub.year}</span>
+                        {pub.citedBy && parseInt(pub.citedBy) > 0 && (
+                          <span className="bg-accent/15 text-accent px-2 py-0.5 rounded-full not-italic font-semibold">
+                            Cited by {pub.citedBy}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 8. Professional Links & Privacy Section */}
+          {activeSection === 'links' && (
+            <div className="space-y-6 animate-fade-in">
+              <div>
+                <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-1">Professional Links & Privacy</h1>
+                <p className="text-muted-foreground text-sm">Manage your academic profiles, social links, and public contact preferences.</p>
+              </div>
+
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+                <h2 className="font-heading text-lg text-foreground mb-2">Academic & Professional Profiles</h2>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Google Scholar Profile URL</label>
+                  <input
+                    type="url"
+                    value={googleScholarLink}
+                    onChange={(e) => setGoogleScholarLink(e.target.value)}
+                    placeholder="https://scholar.google.com/citations?user=..."
+                    className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">ORCID ID or URL</label>
+                  <input
+                    type="text"
+                    value={orcid}
+                    onChange={(e) => setOrcid(e.target.value)}
+                    placeholder="e.g., 0000-0002-1825-0097"
+                    className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">ResearchGate Profile URL</label>
+                  <input
+                    type="url"
+                    value={researchGate}
+                    onChange={(e) => setResearchGate(e.target.value)}
+                    placeholder="https://www.researchgate.net/profile/..."
+                    className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm"
+                  />
+                </div>
+                
+              </div>
+
+              {/* Social Media Links */}
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-heading text-lg text-foreground flex items-center gap-2">
+                    <Share2 className="w-5 h-5 text-accent" />
+                    Social Media Links
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={handleAddSocialLink}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Add Link
+                  </button>
+                </div>
+
+                {socialLinks.length === 0 ? (
+                  <p className="text-xs text-muted-foreground italic">No social media links added yet.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {socialLinks.map((link, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <select
+                          value={link.platform}
+                          onChange={(e) => handleUpdateSocialLink(index, 'platform', e.target.value)}
+                          className="bg-card border border-border rounded-xl px-3 py-2.5 text-foreground text-sm w-36"
+                        >
+                          <option value="LinkedIn">LinkedIn</option>
+                          <option value="Facebook">Facebook</option>
+                          <option value="Instagram">Instagram</option>
+                          <option value="Twitter">Twitter / X</option>
+                          <option value="GitHub">GitHub</option>
+                          <option value="YouTube">YouTube</option>
+                          <option value="ResearchGate">ResearchGate</option>
+                          <option value="Website">Website</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        <input
+                          type="url"
+                          value={link.url}
+                          onChange={(e) => handleUpdateSocialLink(index, 'url', e.target.value)}
+                          placeholder="https://..."
+                          className="flex-1 bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSocialLink(index)}
+                          className="p-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Privacy Preferences */}
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+                <h2 className="font-heading text-lg text-foreground mb-2">Privacy & Contact Visibility</h2>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-secondary">
+                  <div>
+                    <p className="font-medium text-foreground text-sm">Make Email Public</p>
+                    <p className="text-xs text-muted-foreground">Allow visitors on the alumni details page to view and email you.</p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={isEmailPublic}
+                    onChange={(e) => setIsEmailPublic(e.target.checked)}
+                    className="w-5 h-5 rounded border-border text-accent focus:ring-accent"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  onClick={handleSaveAll}
+                  disabled={saving}
+                  className="px-6 py-3 bg-accent text-primary-foreground rounded-xl font-medium hover:bg-accent/90 transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  Save Links & Privacy
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* 9. Settings Section */}
           {activeSection === 'settings' && (
-            <div className="animate-fade-in">
-              <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-2">Settings</h1>
+            <div className="space-y-6 animate-fade-in">
+              <div>
+                <h1 className="font-heading text-2xl lg:text-3xl text-foreground mb-1">Settings</h1>
+                <p className="text-muted-foreground text-sm">Manage your account username and change password.</p>
+              </div>
+
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+                <h2 className="font-heading text-lg text-foreground mb-2">Account Credentials</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Username (Login ID)</label>
+                    <input
+                      type="text"
+                      value={settingsUsername}
+                      onChange={(e) => setSettingsUsername(e.target.value)}
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-border space-y-4 max-w-md">
+                  <h3 className="font-medium text-foreground">Change Password</h3>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Current Password</label>
+                    <input
+                      type={showCurrentPassword ? 'text' : 'password'}
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">New Password</label>
+                    <input
+                      type={showNewPassword ? 'text' : 'password'}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Confirm New Password</label>
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-foreground text-sm"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
+
+                {settingsMessage && <p className="text-sm text-emerald-600 font-medium">✓ {settingsMessage}</p>}
+                {settingsError && <p className="text-sm text-red-600 font-medium">✗ {settingsError}</p>}
+
+                <div className="pt-4">
+                  <button
+                    onClick={handleSaveSettings}
+                    disabled={savingSettings}
+                    className="px-6 py-3 bg-accent text-primary-foreground rounded-xl font-medium hover:bg-accent/90 transition-colors flex items-center gap-2 shadow-sm"
+                  >
+                    {savingSettings ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    Save Settings
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
