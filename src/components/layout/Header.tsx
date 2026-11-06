@@ -12,7 +12,7 @@ const navItems = [
   { label: 'Alumni', path: '/alumni' },
   { label: 'News', path: '/news' },
   { label: 'Notices', path: '/notices' },
-  { label: 'Instruments', path: '/instruments' },
+  { label: 'Facilities', path: '/instruments' },
 ];
 
 export function Header() {

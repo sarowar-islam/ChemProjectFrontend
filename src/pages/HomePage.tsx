@@ -189,8 +189,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Instrument Booking overview */}
-      <InstrumentsOverview />
+    
 
       {/* Stats Section - Floating Cards */}
       <section className="container-wide mt-4 sm:mt-6 relative z-20 pb-6 sm:pb-8 md:pb-10">
@@ -371,6 +370,9 @@ export default function HomePage() {
           )}
         </div>
       </section>
+
+      {/* Instrument Booking overview */}
+      <InstrumentsOverview />
 
       {/* Recent News Section (4 in a row) */}
       <section className="container-wide py-12 md:py-16 bg-background">
